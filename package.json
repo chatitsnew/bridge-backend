@@ -1,0 +1,11 @@
+{
+  "name": "bridge-backend",
+  "version": "1.0.0",
+  "description": "Real backend API for Bridge — skills-first matching engine, extracted from the hackathon prototype",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "audit": "node fairness-audit.js"
+  },
+  "dependencies": {}
+}
