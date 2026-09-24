@@ -76,13 +76,37 @@ const JOBS = [
 
 function escapeRegex(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 
+// A few aliases collide with common English words used as verbs, not the
+// skill itself (e.g. "I excel at teamwork" is not a mention of MS Excel).
+// Custom patterns here override the generic \b<alias>\b construction below.
+const ALIAS_PATTERN_OVERRIDES = {
+  'excel': '\\bexcel\\b(?!\\s+(?:at|in|as|when|beyond))',
+};
+
+// Guards against counting a skill the candidate explicitly says they
+// DON'T have ("no experience with Python", "unfamiliar with SQL").
+const NEGATION_TAIL = /\b(?:no|not|never|without|lack(?:ing)?\s+of|unfamiliar\s+with|not\s+familiar\s+with|no\s+experience\s+(?:with|in)|no\s+knowledge\s+of|no\s+formal\s+experience\s+(?:with|in)|haven't|hasn't|don't\s+have|doesn't\s+have)\s*$/i;
+
 function extractExplicit(text){
-  const lower = text.toLowerCase();
+  // Normalize hyphens to spaces so hyphenated phrasing like
+  // "data-analysis" or "stakeholder-communication" still matches
+  // two-word aliases like "data analysis".
+  const lower = text.toLowerCase().replace(/-/g, ' ');
   const found = new Set();
   for(const s of SKILLS){
     for(const alias of s.aliases){
-      const pat = new RegExp('\\b'+escapeRegex(alias)+'\\b','i');
-      if(pat.test(lower)){ found.add(s.id); break; }
+      // Aliases that themselves contain a hyphen (e.g. "high-pressure") need
+      // the same hyphen-to-space normalization applied to the input text,
+      // or they stop matching once hyphens in the text are turned to spaces.
+      const source = ALIAS_PATTERN_OVERRIDES[alias] || ('\\b'+escapeRegex(alias.replace(/-/g,' '))+'\\b');
+      const re = new RegExp(source, 'gi');
+      let m, matched = false;
+      while((m = re.exec(lower)) !== null){
+        const before = lower.slice(Math.max(0, m.index - 40), m.index);
+        if(!NEGATION_TAIL.test(before)){ matched = true; break; }
+        if(m.index === re.lastIndex) re.lastIndex++; // guard against zero-length matches
+      }
+      if(matched){ found.add(s.id); break; }
     }
   }
   return found;
