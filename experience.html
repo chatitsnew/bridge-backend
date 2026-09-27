@@ -1612,6 +1612,7 @@ function makeGlowTexture() {
 function IntroBridgeTransition({ active, onComplete }) {
     const canvasRef = useRef(null);
     useEffect(() => {
+        console.log('[bridge3d] effect running, active =', active);
         if (!active)
             return;
         const canvas = canvasRef.current;
@@ -1621,10 +1622,14 @@ function IntroBridgeTransition({ active, onComplete }) {
         let rafId = 0;
         let renderer = null;
         const disposables = [];
-        const finish = () => { if (!disposed) {
-            disposed = true;
-            onComplete();
-        } };
+        const finish = () => {
+            console.log('[bridge3d] finish() called, disposed was', disposed);
+            if (!disposed) {
+                disposed = true;
+                onComplete();
+                console.log('[bridge3d] onComplete() returned');
+            }
+        };
         try {
             const GOLD = 0xE07B3F;
             const PLATFORM = 0x4A3A2C;
@@ -1753,6 +1758,7 @@ function IntroBridgeTransition({ active, onComplete }) {
         // Cleanup fires the moment `active` flips false (or on unmount) —
         // independent of whatever AnimatePresence is doing visually.
         return () => {
+            console.log('[bridge3d] effect cleanup running');
             disposed = true;
             clearTimeout(doneTimer);
             cancelAnimationFrame(rafId);
@@ -1766,7 +1772,8 @@ function IntroBridgeTransition({ active, onComplete }) {
             catch { }
         };
     }, [active]);
-    return (React.createElement(AnimatePresence, null, active && (React.createElement(motion.div, { style: { position: 'fixed', inset: 0, zIndex: 9998, background: 'var(--paper)', overflow: 'hidden' }, initial: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.25 } },
+    console.log('[bridge3d] render, active =', active);
+    return (React.createElement(AnimatePresence, null, active && (React.createElement(motion.div, { style: { position: 'fixed', inset: 0, zIndex: 9998, background: 'var(--paper)', overflow: 'hidden' }, initial: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.25 }, onAnimationComplete: () => console.log('[bridge3d] motion.div onAnimationComplete') },
         React.createElement("canvas", { ref: canvasRef, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' } })))));
 }
 
@@ -1794,7 +1801,12 @@ function App() {
     const resultsRef = useRef(null);
     const auditRef = useRef(null);
     const handleTryLive = () => setScanActive(true);
-    const handleScanComplete = () => { setScanActive(false); setScreen('app'); };
+    const handleScanComplete = () => {
+        console.log('[App] handleScanComplete called');
+        setScanActive(false);
+        setScreen('app');
+    };
+    useEffect(() => { console.log('[App] scanActive is now', scanActive, 'screen is', screen); }, [scanActive, screen]);
     const handleAnalyze = async () => {
         setAnalyzing(true);
         const result = await analyzeCandidate(candidate.text, candidate.years, candidate.hasDegree, candidate.hadGap);
