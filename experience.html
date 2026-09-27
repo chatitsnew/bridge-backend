@@ -982,7 +982,7 @@ function Hero({ onTryLive }) {
         console.log('[Hero] scroll-trigger effect mounted');
         const handleScroll = () => {
             const nb = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 48;
-            console.log('[Hero] handleScroll fired', { triggered: triggeredRef.current, scrollY: window.scrollY, innerHeight: window.innerHeight, scrollHeight: document.documentElement.scrollHeight, nearBottom: nb });
+            console.log('[Hero] handleScroll fired ' + JSON.stringify({ triggered: triggeredRef.current, scrollY: window.scrollY, innerHeight: window.innerHeight, scrollHeight: document.documentElement.scrollHeight, nearBottom: nb }));
             if (triggeredRef.current)
                 return;
             if (nb)
