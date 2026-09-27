@@ -979,11 +979,13 @@ function Hero({ onTryLive }) {
     // guessing from wheel-event deltas) means every input method works the
     // same way: mouse wheel, trackpad, touch drag, scrollbar, keyboard.
     useEffect(() => {
+        console.log('[Hero] scroll-trigger effect mounted');
         const handleScroll = () => {
+            const nb = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 48;
+            console.log('[Hero] handleScroll fired', { triggered: triggeredRef.current, scrollY: window.scrollY, innerHeight: window.innerHeight, scrollHeight: document.documentElement.scrollHeight, nearBottom: nb });
             if (triggeredRef.current)
                 return;
-            const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 48;
-            if (nearBottom)
+            if (nb)
                 trigger();
         };
         window.addEventListener('scroll', handleScroll, { passive: true });
