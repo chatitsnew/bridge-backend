@@ -74,6 +74,30 @@
 
   .wrap{max-width:1180px;margin:0 auto;padding:0 28px 80px;}
 
+  /* ---------- Sticky module nav ---------- */
+  .module-nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; justify-content:center;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    transform:translateY(-100%);
+    transition:transform .18s ease;
+  }
+  .module-nav.visible{transform:translateY(0);}
+  .module-nav a{
+    font-family:inherit; font-size:12.5px; color:var(--ink-faint);
+    text-decoration:none; white-space:nowrap;
+    padding:13px 18px 11px;
+    border-bottom:2px solid transparent;
+  }
+  .module-nav a b{font-weight:600;}
+  .module-nav a:hover{color:var(--ink);}
+  .module-nav a.active{color:var(--ink); border-bottom-color:var(--gold);}
+  @media (max-width:640px){
+    .module-nav{justify-content:flex-start; overflow-x:auto;}
+    .module-nav a{padding:11px 13px 9px; font-size:11.5px;}
+  }
+
   /* ---------- Header ---------- */
   header{
     padding:44px 0 30px;
@@ -222,6 +246,22 @@
     transition:opacity .15s;
   }
   .analyze-btn:hover{opacity:.85;}
+
+  .btn-primary{
+    padding:9px 18px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    border-radius:var(--radius);
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:500;
+    cursor:pointer;
+    transition:opacity .15s;
+    white-space:nowrap;
+  }
+  .btn-primary:hover{opacity:.85;}
+  .btn-primary:disabled{opacity:.5; cursor:default;}
   :root[data-theme="dark"] .analyze-btn, body:has([data-theme]) .analyze-btn{}
 
   .note{font-size:12px; color:var(--ink-faint); margin-top:10px; line-height:1.5;}
@@ -426,6 +466,12 @@
 </style>
 </head>
 <body>
+<nav class="module-nav" id="module-nav">
+  <a href="#module-1" data-nav="1"><b>1</b> Discovery</a>
+  <a href="#module-2" data-nav="2"><b>2</b> Matching</a>
+  <a href="#module-3" data-nav="3"><b>3</b> Audit</a>
+  <a href="#module-4" data-nav="4"><b>4</b> Pathway</a>
+</nav>
 <div class="wrap">
 
   <header>
@@ -437,10 +483,11 @@
       <span><b>Module 1</b> — Skills discovery</span>
       <span><b>Module 2</b> — Inclusive matching</span>
       <span><b>Module 3</b> — Bias audit</span>
+      <span><b>Module 4</b> — Learning pathway</span>
     </div>
   </header>
 
-  <div class="module-tag"><b>Module 1</b> — Skills discovery</div>
+  <div class="module-tag" id="module-1"><b>Module 1</b> — Skills discovery</div>
   <div class="workbench">
     <div class="panel">
       <div class="persona-head-row">
@@ -487,7 +534,7 @@
     </div>
   </div>
 
-  <div class="module-tag"><b>Module 2</b> — Inclusive matching &nbsp;·&nbsp; <b>Module 3</b> — Bias audit</div>
+  <div class="module-tag" id="module-2"><b>Module 2</b> — Inclusive matching &nbsp;·&nbsp; <b>Module 3</b> — Bias audit</div>
   <div class="results-head">
     <h2>Match &amp; audit</h2>
     <p class="results-sub">Every role below is scored two ways: a traditional ATS pass, which only looks for the literal required keyword in the text, and a skills-based score, which counts anything explicit or inferred on the graph. Ranked by skills-based score.</p>
@@ -497,7 +544,7 @@
 
   <div id="job-list"></div>
 
-  <div class="module-tag"><b>Module 3</b> — Bias audit, continued: an identity-blind check</div>
+  <div class="module-tag" id="module-3"><b>Module 3</b> — Bias audit, continued: an identity-blind check</div>
   <div class="results-head">
     <h2>Fairness check</h2>
     <p class="results-sub">Same resume text, different identity. The fields below are display-only — the scoring engine only ever reads the text in the candidate box above, so it never sees a name, a college's reputation, or a pronoun.</p>
@@ -758,7 +805,9 @@ function renderGraph(explicitSet, inferredMap, gapJob){
   const svgRoot = document.getElementById('graph-svg');
   svgRoot.innerHTML = '';
   const w = svgRoot.clientWidth || 600;
-  const h = 380;
+  const compact = w < 480;
+  const h = compact ? 540 : 420;
+  svgRoot.style.height = h + 'px';
   svgRoot.setAttribute('viewBox', `0 0 ${w} ${h}`);
 
   const nodes = [];
@@ -809,7 +858,26 @@ function renderGraph(explicitSet, inferredMap, gapJob){
   });
   const byNodeId = Object.fromEntries(nodes.map(n=>[n.id,n]));
   links.forEach(l=>{ l.sourceNode = byNodeId[l.source]; l.targetNode = byNodeId[l.target]; });
-  function radiusOf(n){ return n.kind==='explicit' ? 26 : (n.kind==='gap' ? 20 : 20); }
+  function labelFootprint(name){
+    // on narrow screens labels wrap onto two shorter lines (see node
+    // rendering below), so the on-screen footprint is the longer half;
+    // on wider screens the full name renders on one line
+    if(compact && name.length > 12 && name.includes(' ')){
+      const words = name.split(' ');
+      const mid = Math.ceil(words.length/2);
+      const l1 = words.slice(0,mid).join(' ');
+      const l2 = words.slice(mid).join(' ');
+      return Math.max(l1.length, l2.length);
+    }
+    return name.length;
+  }
+  function radiusOf(n){
+    const base = n.kind==='explicit' ? 26 : 20;
+    // keep nodes far enough apart that their text labels (centered under
+    // each circle) don't overlap neighboring nodes or their labels
+    const labelHalf = 9 + labelFootprint(byId[n.id].name)*(compact?2.4:3.0);
+    return Math.max(base, labelHalf);
+  }
 
   const linkGroup = svgEl('g', {});
   const nodeGroup = svgEl('g', {});
@@ -822,18 +890,36 @@ function renderGraph(explicitSet, inferredMap, gapJob){
     return line;
   });
 
+  const sizeScale = compact ? 0.78 : 1;
   const nodeEls = nodes.map(n=>{
     const g = svgEl('g', {class:'node-circle'});
     const circle = svgEl('circle', {
-      r: n.kind==='explicit' ? 22 : (n.kind==='gap' ? 16 : 14 + 6*n.confidence),
+      r: (n.kind==='explicit' ? 22 : (n.kind==='gap' ? 16 : 14 + 6*n.confidence)) * sizeScale,
       fill: n.kind==='explicit' ? 'var(--gold-fill)' : (n.kind==='gap' ? 'var(--rust-soft)' : 'var(--paper-raised)'),
       stroke: n.kind==='gap' ? 'var(--rust)' : 'var(--gold)',
       'stroke-width': n.kind==='gap' ? 1.3 : 1.5,
       'stroke-dasharray': n.kind==='explicit' ? 'none' : (n.kind==='gap' ? '1.5,2.5' : '3,2')
     });
     if(n.kind==='inferred') circle.setAttribute('class','inferred-node');
-    const text = svgEl('text', {class:'node-label', 'text-anchor':'middle', dy:34, fill: n.kind==='gap' ? 'var(--rust)' : 'var(--ink-soft)'});
-    text.textContent = byId[n.id].name;
+    const fontSize = compact ? 9.5 : 11;
+    const labelDY = compact ? 24 : 34;
+    const text = svgEl('text', {class:'node-label', 'text-anchor':'middle', 'font-size':fontSize, fill: n.kind==='gap' ? 'var(--rust)' : 'var(--ink-soft)'});
+    const fullName = byId[n.id].name;
+    if(compact && fullName.length > 12 && fullName.includes(' ')){
+      // wrap long two-word skill names onto two short lines so they don't
+      // stretch across neighboring nodes on narrow screens
+      const words = fullName.split(' ');
+      const mid = Math.ceil(words.length/2);
+      const t1 = svgEl('tspan', {x:0, dy:labelDY});
+      t1.textContent = words.slice(0,mid).join(' ');
+      const t2 = svgEl('tspan', {x:0, dy:fontSize+2});
+      t2.textContent = words.slice(mid).join(' ');
+      text.appendChild(t1);
+      text.appendChild(t2);
+    } else {
+      text.setAttribute('dy', labelDY);
+      text.textContent = fullName;
+    }
     g.appendChild(circle);
     g.appendChild(text);
     nodeGroup.appendChild(g);
@@ -894,7 +980,7 @@ function renderGraph(explicitSet, inferredMap, gapJob){
         const a=nodes[i], b=nodes[j];
         let dx=b.x-a.x, dy=b.y-a.y;
         let d2 = dx*dx+dy*dy || 0.01;
-        const force = (2200/d2) * alpha;
+        const force = ((compact?3400:2200)/d2) * alpha;
         const d = Math.sqrt(d2);
         const fx = dx/d*force, fy = dy/d*force;
         if(!a.fixed){ a.vx -= fx; a.vy -= fy; }
@@ -905,7 +991,7 @@ function renderGraph(explicitSet, inferredMap, gapJob){
       const a=l.sourceNode, b=l.targetNode;
       let dx=b.x-a.x, dy=b.y-a.y;
       const d = Math.sqrt(dx*dx+dy*dy) || 0.01;
-      const diff = (d-78)/d*0.06*alpha;
+      const diff = (d-(compact?92:78))/d*0.06*alpha;
       const ox=dx*diff, oy=dy*diff;
       if(!a.fixed){ a.vx += ox; a.vy += oy; }
       if(!b.fixed){ b.vx -= ox; b.vy -= oy; }
@@ -929,7 +1015,7 @@ function renderGraph(explicitSet, inferredMap, gapJob){
         }
       }
     }
-    const pad = 30;
+    const pad = compact ? 62 : 30;
     nodes.forEach(n=>{
       if(n.fixed) return;
       n.vx *= 0.82; n.vy *= 0.82;
@@ -1154,6 +1240,28 @@ function analyze(){
 }
 
 document.getElementById('analyze-btn').addEventListener('click', analyze);
+/* ============ Sticky module nav: show on scroll, highlight current section ============ */
+(function(){
+  const nav = document.getElementById('module-nav');
+  const headerEl = document.querySelector('header');
+  const sections = ['module-1','module-2','module-3','module-4']
+    .map(id=>({id, el:document.getElementById(id), link:nav.querySelector(`[data-nav="${id.split('-')[1]}"]`)}))
+    .filter(s=>s.el);
+
+  function onScroll(){
+    const headerBottom = headerEl.getBoundingClientRect().bottom;
+    nav.classList.toggle('visible', headerBottom < 0);
+
+    let current = sections[0];
+    for(const s of sections){
+      if(s.el.getBoundingClientRect().top < 140) current = s;
+    }
+    sections.forEach(s=> s.link && s.link.classList.toggle('active', s===current));
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+
 window.addEventListener('resize', ()=>{
   renderGraph(lastExplicit, lastInferred, getSelectedGapJob());
 });
@@ -1166,7 +1274,7 @@ analyze();
       const footer = document.querySelector('footer');
       const section = document.createElement('div');
       section.innerHTML = `
-          <div class="module-tag"><b>Module 4</b> — Learning pathway (bonus)</div>
+          <div class="module-tag" id="module-4"><b>Module 4</b> — Learning pathway (bonus)</div>
               <div class="results-head">
                     <h2>Close the gap</h2>
                           <p class="results-sub">Pick a role to see a suggested learning path for the skills this candidate is missing. Not a live course-market integration yet — a curated static list — but real code that runs against the same gap data shown above.</p>
@@ -1174,7 +1282,7 @@ analyze();
                                   <div class="gap-select-row">
                                         <label for="pathway-job-select">Show pathway for</label>
                                               <select id="pathway-job-select"><option value="-1">Select a role</option></select>
-                                                    <button id="pathway-btn" class="clear-link" type="button" style="text-decoration:none; border:1px solid var(--line); padding:6px 14px; border-radius:var(--radius); color:var(--ink);">Get learning pathway</button>
+                                                    <button id="pathway-btn" class="btn-primary" type="button">Get learning pathway</button>
                                                         </div>
                                                             <div id="pathway-results" style="margin-top:14px;"></div>
                                                               `;
