@@ -1198,7 +1198,7 @@ async function doAnalysis(){
   if(backendResult){
     explicit = backendResult.explicit;
     inferred = backendResult.inferred;
-    indicator.textContent = '● Live backend response (localhost:3001)';
+    indicator.textContent = '● Live backend response';
     indicator.style.color = '#2C6656';
   } else {
     explicit = extractExplicit(text);
