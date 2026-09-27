@@ -948,6 +948,8 @@ async function fetchFairnessSummary() {
 function Hero({ onTryLive }) {
     const triggeredRef = useRef(false);
     const touchYRef = useRef(null);
+    const accumRef = useRef(0);
+    const decayTimerRef = useRef(null);
     const trigger = () => {
         if (triggeredRef.current)
             return;
@@ -956,15 +958,27 @@ function Hero({ onTryLive }) {
     };
     // Scrolling down on the hero is the same as clicking "Try it live" — a
     // deliberate wheel or touch-swipe gesture advances straight into the
-    // scan transition. preventDefault on the qualifying gesture so the page
+    // scan transition. preventDefault on every qualifying gesture so the page
     // doesn't visibly scroll first and then jump — the transition takes over
     // immediately, edge-to-edge.
+    //
+    // Trackpads (and plenty of mice) deliver a scroll gesture as a stream of
+    // SMALL deltaY events rather than one big jump, so a threshold on a
+    // single event's deltaY misses them entirely. Accumulate deltaY across
+    // the gesture instead, with a short decay so unrelated tiny/stray scrolls
+    // spread over time don't add up to an accidental trigger.
     useEffect(() => {
         const handleWheel = (e) => {
             if (triggeredRef.current)
                 return;
-            if (e.deltaY > 22) {
-                e.preventDefault();
+            if (e.deltaY <= 0)
+                return;
+            e.preventDefault();
+            accumRef.current += e.deltaY;
+            if (decayTimerRef.current)
+                clearTimeout(decayTimerRef.current);
+            decayTimerRef.current = setTimeout(() => { accumRef.current = 0; }, 450);
+            if (accumRef.current > 60) {
                 trigger();
             }
         };
@@ -985,6 +999,8 @@ function Hero({ onTryLive }) {
         window.addEventListener('touchstart', handleTouchStart, { passive: true });
         window.addEventListener('touchmove', handleTouchMove, { passive: false });
         return () => {
+            if (decayTimerRef.current)
+                clearTimeout(decayTimerRef.current);
             window.removeEventListener('wheel', handleWheel);
             window.removeEventListener('touchstart', handleTouchStart);
             window.removeEventListener('touchmove', handleTouchMove);
