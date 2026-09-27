@@ -1223,5 +1223,65 @@ analyze();
   })();
 </script>
   
+<script>
+  /* ============ Bias Audit: full 72/72 results (post-regionals addition) ============ */
+  (function(){
+      const ghostPanel = document.getElementById('ghost-panel');
+      const section = document.createElement('div');
+      section.innerHTML = `
+          <div class="module-tag"><b>Module 3</b>, continued — the full audit, not just one example</div>
+              <div class="results-head">
+                    <h2>Every synthetic candidate, every role, identity swapped</h2>
+                          <p class="results-sub" id="audit-verdict">Loading audit results…</p>
+                              </div>
+                                  <div class="stat-row" id="audit-stats"></div>
+                                      <button class="breakdown-toggle" id="audit-toggle" type="button" style="display:none;">Show all 72 comparisons</button>
+                                          <div id="audit-table-wrap" style="display:none; margin-top:14px; max-height:420px; overflow-y:auto; border:1px solid var(--line); border-radius:var(--radius);"></div>
+                                            `;
+      ghostPanel.parentNode.insertBefore(section, ghostPanel.nextSibling);
+
+      async function loadAudit(){
+            const verdictEl = document.getElementById('audit-verdict');
+            const statsEl = document.getElementById('audit-stats');
+            try {
+                    const res = await fetch(BACKEND_URL + '/api/fairness-summary');
+                    const data = await res.json();
+                    if(data.error){ verdictEl.textContent = data.error; return; }
+
+                    verdictEl.textContent = data.verdict;
+                    statsEl.innerHTML = `
+                            <div class="stat"><div class="num teal">${data.totalComparisons - data.mismatchesFound}<span style="font-size:22px;color:var(--ink-faint);"> / ${data.totalComparisons}</span></div><div class="cap">Identity-swap comparisons with an identical score</div></div>
+                                    <div class="stat"><div class="num gold">${data.candidatesTested}</div><div class="cap">Independently-written synthetic candidates, each tested against ${data.jobsPerCandidate} roles</div></div>
+                                            <div class="stat"><div class="num ${data.maxAbsoluteScoreDelta===0?'teal':'rust'}">${data.maxAbsoluteScoreDelta}</div><div class="cap">Maximum score difference found between identity-swapped pairs</div></div>
+                                                  `;
+
+                    const toggleBtn = document.getElementById('audit-toggle');
+                    const tableWrap = document.getElementById('audit-table-wrap');
+                    toggleBtn.style.display = 'inline-block';
+                    toggleBtn.addEventListener('click', ()=>{
+                              const show = tableWrap.style.display !== 'block';
+                              tableWrap.style.display = show ? 'block' : 'none';
+                              toggleBtn.textContent = show ? 'Hide comparisons' : 'Show all 72 comparisons';
+                              if(show && !tableWrap.dataset.built){
+                                          tableWrap.dataset.built = '1';
+                                          const rows = data.comparisons.map(c => `
+                                                      <div class="breakdown-row">
+                                                                    <span class="sk-name">${c.job} <span class="req-tag">candidate ${c.candidate}</span></span>
+                                                                                  <span class="breakdown-right mono" style="font-size:11.5px;">
+                                                                                                  ${c.identityA}: ${c.scoreA}% &nbsp;↔&nbsp; ${c.identityB}: ${c.scoreB}%
+                                                                                                                  <span class="sk-tag ${c.delta===0?'explicit':'missing'}" style="margin-left:8px;">${c.delta===0?'match':'Δ'+c.delta}</span>
+                                                                                                                                </span>
+                                                                                                                                            </div>`).join('');
+                                          tableWrap.innerHTML = `<div style="padding:4px 14px;">${rows}</div>`;
+                              }
+                    });
+            } catch(e){
+                    verdictEl.textContent = 'Could not reach backend for the full audit — the single-candidate check above still applies.';
+            }
+      }
+      loadAudit();
+  })();
+</script>
+  
 </body>
 </html>
