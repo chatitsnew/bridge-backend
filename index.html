@@ -803,17 +803,17 @@ const JOBS = [
 
 const PERSONAS = {
   priya: {
-    label:'Priya',
+    label:'Sadie',
     text:"I have a Bachelor's degree from a state college in Tamil Nadu. After graduating, I worked for one year as a data entry associate at a small logistics firm, where I organized shipment records in Google Sheets and flagged discrepancies for the operations team. I took a two-year career gap to coordinate my mother's cancer treatment — managing a household budget, scheduling appointments across multiple specialists, and making fast decisions under pressure. During this time I also completed three online courses in Python programming and data analysis fundamentals, and built small scripts to automate my own expense tracking. I am now looking to return to a data-focused role.",
     years:1, hasDegree:true, hadGap:true
   },
   arjun: {
-    label:'Arjun',
+    label:'Emma',
     text:"I am a self-taught software developer. I don't hold a formal computer science degree — I learned programming through freelance projects and open-source contributions on GitHub. Over the past two years I've built and shipped three React web applications, including an e-commerce dashboard. I write clean, componentized JavaScript, use Git for version control, and have started exploring Node.js for backend APIs. I'm comfortable with HTML and CSS and enjoy solving tricky UI bugs.",
     years:2, hasDegree:false, hadGap:false
   },
   rahul: {
-    label:'Rahul',
+    label:'Hrithik',
     text:"I completed my B.Tech in Computer Science from a top engineering institute. After graduating I've spent two years as a full-time developer working with JavaScript, React, Node.js, SQL, and Git in an agile team environment. I hold strong fundamentals and enjoy mentoring junior engineers.",
     years:2, hasDegree:true, hadGap:false
   },
@@ -825,15 +825,15 @@ const PERSONAS = {
 
 const GHOST_IDENTITIES = {
   priya: {
-    original: {name:'Priya Selvam', college:"Govt. Arts College, Madurai — tier 3", pronouns:'she/her'},
+    original: {name:'Sadie Sink', college:"Govt. Arts College, Madurai — tier 3", pronouns:'she/her'},
     ghost:    {name:'Vikram Mehta', college:'IIT Delhi — tier 1', pronouns:'he/him'}
   },
   arjun: {
-    original: {name:'Arjun Kumar', college:'No formal degree — self-taught', pronouns:'he/him'},
+    original: {name:'Emma Watson', college:'No formal degree — self-taught', pronouns:'she/her'},
     ghost:    {name:'Ananya Rao', college:'No formal degree — self-taught', pronouns:'she/her'}
   },
   rahul: {
-    original: {name:'Rahul Verma', college:'IIT Bombay — tier 1', pronouns:'he/him'},
+    original: {name:'Hrithik Roshan', college:'IIT Bombay — tier 1', pronouns:'he/him'},
     ghost:    {name:'Fatima Sheikh', college:'Regional Engineering College — tier 3', pronouns:'she/her'}
   }
 };
@@ -1307,7 +1307,7 @@ function renderGhostPanel(personaKey, scored){
   const panel = document.getElementById('ghost-panel');
   const identities = GHOST_IDENTITIES[personaKey];
   if(!identities){
-    panel.innerHTML = `<div class="ghost-empty">This check is wired up for the three sample personas. Pick Priya, Arjun, or Rahul above to see it — the underlying point holds for any text you paste: the box above is the only thing the engine ever reads.</div>`;
+    panel.innerHTML = `<div class="ghost-empty">This check is wired up for the three sample personas. Pick Sadie, Emma, or Hrithik above to see it — the underlying point holds for any text you paste: the box above is the only thing the engine ever reads.</div>`;
     return;
   }
   const avgScore = Math.round(scored.reduce((a,s)=>a+s.skl,0) / scored.length);
