@@ -256,7 +256,8 @@ footer b{color:var(--ink-soft);}
     "react/jsx-dev-runtime": "https://esm.sh/react@19.2.6/jsx-dev-runtime",
     "react-dom": "https://esm.sh/react-dom@19.2.6?external=react",
     "react-dom/client": "https://esm.sh/react-dom@19.2.6/client?external=react",
-    "framer-motion": "https://esm.sh/framer-motion@11?external=react,react-dom"
+    "framer-motion": "https://esm.sh/framer-motion@11?external=react,react-dom",
+    "three": "https://esm.sh/three@0.169.0"
   }
 }
 </script>
@@ -281,6 +282,7 @@ footer b{color:var(--ink-soft);}
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import * as THREE from 'three';
 
 /* ---- data.js ---- */
 /* ============ DATA ============
@@ -944,7 +946,51 @@ async function fetchFairnessSummary() {
 
 /* ---- Hero.js ---- */
 function Hero({ onTryLive }) {
-    return (React.createElement("div", { className: "wrap", style: { paddingTop: 60 } },
+    const triggeredRef = useRef(false);
+    const touchYRef = useRef(null);
+    const trigger = () => {
+        if (triggeredRef.current)
+            return;
+        triggeredRef.current = true;
+        onTryLive();
+    };
+    // Scrolling down on the hero is the same as clicking "Try it live" — a
+    // deliberate wheel or touch-swipe gesture advances straight into the
+    // scan transition. preventDefault on the qualifying gesture so the page
+    // doesn't visibly scroll first and then jump — the transition takes over
+    // immediately, edge-to-edge.
+    useEffect(() => {
+        const handleWheel = (e) => {
+            if (triggeredRef.current)
+                return;
+            if (e.deltaY > 22) {
+                e.preventDefault();
+                trigger();
+            }
+        };
+        const handleTouchStart = (e) => { touchYRef.current = e.touches[0]?.clientY ?? null; };
+        const handleTouchMove = (e) => {
+            if (triggeredRef.current || touchYRef.current == null)
+                return;
+            const y = e.touches[0]?.clientY;
+            if (y == null)
+                return;
+            if (touchYRef.current - y > 28) {
+                if (e.cancelable)
+                    e.preventDefault();
+                trigger();
+            }
+        };
+        window.addEventListener('wheel', handleWheel, { passive: false });
+        window.addEventListener('touchstart', handleTouchStart, { passive: true });
+        window.addEventListener('touchmove', handleTouchMove, { passive: false });
+        return () => {
+            window.removeEventListener('wheel', handleWheel);
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', handleTouchMove);
+        };
+    }, []);
+    return (React.createElement("div", { className: "wrap", style: { position: 'relative', paddingTop: 60, minHeight: 'calc(100vh - 60px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' } },
         React.createElement("div", { className: "badge-row" },
             React.createElement("span", { className: "badge" }, "Skills-first"),
             React.createElement("span", { className: "badge-connector" }),
@@ -954,11 +1000,15 @@ function Hero({ onTryLive }) {
                 React.createElement(motion.h1, { id: "hero-headline", initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: 0.1 } }, "Hiring that can't see who you are \u2014 only what you can do."),
                 React.createElement(motion.p, { className: "tagline", initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: 0.22 } }, "Bridge reads a resume two ways at once: once as a literal keyword scanner would, and once through a skills graph that infers adjacent capability a scanner misses. Then it proves, live, that the score never moves when the name, college, or pronouns on the page do."),
                 React.createElement(motion.div, { className: "hero-cta", initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5, delay: 0.34 } },
-                    React.createElement("button", { className: "btn-primary", style: { padding: '13px 26px', fontSize: 14.5 }, onClick: onTryLive }, "Try it live \u2192"),
+                    React.createElement("button", { className: "btn-primary", style: { padding: '13px 26px', fontSize: 14.5 }, onClick: trigger }, "Try it live \u2192"),
                     React.createElement("span", { style: { fontSize: 13, color: 'var(--ink-faint)' } }, "No sign-up \u2014 paste a resume and go."))),
             React.createElement(motion.svg, { viewBox: "0 0 260 260", initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, transition: { duration: 0.7, delay: 0.2 }, style: { width: '100%', maxWidth: 340 } },
                 React.createElement("path", { d: "M20 240 L20 60 L200 60", stroke: "var(--line)", strokeWidth: "1", fill: "none" }),
-                [[210, 60, true], [150, 95, false], [230, 150, true], [95, 190, false], [210, 220, true], [145, 145, false]].map(([cx, cy, filled], i) => (React.createElement("circle", { key: i, cx: cx, cy: cy, r: filled ? 9 : 7, fill: filled ? 'var(--gold,#C4571F)' : 'none', stroke: filled ? 'none' : 'var(--gold,#C4571F)', strokeDasharray: filled ? 'none' : '3,2' })))))));
+                [[210, 60, true], [150, 95, false], [230, 150, true], [95, 190, false], [210, 220, true], [145, 145, false]].map(([cx, cy, filled], i) => (React.createElement("circle", { key: i, cx: cx, cy: cy, r: filled ? 9 : 7, fill: filled ? 'var(--gold,#C4571F)' : 'none', stroke: filled ? 'none' : 'var(--gold,#C4571F)', strokeDasharray: filled ? 'none' : '3,2' }))))),
+        React.createElement(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1, y: [0, 7, 0] }, transition: { opacity: { duration: 0.6, delay: 0.8 }, y: { duration: 1.7, delay: 1.1, repeat: Infinity, ease: 'easeInOut' } }, style: { position: 'absolute', left: 0, right: 0, bottom: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, pointerEvents: 'none' } },
+            React.createElement("span", { style: { fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--ink-faint)' } }, "Scroll to try it live"),
+            React.createElement("svg", { width: "16", height: "16", viewBox: "0 0 16 16" },
+                React.createElement("path", { d: "M3 6 L8 11 L13 6", stroke: "var(--ink-faint)", strokeWidth: "1.6", fill: "none", strokeLinecap: "round", strokeLinejoin: "round" })))));
 }
 
 
@@ -1523,6 +1573,203 @@ function BridgeTransition({ active, roleName, gapNames, onComplete }) {
 }
 
 
+/* ---- bridge3d.js ---- */
+/* ---------- Intro transition: Hero -> Discovery, the 3D bridge ----------
+   Fired by scrolling (or clicking "Try it live") on the hero. A WebGL scene
+   — two floating platforms joined by a cable of light that draws itself in,
+   lighting a row of node-sprites as it goes, while the camera drifts around
+   it — standing in for the literal "scan" effect used in the vanilla build.
+   Three.js loads from esm.sh via the import map (same pattern as React/
+   Framer Motion): untestable in this sandbox short of a live browser, so
+   construction is wrapped defensively and falls through to onDone on any
+   failure rather than stranding the user on a blank screen. */
+const DURATION = 1500;
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+function easeOutExpo(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+// A small radial-gradient sprite texture, generated on a throwaway canvas —
+// no network fetch, so it can't be blocked or 404.
+function makeGlowTexture() {
+    const size = 128;
+    const c = document.createElement('canvas');
+    c.width = size;
+    c.height = size;
+    const ctx = c.getContext('2d');
+    const grad = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.35, 'rgba(255,255,255,0.55)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, size, size);
+    const tex = new THREE.CanvasTexture(c);
+    return tex;
+}
+function BridgeScene3D({ onDone }) {
+    const canvasRef = useRef(null);
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas)
+            return;
+        let disposed = false;
+        let rafId = 0;
+        let renderer = null;
+        const disposables = [];
+        const finish = () => { if (!disposed) {
+            disposed = true;
+            onDone();
+        } };
+        const safetyTimer = setTimeout(finish, DURATION + 250);
+        try {
+            const GOLD = 0xE07B3F;
+            const PLATFORM = 0x4A3A2C;
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            renderer.setClearColor(0x000000, 0);
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+            renderer.setPixelRatio(pixelRatio);
+            const resize = () => {
+                const w = canvas.clientWidth || window.innerWidth;
+                const h = canvas.clientHeight || window.innerHeight;
+                renderer.setSize(w, h, true);
+                camera.aspect = w / Math.max(h, 1);
+                camera.updateProjectionMatrix();
+            };
+            resize();
+            window.addEventListener('resize', resize);
+            disposables.push(() => window.removeEventListener('resize', resize));
+            const group = new THREE.Group();
+            scene.add(group);
+            // Bridge curve: left platform to right platform, a gentle rise-and-fall
+            // arch with a slight S-curve in depth so it reads as genuinely 3D.
+            const N = 48;
+            const SPAN = 4.3;
+            const ARCH = 1.5;
+            const curve = [];
+            for (let i = 0; i <= N; i++) {
+                const t = i / N;
+                const x = THREE.MathUtils.lerp(-SPAN, SPAN, t);
+                const y = Math.sin(t * Math.PI) * ARCH - 0.2;
+                const z = Math.sin(t * Math.PI * 2) * 0.55;
+                curve.push([x, y, z]);
+            }
+            // Platforms — two flat discs anchoring the bridge.
+            const platformGeo = new THREE.CylinderGeometry(0.85, 0.85, 0.14, 28);
+            const platformMat = new THREE.MeshBasicMaterial({ color: PLATFORM, transparent: true, opacity: 0.9 });
+            disposables.push(() => { platformGeo.dispose(); platformMat.dispose(); });
+            const platformL = new THREE.Mesh(platformGeo, platformMat);
+            const platformR = new THREE.Mesh(platformGeo, platformMat);
+            platformL.position.set(curve[0][0], curve[0][1] - 0.35, curve[0][2]);
+            platformR.position.set(curve[N][0], curve[N][1] - 0.35, curve[N][2]);
+            platformL.scale.setScalar(0.001);
+            platformR.scale.setScalar(0.001);
+            group.add(platformL, platformR);
+            // Cable — a single line along the curve, revealed via drawRange.
+            const positions = new Float32Array((N + 1) * 3);
+            curve.forEach(([x, y, z], i) => { positions[i * 3] = x; positions[i * 3 + 1] = y; positions[i * 3 + 2] = z; });
+            const lineGeo = new THREE.BufferGeometry();
+            lineGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            lineGeo.setDrawRange(0, 0);
+            const lineMat = new THREE.LineBasicMaterial({ color: GOLD, transparent: true, opacity: 0.95 });
+            disposables.push(() => { lineGeo.dispose(); lineMat.dispose(); });
+            const line = new THREE.Line(lineGeo, lineMat);
+            group.add(line);
+            // Node lights along the cable, each with an additive glow sprite.
+            const glowTex = makeGlowTexture();
+            disposables.push(() => glowTex.dispose());
+            const NODE_COUNT = 9;
+            const nodeGeo = new THREE.SphereGeometry(0.05, 10, 10);
+            const nodeMat = new THREE.MeshBasicMaterial({ color: GOLD, transparent: true, opacity: 1 });
+            disposables.push(() => { nodeGeo.dispose(); nodeMat.dispose(); });
+            const nodes = [];
+            for (let i = 0; i < NODE_COUNT; i++) {
+                const t = (i + 1) / (NODE_COUNT + 1);
+                const idx = Math.round(t * N);
+                const [x, y, z] = curve[idx];
+                const mesh = new THREE.Mesh(nodeGeo, nodeMat);
+                mesh.position.set(x, y, z);
+                mesh.scale.setScalar(0.001);
+                group.add(mesh);
+                const spriteMat = new THREE.SpriteMaterial({
+                    map: glowTex, color: GOLD, transparent: true, opacity: 0,
+                    blending: THREE.AdditiveBlending, depthWrite: false,
+                });
+                const sprite = new THREE.Sprite(spriteMat);
+                sprite.position.set(x, y, z);
+                sprite.scale.setScalar(0.001);
+                group.add(sprite);
+                disposables.push(() => spriteMat.dispose());
+                nodes.push({ mesh, sprite, start: 0.28 + i * (0.6 / NODE_COUNT) });
+            }
+            const start = performance.now();
+            function tick(now) {
+                if (disposed)
+                    return;
+                const t = Math.min((now - start) / DURATION, 1);
+                // Platforms pop in.
+                const platT = easeOutCubic(Math.min(t / 0.22, 1));
+                platformL.scale.setScalar(Math.max(platT, 0.001));
+                platformR.scale.setScalar(Math.max(platT, 0.001));
+                // Cable draws in.
+                const lineT = Math.min(Math.max((t - 0.12) / 0.55, 0), 1);
+                const lineCount = lineT <= 0 ? 0 : Math.max(2, Math.floor(easeOutCubic(lineT) * N) + 1);
+                lineGeo.setDrawRange(0, lineCount);
+                // Nodes light up in sequence.
+                for (const n of nodes) {
+                    const nt = Math.min(Math.max((t - n.start) / 0.22, 0), 1);
+                    const eased = easeOutExpo(nt);
+                    n.mesh.scale.setScalar(Math.max(eased, 0.001));
+                    n.sprite.scale.setScalar(Math.max(eased * 0.9, 0.001));
+                    n.sprite.material.opacity = eased * 0.85;
+                }
+                // Camera drifts around the scene — the "3D" motion.
+                const orbit = THREE.MathUtils.lerp(-0.32, 0.18, easeOutCubic(t));
+                const radius = 7.6;
+                camera.position.set(Math.sin(orbit) * radius, 1.7 + Math.sin(t * Math.PI) * 0.35, Math.cos(orbit) * radius);
+                camera.lookAt(0, 0.25, 0);
+                renderer.render(scene, camera);
+                if (t < 1) {
+                    rafId = requestAnimationFrame(tick);
+                }
+            }
+            rafId = requestAnimationFrame(tick);
+            const doneTimer = setTimeout(finish, DURATION);
+            disposables.push(() => clearTimeout(doneTimer));
+            disposables.push(() => scene.traverse((obj) => {
+                if (obj.geometry)
+                    obj.geometry.dispose?.();
+                if (obj.material)
+                    (Array.isArray(obj.material) ? obj.material : [obj.material]).forEach((m) => m.dispose?.());
+            }));
+        }
+        catch (err) {
+            // Any WebGL/three.js failure (blocked CDN, no WebGL support, etc.)
+            // falls through to Discovery immediately rather than stranding the
+            // user on a broken transition.
+            console.error('IntroBridgeTransition: 3D scene failed, skipping.', err);
+            finish();
+        }
+        return () => {
+            disposed = true;
+            clearTimeout(safetyTimer);
+            cancelAnimationFrame(rafId);
+            disposables.forEach(fn => { try {
+                fn();
+            }
+            catch { } });
+            try {
+                renderer?.dispose();
+            }
+            catch { }
+        };
+    }, []);
+    return React.createElement("canvas", { ref: canvasRef, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' } });
+}
+function IntroBridgeTransition({ active, onComplete }) {
+    return (React.createElement(AnimatePresence, null, active && (React.createElement(motion.div, { style: { position: 'fixed', inset: 0, zIndex: 9998, background: 'var(--paper)', overflow: 'hidden' }, initial: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.25 } },
+        React.createElement(BridgeScene3D, { onDone: onComplete })))));
+}
+
+
 /* ---- App.js ---- */
 function App() {
     const [screen, setScreen] = useState('hero');
@@ -1582,7 +1829,7 @@ function App() {
     const scored = resultsShown ? scoreAll(candidate, explicit, inferred) : [];
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "grid-bg" }),
-        React.createElement(ScanTransition, { active: scanActive, headline: "Hiring that can't see who you are \u2014 only what you can do.", onComplete: handleScanComplete }),
+        React.createElement(IntroBridgeTransition, { active: scanActive, onComplete: handleScanComplete }),
         screen === 'hero' && React.createElement(Hero, { onTryLive: handleTryLive }),
         screen === 'app' && (React.createElement("div", { className: "wrap" },
             React.createElement("header", null,
