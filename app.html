@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bridge — Skills-first matching demo</title>
+<style>
+  :root{
+    --paper:#ECEEE3;
+    --paper-raised:#F8F9F1;
+    --ink:#181F27;
+    --ink-soft:#4B5766;
+    --ink-faint:#7C8895;
+    --line:#D2D5C4;
+    --gold:#AD7C2E;
+    --gold-fill:#C99A3B;
+    --gold-soft:#E9D6AC;
+    --teal:#2C6656;
+    --teal-soft:#CFE3DA;
+    --rust:#A6432F;
+    --rust-soft:#EFD6CE;
+    --shadow: none;
+    --radius: 3px;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark){
+      --paper:#12161B;
+      --paper-raised:#1A2027;
+      --ink:#E9EAE1;
+      --ink-soft:#AEB6BC;
+      --ink-faint:#7C8895;
+      --line:#2B323B;
+      --gold:#D9A94C;
+      --gold-fill:#D9A94C;
+      --gold-soft:#3B3324;
+      --teal:#65B79B;
+      --teal-soft:#1D332C;
+      --rust:#DE8A72;
+      --rust-soft:#3A2521;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#12161B;
+    --paper-raised:#1A2027;
+    --ink:#E9EAE1;
+    --ink-soft:#AEB6BC;
+    --ink-faint:#7C8895;
+    --line:#2B323B;
+    --gold:#D9A94C;
+    --gold-fill:#D9A94C;
+    --gold-soft:#3B3324;
+    --teal:#65B79B;
+    --teal-soft:#1D332C;
+    --rust:#DE8A72;
+    --rust-soft:#3A2521;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height:1.5;
+    min-height:100vh;
+  }
+  h1,h2,h3,.serif{
+    font-family:Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{ font-family:ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", monospace; }
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px 80px;}
+
+  /* ---------- Sticky module nav ---------- */
+  .module-nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; justify-content:center;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    transform:translateY(-100%);
+    transition:transform .18s ease;
+  }
+  .module-nav.visible{transform:translateY(0);}
+  .module-nav a{
+    font-family:inherit; font-size:12.5px; color:var(--ink-faint);
+    text-decoration:none; white-space:nowrap;
+    padding:13px 18px 11px;
+    border-bottom:2px solid transparent;
+  }
+  .module-nav a b{font-weight:600;}
+  .module-nav a:hover{color:var(--ink);}
+  .module-nav a.active{color:var(--ink); border-bottom-color:var(--gold);}
+  @media (max-width:640px){
+    .module-nav{justify-content:flex-start; overflow-x:auto;}
+    .module-nav a{padding:11px 13px 9px; font-size:11.5px;}
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    padding:44px 0 30px;
+    border-bottom:1px solid var(--line);
+  }
+  .brand-row{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
+  header h1{font-size:clamp(32px,5vw,44px); color:var(--ink);}
+  header .dot{color:var(--gold);}
+  .tagline{
+    max-width:56ch;
+    color:var(--ink-soft);
+    font-size:16px;
+    margin-top:10px;
+  }
+  .header-meta{
+    margin-top:18px;
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    font-size:13px;
+    color:var(--ink-faint);
+  }
+  .header-meta span b{color:var(--ink-soft); font-weight:500;}
+
+  .module-tag{
+    font-size:11.5px; color:var(--ink-faint); letter-spacing:0.01em;
+    margin:26px 0 10px;
+  }
+  .module-tag b{color:var(--ink-soft); font-weight:600;}
+
+  .clear-link{
+    background:none; border:none; color:var(--ink-faint);
+    font-size:12px; text-decoration:underline; text-underline-offset:2px;
+    cursor:pointer; padding:0; font-family:inherit;
+  }
+  .clear-link:hover{color:var(--ink);}
+  .persona-head-row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;}
+
+  /* ---------- Workbench ---------- */
+  .workbench{
+    display:grid;
+    grid-template-columns:minmax(280px, 380px) 1fr;
+    gap:0;
+    margin-top:0;
+    border-bottom:1px solid var(--line);
+  }
+  @media (max-width:860px){
+    .workbench{grid-template-columns:1fr;}
+  }
+  .panel{padding:34px 30px;}
+  .panel + .panel{border-left:1px solid var(--line);}
+  @media (max-width:860px){
+    .panel + .panel{border-left:none; border-top:1px solid var(--line);}
+  }
+
+  .panel-label{
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .panel-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  .persona-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;}
+  .persona-chip{
+    border:1px solid var(--line);
+    background:var(--paper-raised);
+    color:var(--ink-soft);
+    padding:7px 13px;
+    border-radius:var(--radius);
+    font-size:13px;
+    font-family:inherit;
+    cursor:pointer;
+    transition:border-color .15s, color .15s;
+  }
+  .persona-chip:hover{border-color:var(--gold);}
+  .persona-chip.active{
+    border-color:var(--gold);
+    color:var(--ink);
+    background:var(--gold-soft);
+    font-weight:500;
+  }
+
+  textarea{
+    width:100%;
+    min-height:172px;
+    resize:vertical;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    color:var(--ink);
+    font-family:inherit;
+    font-size:14px;
+    line-height:1.55;
+    padding:12px 13px;
+  }
+  textarea:focus, input:focus, button:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:1px;
+  }
+
+  .field-row{
+    display:flex;
+    gap:16px;
+    margin-top:16px;
+    flex-wrap:wrap;
+  }
+  .field{display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-soft);}
+  .field input[type="number"]{
+    width:84px;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:7px 9px;
+    color:var(--ink);
+    font-family:inherit;
+    font-size:14px;
+  }
+  .field input[type="text"]{
+    width:100%;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:7px 9px;
+    color:var(--ink);
+    font-family:inherit;
+    font-size:14px;
+    box-sizing:border-box;
+  }
+  .architect-note{font-size:12px; color:var(--ink-faint); margin:10px 0 16px; line-height:1.5;}
+  .verify-block{
+    margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);
+    font-size:12.5px; color:var(--ink-soft); line-height:1.5;
+  }
+  .verify-block b{color:var(--ink);}
+  .ats-block{
+    margin-top:8px; padding:10px 12px; background:var(--paper-raised);
+    border:1px solid var(--line); border-radius:var(--radius);
+    font-size:12.5px; color:var(--ink-soft); line-height:1.5;
+  }
+  .ats-block .ats-line{font-family:Georgia,serif; color:var(--ink); font-style:italic;}
+  .check-field{
+    display:flex; align-items:center; gap:7px;
+    font-size:13px; color:var(--ink-soft);
+    cursor:pointer;
+    margin-top:16px;
+  }
+  .check-field input{accent-color:var(--gold);}
+
+  .analyze-btn{
+    margin-top:22px;
+    width:100%;
+    padding:13px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    border-radius:var(--radius);
+    font-family:inherit;
+    font-size:14.5px;
+    font-weight:500;
+    cursor:pointer;
+    transition:opacity .15s;
+  }
+  .analyze-btn:hover{opacity:.85;}
+
+  .btn-primary{
+    padding:9px 18px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    border-radius:var(--radius);
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:500;
+    cursor:pointer;
+    transition:opacity .15s;
+    white-space:nowrap;
+  }
+  .btn-primary:hover{opacity:.85;}
+  .btn-primary:disabled{opacity:.5; cursor:default;}
+  :root[data-theme="dark"] .analyze-btn, body:has([data-theme]) .analyze-btn{}
+
+  .note{font-size:12px; color:var(--ink-faint); margin-top:10px; line-height:1.5;}
+
+  /* ---------- Graph panel ---------- */
+  .graph-head{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:6px;}
+  .legend{display:flex; gap:16px; font-size:12px; color:var(--ink-faint); flex-wrap:wrap;}
+  .legend span{display:flex; align-items:center; gap:6px;}
+  .legend i{width:10px; height:10px; border-radius:50%; display:inline-block;}
+  .legend .dot-explicit{background:var(--gold-fill);}
+  .legend .dot-inferred{background:transparent; border:1.5px dashed var(--gold);}
+  .legend .dot-gap{background:var(--rust-soft); border:1.3px dashed var(--rust);}
+
+  .gap-select-row{
+    display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+    margin:14px 0 4px; font-size:13px; color:var(--ink-soft);
+  }
+  .gap-select-row select{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:6px 9px;
+    color:var(--ink);
+    font-family:inherit;
+    font-size:13px;
+  }
+  #gap-summary{font-size:12px; color:var(--rust);}
+
+  #graph-svg{width:100%; height:380px; display:block;}
+  @media (max-width:860px){
+    #graph-svg{
+      width:100vw; max-width:100vw;
+      position:relative; left:50%; right:50%;
+      margin-left:-50vw; margin-right:-50vw;
+    }
+  }
+  .node-label{
+    font-family:inherit; font-size:11px; fill:var(--ink-soft); pointer-events:none;
+  }
+  .link-line{stroke:var(--line); stroke-width:1.3;}
+  .node-circle{cursor:pointer;}
+
+  #rationale{
+    margin-top:10px;
+    min-height:44px;
+    padding:12px 14px;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  #rationale b{color:var(--ink); font-weight:600;}
+  #rationale .empty{color:var(--ink-faint); font-style:italic;}
+
+  /* ---------- Results ---------- */
+  .results-head{padding:38px 0 10px;}
+  .results-head h2{font-size:26px;}
+  .results-sub{color:var(--ink-soft); font-size:14.5px; margin-top:8px; max-width:70ch;}
+
+  .stat-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin:26px 0 34px;
+  }
+  @media (max-width:600px){
+    .stat-row{grid-template-columns:1fr;}
+  }
+  .stat{
+    background:var(--paper);
+    padding:22px 22px 20px;
+  }
+  .stat .num{font-family:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif; font-size:44px; font-weight:600; line-height:1;}
+  .stat .num.rust{color:var(--rust);}
+  .stat .num.teal{color:var(--teal);}
+  .stat .num.gold{color:var(--gold);}
+  .stat .cap{font-size:13px; color:var(--ink-soft); margin-top:8px; max-width:32ch;}
+
+  .job-row{
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+    display:grid;
+    grid-template-columns:26px 1.5fr 1fr;
+    gap:22px;
+    align-items:start;
+  }
+  @media (max-width:760px){
+    .job-row{grid-template-columns:1fr; gap:10px;}
+    .job-rank{display:none;}
+  }
+  .job-rank{
+    font-family:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif; color:var(--ink-faint); font-size:18px; padding-top:2px;
+  }
+  .job-title{font-size:16.5px; font-weight:600; font-family:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif;}
+  .job-meta{font-size:12.5px; color:var(--ink-faint); margin-top:4px;}
+  .job-desc{
+    font-size:13px; color:var(--ink-soft); margin-top:10px; max-width:62ch; line-height:1.6;
+  }
+  .job-desc mark{
+    background:var(--rust-soft); color:var(--rust); padding:0 3px; border-radius:2px; font-weight:500;
+  }
+
+  .verdict-block{margin-bottom:12px;}
+  .verdict-label{font-size:11.5px; color:var(--ink-faint); margin-bottom:5px;}
+  .verdict-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:13px; font-weight:600; padding:4px 10px 4px 8px;
+    border-radius:20px;
+  }
+  .verdict-badge.pass{color:var(--teal); background:var(--teal-soft);}
+  .verdict-badge.reject{color:var(--rust); background:var(--rust-soft);}
+  .verdict-badge .icon{font-size:12px;}
+
+  @keyframes pulse-ring{
+    0%,100%{ stroke-opacity:1; }
+    50%{ stroke-opacity:.35; }
+  }
+  .inferred-node{ animation: pulse-ring 2.4s ease-in-out infinite; }
+
+  #status-line{
+    margin-top:14px; font-size:12.5px; color:var(--ink-soft);
+    display:none; align-items:center; gap:8px;
+  }
+  #status-line.active{display:flex;}
+  .spinner{
+    width:13px; height:13px; border-radius:50%;
+    border:2px solid var(--line); border-top-color:var(--gold);
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .verdict-reasons{
+    font-size:12px; color:var(--ink-faint); margin-top:4px; line-height:1.55;
+  }
+
+  .bar-track{
+    height:8px; background:var(--paper-raised); border:1px solid var(--line);
+    border-radius:20px; overflow:hidden; margin-top:6px; position:relative;
+  }
+  .bar-fill{height:100%; background:var(--teal);}
+  .bar-fill.low{background:var(--ink-faint);}
+  .bar-pct{font-family:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif; font-size:19px; font-weight:600;}
+
+  .breakdown-toggle{
+    background:none; border:none; color:var(--ink-soft);
+    font-size:12px; text-decoration:underline; text-underline-offset:2px;
+    cursor:pointer; padding:0; margin-top:10px; font-family:inherit;
+  }
+  .breakdown-toggle:hover{color:var(--ink);}
+  .breakdown-panel{
+    display:none; margin-top:10px; padding:11px 13px;
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius);
+  }
+  .breakdown-row{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:6px 0; border-bottom:1px solid var(--line); font-size:12.5px;
+    flex-wrap:wrap;
+  }
+  .breakdown-row:last-child{border-bottom:none;}
+  .breakdown-row .sk-name{color:var(--ink);}
+  .breakdown-row .req-tag{font-size:10.5px; color:var(--ink-faint); margin-left:5px;}
+  .breakdown-right{display:flex; align-items:center; gap:8px;}
+  .sk-tag{
+    font-size:11px; padding:2px 8px; border-radius:20px; white-space:nowrap;
+  }
+  .sk-tag.explicit{background:var(--gold-soft); color:var(--gold);}
+  .sk-tag.inferred{background:var(--paper); color:var(--gold); border:1px dashed var(--gold);}
+  .sk-tag.missing{background:var(--rust-soft); color:var(--rust);}
+  .sk-pts{font-size:11px; color:var(--ink-faint); min-width:44px; text-align:right;}
+
+  /* ---------- Ghost Resume panel ---------- */
+  .ghost-panel{border:1px solid var(--line); margin:20px 0 12px;}
+  .ghost-grid{display:grid; grid-template-columns:1fr auto 1fr;}
+  @media (max-width:760px){
+    .ghost-grid{grid-template-columns:1fr;}
+    .ghost-divider{width:auto !important; height:1px;}
+  }
+  .ghost-card{padding:24px;}
+  .ghost-card .id-eyebrow{font-size:11px; color:var(--ink-faint); margin-bottom:12px;}
+  .ghost-card .id-row{font-size:14.5px; margin-bottom:7px; color:var(--ink-soft);}
+  .ghost-card .id-row b{color:var(--ink); font-weight:600;}
+  .ghost-divider{width:1px; background:var(--line);}
+  .ghost-center{
+    padding:24px; text-align:center; display:flex; flex-direction:column;
+    justify-content:center; align-items:center; background:var(--teal-soft);
+    min-width:170px;
+  }
+  .ghost-center .ghost-num{font-family:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif; font-size:36px; font-weight:600; color:var(--teal); line-height:1;}
+  .ghost-center .ghost-cap{font-size:11.5px; color:var(--ink-soft); margin-top:9px; max-width:24ch; line-height:1.5;}
+  .ghost-note{
+    padding:16px 24px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--ink-faint); line-height:1.6;
+  }
+  .ghost-note b{color:var(--ink-soft);}
+  .ghost-empty{padding:24px; font-size:13.5px; color:var(--ink-faint);}
+
+  footer{
+    margin-top:44px;
+    padding-top:22px;
+    border-top:1px solid var(--line);
+    font-size:12.5px;
+    color:var(--ink-faint);
+    line-height:1.7;
+    max-width:78ch;
+  }
+  footer b{color:var(--ink-soft);}
+</style>
+</head>
+<body>
+<nav class="module-nav" id="module-nav">
+  <a href="/" style="border-right:1px solid var(--line);">&larr; Bridge</a>
+  <a href="#module-1" data-nav="1"><b>1</b> Discovery</a>
+  <a href="#module-2" data-nav="2"><b>2</b> Matching</a>
+  <a href="#module-3" data-nav="3"><b>3</b> Audit</a>
+  <a href="#module-4" data-nav="4"><b>4</b> Pathway</a>
+</nav>
+<div class="wrap">
+
+  <header>
+    <div class="brand-row">
+      <h1><a href="/" style="text-decoration:none; color:inherit;">Bridge<span class="dot">.</span></a></h1>
+    </div>
+    <p class="tagline">A skills-first matching demo. Paste a resume, watch it get read two ways — once by a literal keyword scanner, once by a skills graph that infers adjacent capability — and see where the two disagree.</p>
+    <div class="header-meta">
+      <span><b>Module 1</b> — Skills discovery</span>
+      <span><b>Module 2</b> — Inclusive matching</span>
+      <span><b>Module 3</b> — Bias audit</span>
+      <span><b>Module 4</b> — Learning pathway</span>
+    </div>
+  </header>
+
+  <div class="module-tag" id="module-1"><b>Module 1</b> — Skills discovery</div>
+  <div class="workbench">
+    <div class="panel">
+      <div class="persona-head-row">
+        <div class="panel-label" style="margin-bottom:0; flex:1;">Candidate</div>
+        <button class="clear-link" id="clear-btn" type="button">Clear</button>
+      </div>
+
+      <div class="persona-row" id="persona-row"></div>
+
+      <textarea id="resume-text" spellcheck="false"></textarea>
+
+      <div class="field-row">
+        <label class="field">Years experience
+          <input type="number" id="years-input" min="0" max="40" value="0">
+        </label>
+      </div>
+      <label class="check-field"><input type="checkbox" id="degree-input"> Has a bachelor's degree on file</label>
+      <label class="check-field"><input type="checkbox" id="gap-input"> Employment gap in last 3 years</label>
+
+      <button class="analyze-btn" id="analyze-btn">Analyze candidate</button>
+      <div id="status-line"><span class="spinner"></span><span id="status-text">Reading resume text…</span></div>
+      <div id="backend-indicator" style="font-size:12px; color:#7C8895; margin-top:6px;"></div>
+      <p class="note">Skills are extracted from the text above using a keyword + adjacency model. Experience, degree, and gap are set explicitly here rather than parsed, so the demo stays predictable on stage.</p>
+    </div>
+
+    <div class="panel">
+      <div class="graph-head">
+        <div class="panel-label" style="flex:1;">Inferred skills graph</div>
+      </div>
+      <div class="legend">
+        <span><i class="dot-explicit"></i> Stated in the text</span>
+        <span><i class="dot-inferred"></i> Inferred capability</span>
+        <span><i class="dot-gap"></i> Missing for selected role</span>
+      </div>
+      <div class="gap-select-row">
+        <label for="gap-job-select">Show gaps against</label>
+        <select id="gap-job-select">
+          <option value="-1">No role selected</option>
+        </select>
+        <span id="gap-summary"></span>
+      </div>
+      <svg id="graph-svg"></svg>
+      <div id="rationale"><span class="empty">Click a node to see why it's on the graph.</span></div>
+    </div>
+  </div>
+
+  <div class="module-tag" id="module-2"><b>Module 2</b> — Inclusive matching &nbsp;·&nbsp; <b>Module 3</b> — Bias audit</div>
+  <div class="results-head">
+    <h2>Match &amp; audit</h2>
+    <p class="results-sub">Every role below is scored two ways: a traditional ATS pass, which only looks for the literal required keyword in the text, and a skills-based score, which counts anything explicit or inferred on the graph. Ranked by skills-based score.</p>
+  </div>
+
+  <div class="stat-row" id="stat-row"></div>
+
+  <div id="job-list"></div>
+
+  <div class="module-tag" id="module-2b"><b>Module 2B</b> — Role Architect (define your own role)</div>
+  <div class="panel" id="architect-panel">
+    <div class="panel-label" style="margin-bottom:0;">Build a custom role</div>
+    <p class="architect-note">Define required and preferred skills for a role of your own, and score the current candidate against it using the exact same engine as every role above. This role is scored live for this candidate only — it is never added to the fairness-audit matrix in Module 3.</p>
+    <div class="field-row">
+      <label class="field" style="flex:2; min-width:220px;">Role title
+        <input type="text" id="arch-title" placeholder="e.g. Data Platform Analyst">
+      </label>
+      <label class="field">Min years
+        <input type="number" id="arch-years" min="0" max="40" value="0">
+      </label>
+    </div>
+    <div class="field-row">
+      <label class="field" style="flex:1; min-width:220px;">Required skills (comma-separated)
+        <input type="text" id="arch-required" placeholder="e.g. SQL, Excel, Data Analysis">
+      </label>
+      <label class="field" style="flex:1; min-width:220px;">Preferred skills (comma-separated)
+        <input type="text" id="arch-preferred" placeholder="e.g. Python, Communication">
+      </label>
+    </div>
+    <label class="check-field"><input type="checkbox" id="arch-degree"> Requires a bachelor's degree</label>
+    <label class="check-field"><input type="checkbox" id="arch-gap"> Employment-gap policy disqualifies</label>
+    <button class="btn-primary" id="arch-score-btn" type="button" style="margin-top:18px;">Score current candidate against this role</button>
+    <div id="arch-result" style="margin-top:14px;"></div>
+  </div>
+
+  <div class="module-tag" id="module-3"><b>Module 3</b> — Bias audit, continued: an identity-blind check</div>
+  <div class="results-head">
+    <h2>Fairness check</h2>
+    <p class="results-sub">Same resume text, different identity. The fields below are display-only — the scoring engine only ever reads the text in the candidate box above, so it never sees a name, a college's reputation, or a pronoun.</p>
+  </div>
+  <div class="ghost-panel" id="ghost-panel"></div>
+
+  <footer>
+    <b>How this demo works —</b> skill extraction and job scoring run on a deterministic rule engine (a ~30-node skills dictionary with weighted adjacency), not a live model call, so results are exactly reproducible in front of judges. The production version of Bridge replaces this layer with an LLM-driven skills inference agent (voice narratives, GitHub code analysis, synthetic skill validation) sitting behind the same three-module contract shown here — Discovery, Matching, Audit — so the interface and the bias-audit logic don't have to change when the inference engine does.
+  </footer>
+
+</div>
+
+<script>
+/* ============ DATA ============ */
+const SKILLS = [
+  {id:'python', name:'Python', aliases:['python']},
+  {id:'javascript', name:'JavaScript', aliases:['javascript','js']},
+  {id:'react', name:'React', aliases:['react','react.js','reactjs']},
+  {id:'nodejs', name:'Node.js', aliases:['node.js','nodejs','node']},
+  {id:'html', name:'HTML', aliases:['html']},
+  {id:'css', name:'CSS', aliases:['css']},
+  {id:'git', name:'Git', aliases:['git','github','version control']},
+  {id:'sql', name:'SQL', aliases:['sql']},
+  {id:'excel', name:'Excel', aliases:['excel','google sheets','spreadsheet','spreadsheets']},
+  {id:'data_analysis', name:'Data Analysis', aliases:['data analysis','analyzing data','analysed data','analyzed data']},
+  {id:'statistics', name:'Statistics', aliases:['statistics','statistical analysis']},
+  {id:'data_viz', name:'Data Visualization', aliases:['data visualization','dashboards']},
+  {id:'ml', name:'Machine Learning', aliases:['machine learning']},
+  {id:'agile', name:'Agile/Scrum', aliases:['agile','scrum']},
+  {id:'project_mgmt', name:'Project Management', aliases:['project management','managing projects']},
+  {id:'stakeholder_comm', name:'Stakeholder Communication', aliases:['stakeholder communication','coordinating stakeholders']},
+  {id:'scheduling', name:'Scheduling', aliases:['scheduling','coordinating appointments','coordinating schedules']},
+  {id:'budget_mgmt', name:'Budget Management', aliases:['budget management','household budget','managing a budget']},
+  {id:'crisis_mgmt', name:'Crisis Management', aliases:['crisis management','under pressure','fast decisions','high-pressure']},
+  {id:'resource_prior', name:'Resource Prioritization', aliases:['resource prioritization','prioritizing resources','prioritization']},
+  {id:'communication', name:'Communication', aliases:['communication','communicating']},
+  {id:'leadership', name:'Leadership', aliases:['leadership','mentoring','led a team','leading a team']},
+  {id:'uiux', name:'UI/UX', aliases:['ui/ux','user experience','ui design']},
+  {id:'component_arch', name:'Component Architecture', aliases:['componentized','component-based','component architecture']},
+  {id:'rest_api', name:'REST APIs', aliases:['rest api','rest apis']},
+  {id:'aws', name:'AWS', aliases:['aws']},
+  {id:'docker', name:'Docker', aliases:['docker','containers']},
+  {id:'automation', name:'Automation', aliases:['automate','automation','automated']},
+];
+const ADJ = [
+  ['python','data_analysis',0.65],['python','automation',0.6],['python','ml',0.5],
+  ['react','javascript',0.95],['react','html',0.85],['react','css',0.85],
+  ['react','component_arch',0.8],['react','uiux',0.55],
+  ['nodejs','javascript',0.9],['nodejs','rest_api',0.7],
+  ['data_analysis','statistics',0.6],['data_analysis','sql',0.5],
+  ['data_analysis','data_viz',0.55],['data_analysis','excel',0.4],
+  ['excel','data_analysis',0.4],
+  ['crisis_mgmt','project_mgmt',0.6],['crisis_mgmt','stakeholder_comm',0.65],['crisis_mgmt','resource_prior',0.75],
+  ['scheduling','stakeholder_comm',0.55],['scheduling','project_mgmt',0.5],
+  ['budget_mgmt','resource_prior',0.6],['budget_mgmt','project_mgmt',0.45],
+  ['resource_prior','project_mgmt',0.55],
+  ['automation','data_analysis',0.4],
+].map(([from,to,w])=>({from,to,w}));
+
+// Verification Toolkit + Proof-of-Skill: one tailored pair per adjacency edge,
+// so every inferred skill comes with a way to actually check it, not a
+// generic mad-lib. Keyed 'from|to' to match an {from,id} inferred-skill pair.
+const VERIFY_MAP = {
+  'python|data_analysis': { q:"Ask them to walk through a specific Python script or notebook where they cleaned or analyzed a real dataset — what did the data look like, and what did they conclude from it?", p:"Ask for a link to the script/notebook, or a before/after look at the dataset they cleaned." },
+  'python|automation': { q:"Ask what repetitive task they automated with Python, how long it used to take by hand, and how much time it saved.", p:"Ask for the script itself, or a short before/after description of the manual process it replaced." },
+  'python|ml': { q:"Ask whether any of their Python work touched a predictive or classification model — even a simple one — and what problem it solved.", p:"Ask for the notebook, or a one-paragraph write-up of the model's inputs and accuracy." },
+  'react|javascript': { q:"Ask them to describe a JavaScript concept (closures, async/await, state updates) they had to reason about carefully while building their React app.", p:"Ask for a link to the deployed app or repo, plus one tricky bug they remember fixing." },
+  'react|html': { q:"Ask how they structure and semantically mark up a page before adding React components on top of it.", p:"Ask for a screenshot of a component's rendered markup, or an accessibility/Lighthouse score." },
+  'react|css': { q:"Ask how they approach responsive styling in a React app — CSS modules, a utility framework, or plain CSS — and why.", p:"Ask for a live link to a page they styled, viewed on both desktop and mobile." },
+  'react|component_arch': { q:"Ask them to describe how they split one of their React apps into components, and why they drew the boundaries where they did.", p:"Ask for a component-tree sketch or a quick look at the repo's folder structure." },
+  'react|uiux': { q:"Ask what user feedback or usability issue shaped a design decision in one of their React interfaces.", p:"Ask for a before/after screenshot, or the wireframe they built from." },
+  'nodejs|javascript': { q:"Ask them to describe one way Node.js's runtime behaves differently from browser JavaScript, in the context of something they built.", p:"Ask for a link to a repo showing their Node.js code." },
+  'nodejs|rest_api': { q:"Ask them to describe an endpoint they built in Node.js — its inputs, outputs, and one edge case they had to handle.", p:"Ask for API docs, a Postman collection, or a live demo of the endpoint responding to a request." },
+  'data_analysis|statistics': { q:"Ask what statistical method (an average, a correlation, a significance test) they used to support a conclusion from their analysis.", p:"Ask for the chart or summary table that used that method." },
+  'data_analysis|sql': { q:"Ask whether any of their analysis pulled from a database, and what a query they wrote looked like.", p:"Ask them to sketch or describe one SQL query from memory." },
+  'data_analysis|data_viz': { q:"Ask what chart type they chose to represent a finding, and why that type over another.", p:"Ask for a screenshot of a chart or dashboard they built." },
+  'data_analysis|excel': { q:"Ask whether their analysis happened in a spreadsheet, and what formulas or pivot tables it relied on.", p:"Ask for a (redacted) screenshot of the formula bar or a pivot table behind it." },
+  'excel|data_analysis': { q:"Ask what conclusion they drew from a workbook, and how they'd double-check it wasn't a spreadsheet error.", p:"Ask for a screenshot of the summary tab or pivot table behind that conclusion." },
+  'crisis_mgmt|project_mgmt': { q:"Ask how they kept a project on track while also handling the high-pressure situation they described.", p:"Ask for a timeline, task list, or plan they kept during that period." },
+  'crisis_mgmt|stakeholder_comm': { q:"Ask who they had to keep informed during that high-pressure period, and how often.", p:"Ask for an example update or message from that time, names redacted." },
+  'crisis_mgmt|resource_prior': { q:"Ask them to walk through a moment where they had to choose between two competing needs under pressure, and how they decided.", p:"Ask for that specific example, with the reasoning behind the trade-off." },
+  'scheduling|stakeholder_comm': { q:"Ask how they coordinated schedules across multiple people, and what they did when two commitments conflicted.", p:"Ask for a redacted screenshot of a calendar or scheduling tool they used." },
+  'scheduling|project_mgmt': { q:"Ask what tool or system they used to track scheduling across a project, and one deadline they had to move.", p:"Ask for a redacted screenshot of the tracker or calendar." },
+  'budget_mgmt|resource_prior': { q:"Ask about a time the budget was tighter than planned, and what they cut or delayed as a result.", p:"Ask for a (redacted) budget sheet, or a short written account of the trade-off." },
+  'budget_mgmt|project_mgmt': { q:"Ask how they tracked spend against a plan, and what they did when a cost ran over.", p:"Ask for a redacted budget tracker, or a summary of the overage and the fix." },
+  'resource_prior|project_mgmt': { q:"Ask for an example of reprioritizing a project's task list when resources suddenly got tight.", p:"Ask for the before/after task list or plan." },
+  'automation|data_analysis': { q:"Ask what data the automation they built touched, and what it let them analyze that manual work didn't.", p:"Ask for the script, plus a one-line description of what it outputs." },
+};
+function verifyFor(fromId, toId){
+  return VERIFY_MAP[fromId+'|'+toId] || {
+    q:`Ask for a specific example that shows both ${byId[fromId] ? byId[fromId].name : fromId} and this capability together — inference is a hint, not proof.`,
+    p:`Ask for a concrete artifact (a file, link, or screenshot) that demonstrates it directly.`
+  };
+}
+
+// ATS Translator: one example resume-line per skill, phrased with the
+// literal keyword an ATS keyword-scanner is looking for.
+const ATS_HINTS = {
+  python:"Automated recurring tasks and analyzed datasets using Python.",
+  javascript:"Built interactive product features using JavaScript.",
+  react:"Developed component-based user interfaces using React.",
+  nodejs:"Built backend services and REST APIs using Node.js.",
+  html:"Built responsive page markup using HTML.",
+  css:"Styled responsive interfaces using CSS.",
+  git:"Managed version control and collaborative workflows using Git.",
+  sql:"Queried and filtered structured data using SQL.",
+  excel:"Built reporting workflows and tracked data using Excel.",
+  data_analysis:"Analyzed datasets to surface trends through Data Analysis.",
+  statistics:"Applied Statistics to validate trends in operational data.",
+  data_viz:"Built dashboards and charts for Data Visualization of key metrics.",
+  ml:"Applied Machine Learning to a classification or prediction problem.",
+  agile:"Worked within Agile/Scrum sprints to plan and deliver features.",
+  project_mgmt:"Managed a cross-functional project end-to-end, i.e. Project Management.",
+  stakeholder_comm:"Coordinated regularly with stakeholders to align priorities (Stakeholder Communication).",
+  scheduling:"Managed complex, multi-party Scheduling across teams or specialists.",
+  budget_mgmt:"Tracked spend against a plan, i.e. Budget Management.",
+  crisis_mgmt:"Made fast decisions under pressure during a high-stakes situation (Crisis Management).",
+  resource_prior:"Prioritized limited resources across competing needs (Resource Prioritization).",
+  communication:"Communicated updates clearly across technical and non-technical audiences.",
+  leadership:"Led and mentored a team, i.e. Leadership.",
+  uiux:"Designed user flows and interfaces with UI/UX best practices in mind.",
+  component_arch:"Built reusable, componentized architecture (Component Architecture).",
+  rest_api:"Designed and integrated REST APIs.",
+  aws:"Deployed and managed services on AWS.",
+  docker:"Containerized services using Docker.",
+  automation:"Built scripts to automate a repetitive workflow (Automation).",
+};
+
+const byId = Object.fromEntries(SKILLS.map(s=>[s.id,s]));
+const byName = Object.fromEntries(SKILLS.map(s=>[s.name.toLowerCase(), s.id]));
+
+const JOBS = [
+  {name:'Data Analyst', company:'Healthcare Analytics Co.', required:['SQL','Excel','Data Analysis','Statistics'], preferred:['Python','Data Visualization'], minYears:2, degreeRequired:true, gapPolicy:true,
+   desc:"We're looking for a rockstar Data Analyst to join our fast-paced healthcare analytics team. Bachelor's degree required. Candidates must have a continuous work history with no employment gaps in the last 3 years. 2+ years experience with SQL, Excel, and statistical analysis required.",
+   flags:['rockstar','fast-paced','continuous work history']},
+  {name:'Frontend Developer', company:'Nimbus Retail Tech', required:['JavaScript','React','HTML','CSS'], preferred:['Node.js','UI/UX'], minYears:3, degreeRequired:true, gapPolicy:false,
+   desc:"Looking for a coding ninja who's a true digital native. Must have a B.Tech/BE degree and 3+ years of professional experience with JavaScript, React, HTML, and CSS.",
+   flags:['coding ninja','digital native']},
+  {name:'Junior Data Analyst (Remote)', company:'Meridian Insights', required:['Data Analysis','Excel'], preferred:['SQL','Python','Communication'], minYears:0, degreeRequired:false, gapPolicy:false,
+   desc:"We welcome applicants from all educational backgrounds and career paths, including those returning after a career break. 0–1 years experience welcome; on-the-job training provided.",
+   flags:[]},
+  {name:'Project Coordinator', company:'Lighthouse Health Systems', required:['Project Management','Stakeholder Communication','Scheduling'], preferred:['Budget Management','Crisis Management'], minYears:2, degreeRequired:false, gapPolicy:true,
+   desc:"Seeking an organized Project Coordinator. Must have no employment gaps in the last 3 years. 2+ years managing projects, coordinating stakeholders, and scheduling required.",
+   flags:['no employment gaps']},
+  {name:'Backend Engineer', company:'Forge Cloud Systems', required:['JavaScript','Node.js','Git','SQL'], preferred:['REST APIs','Docker','AWS'], minYears:2, degreeRequired:true, gapPolicy:false,
+   desc:"Join our elite engineering team as a 10x Backend Engineer. Bachelor's in CS required. 2+ years with JavaScript, Node.js, Git, and SQL.",
+   flags:['elite','10x']},
+  {name:'Customer Insights Associate', company:'Bridgewell Analytics', required:['Data Analysis','Communication'], preferred:['SQL','Excel'], minYears:1, degreeRequired:false, gapPolicy:false,
+   desc:"An entry-friendly analyst role. No specific degree required — we care about how you think about data. 1+ years of relevant experience, formal or informal.",
+   flags:[]},
+  {name:'DevOps Engineer', company:'Forge Cloud Systems', required:['Git','Docker','AWS'], preferred:['Automation','REST APIs'], minYears:2, degreeRequired:false, gapPolicy:false,
+   desc:"Keep our deployment pipelines and cloud infrastructure running smoothly. No specific degree required — we care about hands-on experience. 2+ years working with Git, Docker, and AWS.",
+   flags:[]},
+  {name:'Product Designer', company:'Nimbus Retail Tech', required:['UI/UX','Communication'], preferred:['Component Architecture','Data Analysis'], minYears:1, degreeRequired:false, gapPolicy:false,
+   desc:"Looking for a designer who can turn user feedback into clean, usable interfaces. No specific design pedigree required — we care about your process. 1+ years designing for real users.",
+   flags:[]},
+  {name:'Machine Learning Associate', company:'Bridgewell Analytics', required:['Python','Machine Learning'], preferred:['Data Analysis','Statistics'], minYears:1, degreeRequired:true, gapPolicy:false,
+   desc:"Support our data science team building and evaluating predictive models. Bachelor's degree required. 1+ years of hands-on Python and machine learning experience.",
+   flags:[]},
+  {name:'Operations Program Lead', company:'Lighthouse Health Systems', required:['Leadership','Resource Prioritization','Budget Management'], preferred:['Crisis Management','Agile/Scrum'], minYears:3, degreeRequired:false, gapPolicy:true,
+   desc:"Seeking a Program Lead who can juggle competing priorities and keep a budget on track under pressure. Must have no employment gaps in the last 3 years. 3+ years leading programs, managing budgets, and prioritizing resources.",
+   flags:['no employment gaps']},
+  {name:'Scrum Master', company:'Orbital Cloud Works', required:['Agile/Scrum','Stakeholder Communication'], preferred:['Project Management','Leadership'], minYears:2, degreeRequired:false, gapPolicy:false,
+   desc:"Facilitate sprints and keep cross-functional teams aligned. No specific certification required — we care about how you run a room. 2+ years working in Agile/Scrum environments.",
+   flags:[]},
+  {name:'Full-Stack Engineer', company:'Nimbus Retail Tech', required:['JavaScript','React','Node.js'], preferred:['REST APIs','Component Architecture'], minYears:3, degreeRequired:true, gapPolicy:false,
+   desc:"Join our elite full-stack squad shipping features end to end. Bachelor's in CS required. 3+ years across JavaScript, React, and Node.js.",
+   flags:['elite']},
+  {name:'Business Intelligence Analyst', company:'Healthcare Analytics Co.', required:['SQL','Data Visualization'], preferred:['Excel','Statistics'], minYears:2, degreeRequired:true, gapPolicy:true,
+   desc:"Build dashboards that leadership actually reads. Bachelor's degree required. Candidates must have no employment gaps in the last 3 years. 2+ years with SQL and dashboarding tools.",
+   flags:['no employment gaps']},
+  {name:'Cloud Infrastructure Automation Engineer', company:'Forge Cloud Systems', required:['Automation','AWS'], preferred:['Docker','Git'], minYears:2, degreeRequired:false, gapPolicy:false,
+   desc:"We're a lean team obsessed with automating away toil. Must be a 10x self-starter. 2+ years automating cloud infrastructure.",
+   flags:['10x','self-starter']},
+  {name:'Community Operations Coordinator', company:'Lighthouse Health Systems', required:['Scheduling','Crisis Management'], preferred:['Stakeholder Communication','Budget Management'], minYears:1, degreeRequired:false, gapPolicy:false,
+   desc:"Keep community programs running when things get chaotic. We welcome applicants from all backgrounds, including career-break returners. 1+ years coordinating under pressure.",
+   flags:[]},
+  {name:'Junior Frontend Developer', company:'Meridian Insights', required:['HTML','CSS'], preferred:['JavaScript','React'], minYears:0, degreeRequired:false, gapPolicy:false,
+   desc:"Entry point into frontend work — no professional experience required, just a portfolio and curiosity. 0+ years, on-the-job mentorship provided.",
+   flags:[]},
+  {name:'QA & Release Automation Engineer', company:'Bridgewell Analytics', required:['Automation','Git'], preferred:['Python','REST APIs'], minYears:2, degreeRequired:true, gapPolicy:false,
+   desc:"Own our test automation and release pipeline. Bachelor's degree required. 2+ years automating QA workflows.",
+   flags:[]},
+  {name:'Data Visualization Specialist', company:'Healthcare Analytics Co.', required:['Data Visualization','Data Analysis'], preferred:['SQL','Excel'], minYears:1, degreeRequired:false, gapPolicy:false,
+   desc:"Turn messy datasets into charts people actually understand. No design degree required. 1+ years building dashboards or reports.",
+   flags:[]},
+  {name:'Engineering Team Lead', company:'Forge Cloud Systems', required:['Leadership','Node.js','Git'], preferred:['Agile/Scrum','REST APIs'], minYears:4, degreeRequired:true, gapPolicy:false,
+   desc:"Lead a small team of backend engineers as a true 10x tech lead. Bachelor's in CS required. 4+ years, including people leadership.",
+   flags:['10x']},
+  {name:'Grants & Budget Coordinator', company:'Lighthouse Health Systems', required:['Budget Management','Communication'], preferred:['Scheduling','Resource Prioritization'], minYears:1, degreeRequired:false, gapPolicy:true,
+   desc:"Track program budgets and communicate spend to stakeholders. Must have no employment gaps in the last 3 years. 1+ years managing a budget.",
+   flags:['no employment gaps']},
+  {name:'UX Researcher', company:'Nimbus Retail Tech', required:['UI/UX','Data Analysis'], preferred:['Communication','Statistics'], minYears:2, degreeRequired:true, gapPolicy:false,
+   desc:"Study how real users struggle with our product and turn it into design decisions. Bachelor's degree required. 2+ years of UX research or related analysis.",
+   flags:[]},
+  {name:'Platform Reliability Engineer', company:'Forge Cloud Systems', required:['Docker','AWS','Automation'], preferred:['Python','Git'], minYears:3, degreeRequired:false, gapPolicy:false,
+   desc:"Keep production reliable at 3am too. No specific degree required — we care about incident scars. 3+ years running production infrastructure.",
+   flags:[]},
+];
+
+const PERSONAS = {
+  priya: {
+    label:'Sadie',
+    text:"I have a Bachelor's degree from a state college in Tamil Nadu. After graduating, I worked for one year as a data entry associate at a small logistics firm, where I organized shipment records in Google Sheets and flagged discrepancies for the operations team. I took a two-year career gap to coordinate my mother's cancer treatment — managing a household budget, scheduling appointments across multiple specialists, and making fast decisions under pressure. During this time I also completed three online courses in Python programming and data analysis fundamentals, and built small scripts to automate my own expense tracking. I am now looking to return to a data-focused role.",
+    years:1, hasDegree:true, hadGap:true
+  },
+  arjun: {
+    label:'Emma',
+    text:"I am a self-taught software developer. I don't hold a formal computer science degree — I learned programming through freelance projects and open-source contributions on GitHub. Over the past two years I've built and shipped three React web applications, including an e-commerce dashboard. I write clean, componentized JavaScript, use Git for version control, and have started exploring Node.js for backend APIs. I'm comfortable with HTML and CSS and enjoy solving tricky UI bugs.",
+    years:2, hasDegree:false, hadGap:false
+  },
+  rahul: {
+    label:'Hrithik',
+    text:"I completed my B.Tech in Computer Science from a top engineering institute. After graduating I've spent two years as a full-time developer working with JavaScript, React, Node.js, SQL, and Git in an agile team environment. I hold strong fundamentals and enjoy mentoring junior engineers.",
+    years:2, hasDegree:true, hadGap:false
+  },
+  custom: {
+    label:'Write your own',
+    text:"", years:0, hasDegree:false, hadGap:false
+  }
+};
+
+const GHOST_IDENTITIES = {
+  priya: {
+    original: {name:'Sadie Sink', college:"Govt. Arts College, Madurai — tier 3", pronouns:'she/her'},
+    ghost:    {name:'Vikram Mehta', college:'IIT Delhi — tier 1', pronouns:'he/him'}
+  },
+  arjun: {
+    original: {name:'Emma Watson', college:'No formal degree — self-taught', pronouns:'she/her'},
+    ghost:    {name:'Ananya Rao', college:'No formal degree — self-taught', pronouns:'she/her'}
+  },
+  rahul: {
+    original: {name:'Hrithik Roshan', college:'IIT Bombay — tier 1', pronouns:'he/him'},
+    ghost:    {name:'Fatima Sheikh', college:'Regional Engineering College — tier 3', pronouns:'she/her'}
+  }
+};
+
+/* ============ LOGIC ============ */
+function escapeRegex(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+// A few aliases collide with common English words used as verbs, not the
+// skill itself (e.g. "I excel at teamwork" is not a mention of MS Excel).
+const ALIAS_PATTERN_OVERRIDES = {
+  'excel': '\\bexcel\\b(?!\\s+(?:at|in|as|when|beyond))',
+};
+
+// Guards against counting a skill the candidate explicitly says they
+// DON'T have ("no experience with Python", "unfamiliar with SQL").
+const NEGATION_TAIL = /\b(?:no|not|never|without|lack(?:ing)?\s+of|unfamiliar\s+with|not\s+familiar\s+with|no\s+experience\s+(?:with|in)|no\s+knowledge\s+of|no\s+formal\s+experience\s+(?:with|in)|haven't|hasn't|don't\s+have|doesn't\s+have)\s*$/i;
+
+function extractExplicit(text){
+  const lower = text.toLowerCase().replace(/-/g, ' ');
+  const found = new Set();
+  for(const s of SKILLS){
+    for(const alias of s.aliases){
+      const source = ALIAS_PATTERN_OVERRIDES[alias] || ('\\b'+escapeRegex(alias.replace(/-/g,' '))+'\\b');
+      const re = new RegExp(source, 'gi');
+      let m, matched = false;
+      while((m = re.exec(lower)) !== null){
+        const before = lower.slice(Math.max(0, m.index - 40), m.index);
+        if(!NEGATION_TAIL.test(before)){ matched = true; break; }
+        if(m.index === re.lastIndex) re.lastIndex++;
+      }
+      if(matched){ found.add(s.id); break; }
+    }
+  }
+  return found;
+}
+function literalFound(text, name){
+  const pat = new RegExp('\\b'+escapeRegex(name.toLowerCase())+'\\b','i');
+  return pat.test(text.toLowerCase());
+}
+function inferSkills(explicitSet){
+  const inferred = new Map();
+  for(const e of ADJ){
+    if(explicitSet.has(e.from) && !explicitSet.has(e.to)){
+      const cur = inferred.get(e.to);
+      if(!cur || cur.confidence < e.w) inferred.set(e.to, {confidence:e.w, from:e.from});
+    }
+  }
+  return inferred;
+}
+function skillsBreakdown(job, explicitSet, inferredMap){
+  const rows = [];
+  function addSkill(name, weight, isRequired){
+    const id = byName[name.toLowerCase()];
+    let type, contribution, confidence=null;
+    if(explicitSet.has(id)){ type='explicit'; contribution=weight; }
+    else if(inferredMap.has(id)){ type='inferred'; confidence=inferredMap.get(id).confidence; contribution=weight*confidence; }
+    else { type='missing'; contribution=0; }
+    rows.push({name, weight, isRequired, type, contribution, confidence});
+  }
+  job.required.forEach(n=>addSkill(n,2,true));
+  job.preferred.forEach(n=>addSkill(n,1,false));
+  const totalWeight = rows.reduce((a,r)=>a+r.weight,0);
+  const totalGot = rows.reduce((a,r)=>a+r.contribution,0);
+  return { rows, score: Math.round(100*totalGot/totalWeight) };
+}
+function traditionalResult(job, text, years, hasDegree, hadGap){
+  const missing = job.required.filter(name=>!literalFound(text,name));
+  const reasons=[];
+  if(missing.length) reasons.push('Missing required keyword'+(missing.length>1?'s':'')+': '+missing.join(', '));
+  if(years < job.minYears) reasons.push(`Needs ${job.minYears}+ yrs experience (has ${years})`);
+  if(job.degreeRequired && !hasDegree) reasons.push("Requires a bachelor's degree on file");
+  if(job.gapPolicy && hadGap) reasons.push('Employment-gap policy disqualifies');
+  return {pass: reasons.length===0, reasons};
+}
+function highlightDesc(job){
+  let html = job.desc;
+  job.flags.forEach(f=>{
+    const pat = new RegExp('('+escapeRegex(f)+')','ig');
+    html = html.replace(pat, '<mark>$1</mark>');
+  });
+  return html;
+}
+
+/* ============ UI: persona chips ============ */
+const personaRow = document.getElementById('persona-row');
+let activePersona = 'priya';
+Object.entries(PERSONAS).forEach(([key,p])=>{
+  const btn = document.createElement('button');
+  btn.className = 'persona-chip' + (key===activePersona?' active':'');
+  btn.textContent = p.label;
+  btn.dataset.key = key;
+  btn.addEventListener('click', ()=>selectPersona(key));
+  personaRow.appendChild(btn);
+});
+function selectPersona(key){
+  activePersona = key;
+  [...personaRow.children].forEach(c=>c.classList.toggle('active', c.dataset.key===key));
+  const p = PERSONAS[key];
+  document.getElementById('resume-text').value = p.text;
+  document.getElementById('years-input').value = p.years;
+  document.getElementById('degree-input').checked = p.hasDegree;
+  document.getElementById('gap-input').checked = p.hadGap;
+}
+selectPersona('priya');
+
+document.getElementById('clear-btn').addEventListener('click', ()=>{
+  selectPersona('custom');
+});
+
+const gapSelect = document.getElementById('gap-job-select');
+JOBS.forEach((job,i)=>{
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = job.name;
+  gapSelect.appendChild(opt);
+});
+function getSelectedGapJob(){
+  const v = parseInt(gapSelect.value,10);
+  return v>=0 ? JOBS[v] : null;
+}
+
+/* ============ Graph rendering (no external libraries) ============ */
+let rationaleEl = document.getElementById('rationale');
+let lastExplicit = new Set();
+let lastInferred = new Map();
+const SVGNS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs){
+  const el = document.createElementNS(SVGNS, tag);
+  for(const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+function screenToSvg(svgRoot, clientX, clientY){
+  const pt = svgRoot.createSVGPoint();
+  pt.x = clientX; pt.y = clientY;
+  const ctm = svgRoot.getScreenCTM();
+  if(!ctm) return {x:clientX, y:clientY};
+  const p = pt.matrixTransform(ctm.inverse());
+  return {x:p.x, y:p.y};
+}
+
+function renderGraph(explicitSet, inferredMap, gapJob){
+  const svgRoot = document.getElementById('graph-svg');
+  svgRoot.innerHTML = '';
+  const w = svgRoot.clientWidth || 600;
+  const compact = w < 480;
+  const h = compact ? Math.max(440, Math.min(620, Math.round(w*1.15))) : 420;
+  svgRoot.style.height = h + 'px';
+  svgRoot.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+  const nodes = [];
+  const nodeIds = new Set();
+  explicitSet.forEach(id=>{ nodes.push({id, kind:'explicit', confidence:1}); nodeIds.add(id); });
+  inferredMap.forEach((v,id)=>{ if(!nodeIds.has(id)){ nodes.push({id, kind:'inferred', confidence:v.confidence, from:v.from}); nodeIds.add(id);} });
+
+  let gapCount = 0, gapTotal = 0;
+  if(gapJob){
+    const reqIds = gapJob.required.map(n=>byName[n.toLowerCase()]);
+    const prefIds = gapJob.preferred.map(n=>byName[n.toLowerCase()]);
+    gapTotal = reqIds.length + prefIds.length;
+    [...reqIds, ...prefIds].forEach(id=>{
+      if(!nodeIds.has(id)){
+        nodes.push({id, kind:'gap', required: reqIds.includes(id)});
+        nodeIds.add(id);
+        gapCount++;
+      }
+    });
+    document.getElementById('gap-summary').textContent =
+      gapCount===0 ? `Fully covers ${gapJob.name}'s stated requirements.`
+      : `${gapCount} of ${gapTotal} requirement(s) for ${gapJob.name} not found, explicit or inferred.`;
+  } else {
+    document.getElementById('gap-summary').textContent = '';
+  }
+
+  const links = [];
+  ADJ.forEach(e=>{
+    if(nodeIds.has(e.from) && nodeIds.has(e.to)){
+      links.push({source:e.from, target:e.to});
+    }
+  });
+
+  if(nodes.length===0){
+    const t = svgEl('text', {x:20, y:40, class:'node-label'});
+    t.textContent = 'No recognizable skills in this text yet.';
+    svgRoot.appendChild(t);
+    return;
+  }
+
+  // seed positions in a loose circle so the layout untangles quickly
+  nodes.forEach((n,i)=>{
+    const angle = (i/nodes.length)*Math.PI*2;
+    n.x = w/2 + Math.cos(angle)*Math.min(w,h)*0.28;
+    n.y = h/2 + Math.sin(angle)*Math.min(w,h)*0.28;
+    n.vx = 0; n.vy = 0;
+    n.fixed = false;
+  });
+  const byNodeId = Object.fromEntries(nodes.map(n=>[n.id,n]));
+  links.forEach(l=>{ l.sourceNode = byNodeId[l.source]; l.targetNode = byNodeId[l.target]; });
+  function labelFootprint(name){
+    // on narrow screens labels wrap onto two shorter lines (see node
+    // rendering below), so the on-screen footprint is the longer half;
+    // on wider screens the full name renders on one line
+    if(compact && name.length > 12 && name.includes(' ')){
+      const words = name.split(' ');
+      const mid = Math.ceil(words.length/2);
+      const l1 = words.slice(0,mid).join(' ');
+      const l2 = words.slice(mid).join(' ');
+      return Math.max(l1.length, l2.length);
+    }
+    return name.length;
+  }
+  function radiusOf(n){
+    const base = n.kind==='explicit' ? 26 : 20;
+    // keep nodes far enough apart that their text labels (centered under
+    // each circle) don't overlap neighboring nodes or their labels
+    const labelHalf = 9 + labelFootprint(byId[n.id].name)*(compact?2.4:3.0);
+    return Math.max(base, labelHalf);
+  }
+
+  const linkGroup = svgEl('g', {});
+  const nodeGroup = svgEl('g', {});
+  svgRoot.appendChild(linkGroup);
+  svgRoot.appendChild(nodeGroup);
+
+  const linkEls = links.map(()=>{
+    const line = svgEl('line', {class:'link-line'});
+    linkGroup.appendChild(line);
+    return line;
+  });
+
+  const sizeScale = compact ? 0.78 : 1;
+  const nodeEls = nodes.map(n=>{
+    const g = svgEl('g', {class:'node-circle'});
+    const circle = svgEl('circle', {
+      r: (n.kind==='explicit' ? 22 : (n.kind==='gap' ? 16 : 14 + 6*n.confidence)) * sizeScale,
+      fill: n.kind==='explicit' ? 'var(--gold-fill)' : (n.kind==='gap' ? 'var(--rust-soft)' : 'var(--paper-raised)'),
+      stroke: n.kind==='gap' ? 'var(--rust)' : 'var(--gold)',
+      'stroke-width': n.kind==='gap' ? 1.3 : 1.5,
+      'stroke-dasharray': n.kind==='explicit' ? 'none' : (n.kind==='gap' ? '1.5,2.5' : '3,2')
+    });
+    if(n.kind==='inferred') circle.setAttribute('class','inferred-node');
+    const fontSize = compact ? 9.5 : 11;
+    const labelDY = compact ? 24 : 34;
+    const text = svgEl('text', {class:'node-label', 'text-anchor':'middle', 'font-size':fontSize, fill: n.kind==='gap' ? 'var(--rust)' : 'var(--ink-soft)'});
+    const fullName = byId[n.id].name;
+    if(compact && fullName.length > 12 && fullName.includes(' ')){
+      // wrap long two-word skill names onto two short lines so they don't
+      // stretch across neighboring nodes on narrow screens
+      const words = fullName.split(' ');
+      const mid = Math.ceil(words.length/2);
+      const t1 = svgEl('tspan', {x:0, dy:labelDY});
+      t1.textContent = words.slice(0,mid).join(' ');
+      const t2 = svgEl('tspan', {x:0, dy:fontSize+2});
+      t2.textContent = words.slice(mid).join(' ');
+      text.appendChild(t1);
+      text.appendChild(t2);
+    } else {
+      text.setAttribute('dy', labelDY);
+      text.textContent = fullName;
+    }
+    g.appendChild(circle);
+    g.appendChild(text);
+    nodeGroup.appendChild(g);
+
+    g.addEventListener('pointerdown', (ev)=>{
+      ev.preventDefault();
+      let moved = false;
+      n.fixed = true;
+      wake(0.4);
+      const onMove = (mv)=>{
+        const p = screenToSvg(svgRoot, mv.clientX, mv.clientY);
+        n.x = p.x; n.y = p.y; n.vx = 0; n.vy = 0;
+        moved = true;
+      };
+      const onUp = ()=>{
+        n.fixed = false;
+        wake(0);
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+        if(!moved){
+          if(n.kind==='gap'){
+            rationaleEl.innerHTML = `<b>${byId[n.id].name}</b> — ${n.required?'required':'preferred'} for <b>${gapJob.name}</b>, and not found, explicit or inferred, in this candidate's profile. This is a genuine gap, not a keyword miss.`;
+          } else if(n.kind==='explicit'){
+            rationaleEl.innerHTML = `<b>${byId[n.id].name}</b> — stated directly in the candidate's text.`;
+          } else {
+            const v = verifyFor(n.from, n.id);
+            rationaleEl.innerHTML = `<b>${byId[n.id].name}</b> — inferred from <b>${byId[n.from].name}</b> at ${Math.round(n.confidence*100)}% confidence. Candidates who show ${byId[n.from].name.toLowerCase()} typically also carry this capability, even if they never wrote the word down.
+              <div class="verify-block"><b>Verify it — interview question:</b> ${v.q}</div>
+              <div class="verify-block"><b>Ask for proof of skill:</b> ${v.p}</div>`;
+          }
+        }
+      };
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    });
+    return g;
+  });
+
+  function draw(){
+    linkEls.forEach((line,i)=>{
+      line.setAttribute('x1', links[i].sourceNode.x);
+      line.setAttribute('y1', links[i].sourceNode.y);
+      line.setAttribute('x2', links[i].targetNode.x);
+      line.setAttribute('y2', links[i].targetNode.y);
+    });
+    nodeEls.forEach((g,i)=> g.setAttribute('transform', `translate(${nodes[i].x},${nodes[i].y})`));
+  }
+
+  // ---- tiny hand-written force simulation: repulsion + link springs + centering + collision ----
+  let alpha = 1, alphaTarget = 0, rafId = null;
+  function wake(target){
+    alphaTarget = target || 0;
+    alpha = Math.max(alpha, 0.4);
+    if(!rafId) rafId = requestAnimationFrame(tick);
+  }
+  function tick(){
+    alpha += (alphaTarget - alpha) * 0.05;
+
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i], b=nodes[j];
+        let dx=b.x-a.x, dy=b.y-a.y;
+        let d2 = dx*dx+dy*dy || 0.01;
+        const force = ((compact?3400:2200)/d2) * alpha;
+        const d = Math.sqrt(d2);
+        const fx = dx/d*force, fy = dy/d*force;
+        if(!a.fixed){ a.vx -= fx; a.vy -= fy; }
+        if(!b.fixed){ b.vx += fx; b.vy += fy; }
+      }
+    }
+    links.forEach(l=>{
+      const a=l.sourceNode, b=l.targetNode;
+      let dx=b.x-a.x, dy=b.y-a.y;
+      const d = Math.sqrt(dx*dx+dy*dy) || 0.01;
+      const diff = (d-(compact?92:78))/d*0.06*alpha;
+      const ox=dx*diff, oy=dy*diff;
+      if(!a.fixed){ a.vx += ox; a.vy += oy; }
+      if(!b.fixed){ b.vx -= ox; b.vy -= oy; }
+    });
+    nodes.forEach(n=>{
+      if(n.fixed) return;
+      n.vx += (w/2-n.x)*0.006*alpha;
+      n.vy += (h/2-n.y)*0.008*alpha;
+    });
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i], b=nodes[j];
+        const minDist = radiusOf(a)+radiusOf(b)+2;
+        let dx=b.x-a.x, dy=b.y-a.y;
+        const d = Math.sqrt(dx*dx+dy*dy) || 0.01;
+        if(d<minDist){
+          const overlap=(minDist-d)/2;
+          const ox=dx/d*overlap, oy=dy/d*overlap;
+          if(!a.fixed){ a.x-=ox; a.y-=oy; }
+          if(!b.fixed){ b.x+=ox; b.y+=oy; }
+        }
+      }
+    }
+    const pad = compact ? 52 : 30;
+    nodes.forEach(n=>{
+      if(n.fixed) return;
+      n.vx *= 0.82; n.vy *= 0.82;
+      n.x += n.vx; n.y += n.vy;
+      n.x = Math.max(pad, Math.min(w-pad, n.x));
+      n.y = Math.max(pad, Math.min(h-pad, n.y));
+    });
+
+    draw();
+    if(alpha > 0.005){ rafId = requestAnimationFrame(tick); } else { rafId = null; }
+  }
+  draw();
+  wake(0);
+}
+
+gapSelect.addEventListener('change', ()=>{
+  renderGraph(lastExplicit, lastInferred, getSelectedGapJob());
+});
+
+/* ============ ATS Translator ============ */
+// For each required skill the literal keyword scanner misses, suggest a
+// resume line phrased with the literal keyword — prioritizing skills the
+// candidate already shows (explicit or inferred) but never spelled out,
+// since those are real experience just waiting on better wording.
+function atsTranslatorHtml(job, text, explicitSet, inferredMap){
+  const missingNames = job.required.filter(name=>!literalFound(text, name));
+  if(!missingNames.length) return '';
+  const items = missingNames.slice(0,2).map(name=>{
+    const id = byName[name.toLowerCase()];
+    const hint = (id && ATS_HINTS[id]) || `Add a line naming ${name} directly, if it applies.`;
+    const rescuable = id && (explicitSet.has(id) || inferredMap.has(id));
+    const lead = rescuable
+      ? `Your skills graph already shows ${name} — the ATS scanner just never saw the literal word. Try adding:`
+      : `No sign of ${name} in the text at all. If you have it, try adding a line like:`;
+    return `<div style="margin-bottom:6px;">${lead}<br><span class="ats-line">"${hint}"</span></div>`;
+  }).join('');
+  return `<div class="ats-block"><b>ATS Translator</b>${items}</div>`;
+}
+
+/* ============ Results rendering ============ */
+let lastScored = [];
+function renderResults(explicitSet, inferredMap, text, years, hasDegree, hadGap){
+  const scored = JOBS.map(job=>{
+    const trad = traditionalResult(job, text, years, hasDegree, hadGap);
+    const bd = skillsBreakdown(job, explicitSet, inferredMap);
+    return {job, trad, skl:bd.score, rows:bd.rows};
+  }).sort((a,b)=>b.skl-a.skl);
+  lastScored = scored;
+
+  const tradPass = scored.filter(s=>s.trad.pass).length;
+  const sklPass = scored.filter(s=>s.skl>=50).length;
+  const rescued = scored.filter(s=>!s.trad.pass && s.skl>=50).length;
+
+  const statRow = document.getElementById('stat-row');
+  statRow.innerHTML = `
+    <div class="stat"><div class="num rust">${tradPass}<span style="font-size:22px;color:var(--ink-faint);"> / ${JOBS.length}</span></div><div class="cap">Roles passed by a literal keyword ATS</div></div>
+    <div class="stat"><div class="num teal">${sklPass}<span style="font-size:22px;color:var(--ink-faint);"> / ${JOBS.length}</span></div><div class="cap">Roles matched by skills-based scoring</div></div>
+    <div class="stat"><div class="num gold">${rescued}</div><div class="cap">Roles this candidate would be screened out of, despite a qualifying skills score</div></div>
+  `;
+
+  const list = document.getElementById('job-list');
+  list.innerHTML = '';
+  scored.forEach((s,i)=>{
+    const row = document.createElement('div');
+    row.className = 'job-row';
+    const breakdownRows = s.rows.map(r=>{
+      const tagText = r.type==='explicit' ? 'stated' : r.type==='inferred' ? `inferred ${Math.round(r.confidence*100)}%` : 'missing';
+      return `
+        <div class="breakdown-row">
+          <span class="sk-name">${r.name}<span class="req-tag">${r.isRequired?'(required)':'(preferred)'}</span></span>
+          <span class="breakdown-right">
+            <span class="sk-tag ${r.type}">${tagText}</span>
+            <span class="sk-pts mono">${r.contribution.toFixed(1)}/${r.weight}</span>
+          </span>
+        </div>`;
+    }).join('');
+    row.innerHTML = `
+      <div class="job-rank mono">${String(i+1).padStart(2,'0')}</div>
+      <div>
+        <div class="job-title">${s.job.name}</div>
+        <div class="job-meta">${s.job.company} · ${s.job.minYears}+ yrs · ${s.job.degreeRequired?"degree required":"no degree required"}${s.job.gapPolicy?" · no employment gaps":""}</div>
+        <div class="job-desc">${highlightDesc(s.job)}</div>
+      </div>
+      <div>
+        <div class="verdict-block">
+          <div class="verdict-label">Traditional ATS</div>
+          <div class="verdict-badge ${s.trad.pass?'pass':'reject'}"><span class="icon">${s.trad.pass?'✓':'✕'}</span>${s.trad.pass?'Passed':'Rejected'}</div>
+          ${s.trad.reasons.length? `<div class="verdict-reasons">${s.trad.reasons.join('<br>')}</div>` : ''}
+          ${atsTranslatorHtml(s.job, text, explicitSet, inferredMap)}
+        </div>
+        <div>
+          <div class="verdict-label">Skills-based match</div>
+          <div class="bar-pct" style="color:${s.skl>=50?'var(--teal)':'var(--ink-faint)'}">${s.skl}%</div>
+          <div class="bar-track"><div class="bar-fill ${s.skl<50?'low':''}" style="width:${s.skl}%;"></div></div>
+        </div>
+        <button class="breakdown-toggle" id="breakdown-btn-${i}" onclick="toggleBreakdown(${i})">Show scoring breakdown</button>
+        <div class="breakdown-panel" id="breakdown-${i}">${breakdownRows}</div>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+}
+function toggleBreakdown(i){
+  const panel = document.getElementById('breakdown-'+i);
+  const btn = document.getElementById('breakdown-btn-'+i);
+  const show = panel.style.display !== 'block';
+  panel.style.display = show ? 'block' : 'none';
+  btn.textContent = show ? 'Hide scoring breakdown' : 'Show scoring breakdown';
+}
+
+/* ============ Ghost Resume fairness panel ============ */
+function renderGhostPanel(personaKey, scored){
+  const panel = document.getElementById('ghost-panel');
+  const identities = GHOST_IDENTITIES[personaKey];
+  if(!identities){
+    panel.innerHTML = `<div class="ghost-empty">This check is wired up for the three sample personas. Pick Sadie, Emma, or Hrithik above to see it — the underlying point holds for any text you paste: the box above is the only thing the engine ever reads.</div>`;
+    return;
+  }
+  const avgScore = Math.round(scored.reduce((a,s)=>a+s.skl,0) / scored.length);
+  const matched = scored.filter(s=>s.skl>=50).length;
+
+  function cardHtml(id, label){
+    return `
+      <div class="ghost-card">
+        <div class="id-eyebrow">${label}</div>
+        <div class="id-row"><b>${id.name}</b></div>
+        <div class="id-row">${id.college}</div>
+        <div class="id-row">${id.pronouns}</div>
+      </div>`;
+  }
+
+  panel.innerHTML = `
+    <div class="ghost-grid">
+      ${cardHtml(identities.original, 'As submitted')}
+      <div class="ghost-divider"></div>
+      <div class="ghost-center">
+        <div class="ghost-num">${avgScore}%</div>
+        <div class="ghost-cap">average skills-based match · ${matched}/${JOBS.length} roles — identical for both identities</div>
+      </div>
+      <div class="ghost-divider"></div>
+      ${cardHtml(identities.ghost, 'Identity swapped')}
+    </div>
+    <div class="ghost-note"><b>Why the number doesn't move —</b> both cards are wrappers around the exact same resume text. Name, college, and pronouns live in this display only; the scoring engine's input is the candidate text box, which is byte-for-byte identical either way. A system that scores on skills can't be swayed by a signal it was never given.</div>
+  `;
+}
+
+/* ============ Wire up ============ */
+const BACKEND_URL = 'https://bridge-here-for-food.up.railway.app';
+
+/**
+ * Tries the real backend first (proves this isn't just client-side
+ * theater when the API is running). Falls back to the local engine
+ * if the backend is unreachable — e.g. bad venue wifi, or nobody
+ * started `node server.js` — so the demo never breaks either way.
+ */
+async function fetchFromBackend(text, years, hasDegree, hadGap){
+  const controller = new AbortController();
+  const timeout = setTimeout(()=>controller.abort(), 1500);
+  try {
+    const res = await fetch(BACKEND_URL + '/api/analyze', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({text, years, hasDegree, hadGap}),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    if(!res.ok) return null;
+    const data = await res.json();
+    const explicit = new Set(
+      data.explicitSkills.map(name => byName[name.toLowerCase()]).filter(Boolean)
+    );
+    const inferred = new Map();
+    data.inferredSkills.forEach(s => {
+      const id = byName[s.name.toLowerCase()];
+      const fromId = byName[(s.inferredFrom||'').toLowerCase()];
+      if(id) inferred.set(id, {confidence: s.confidence, from: fromId});
+    });
+    return { explicit, inferred };
+  } catch(e){
+    clearTimeout(timeout);
+    return null;
+  }
+}
+
+async function doAnalysis(){
+  const text = document.getElementById('resume-text').value;
+  const years = parseInt(document.getElementById('years-input').value,10) || 0;
+  const hasDegree = document.getElementById('degree-input').checked;
+  const hadGap = document.getElementById('gap-input').checked;
+
+  const indicator = document.getElementById('backend-indicator');
+  const backendResult = await fetchFromBackend(text, years, hasDegree, hadGap);
+  let explicit, inferred;
+  if(backendResult){
+    explicit = backendResult.explicit;
+    inferred = backendResult.inferred;
+    indicator.textContent = '● Live backend response';
+    indicator.style.color = '#2C6656';
+  } else {
+    explicit = extractExplicit(text);
+    inferred = inferSkills(explicit);
+    indicator.textContent = '○ Offline engine (backend not reachable)';
+    indicator.style.color = '#7C8895';
+  }
+  lastExplicit = explicit;
+  lastInferred = inferred;
+
+  renderGraph(explicit, inferred, getSelectedGapJob());
+  renderResults(explicit, inferred, text, years, hasDegree, hadGap);
+  renderGhostPanel(activePersona, lastScored);
+  rationaleEl.innerHTML = '<span class="empty">Click a node to see why it\'s on the graph.</span>';
+}
+
+const STAGES = [
+  'Reading resume text…',
+  'Extracting stated skills…',
+  'Walking the adjacency graph for inferred skills…',
+  'Scoring roles — literal keyword pass…',
+  'Scoring roles — skills-weighted pass…'
+];
+function analyze(){
+  const btn = document.getElementById('analyze-btn');
+  const statusLine = document.getElementById('status-line');
+  const statusText = document.getElementById('status-text');
+  btn.disabled = true;
+  btn.style.opacity = '.6';
+  statusLine.classList.add('active');
+
+  let i = 0;
+  statusText.textContent = STAGES[0];
+  const interval = setInterval(()=>{
+    i++;
+    if(i < STAGES.length){ statusText.textContent = STAGES[i]; }
+  }, 260);
+
+  setTimeout(async ()=>{
+    clearInterval(interval);
+    await doAnalysis();
+    statusLine.classList.remove('active');
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }, STAGES.length*260 + 150);
+}
+
+document.getElementById('analyze-btn').addEventListener('click', analyze);
+/* ============ Sticky module nav: show on scroll, highlight current section ============ */
+(function(){
+  const nav = document.getElementById('module-nav');
+  const headerEl = document.querySelector('header');
+  const sections = ['module-1','module-2','module-3','module-4']
+    .map(id=>({id, el:document.getElementById(id), link:nav.querySelector(`[data-nav="${id.split('-')[1]}"]`)}))
+    .filter(s=>s.el);
+
+  function onScroll(){
+    const headerBottom = headerEl.getBoundingClientRect().bottom;
+    nav.classList.toggle('visible', headerBottom < 0);
+
+    let current = sections[0];
+    for(const s of sections){
+      if(s.el.getBoundingClientRect().top < 140) current = s;
+    }
+    sections.forEach(s=> s.link && s.link.classList.toggle('active', s===current));
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+
+window.addEventListener('resize', ()=>{
+  renderGraph(lastExplicit, lastInferred, getSelectedGapJob());
+});
+
+analyze();
+</script>
+<script>
+  /* ============ Module 4: Learning Pathway (post-regionals addition) ============ */
+  (function(){
+      const footer = document.querySelector('footer');
+      const section = document.createElement('div');
+      section.innerHTML = `
+          <div class="module-tag" id="module-4"><b>Module 4</b> — Learning pathway (bonus)</div>
+              <div class="results-head">
+                    <h2>Close the gap</h2>
+                          <p class="results-sub">Pick a role to see a suggested learning path for the skills this candidate is missing. Not a live course-market integration yet — a curated static list — but real code that runs against the same gap data shown above.</p>
+                              </div>
+                                  <div class="gap-select-row">
+                                        <label for="pathway-job-select">Show pathway for</label>
+                                              <select id="pathway-job-select"><option value="-1">Select a role</option></select>
+                                                    <button id="pathway-btn" class="btn-primary" type="button">Get learning pathway</button>
+                                                        </div>
+                                                            <div id="pathway-results" style="margin-top:14px;"></div>
+                                                              `;
+      footer.parentNode.insertBefore(section, footer);
+
+      const pathwaySelect = document.getElementById('pathway-job-select');
+      JOBS.forEach((job,i)=>{
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = job.name;
+            pathwaySelect.appendChild(opt);
+      });
+
+      document.getElementById('pathway-btn').addEventListener('click', async ()=>{
+            const resultsEl = document.getElementById('pathway-results');
+            const v = parseInt(pathwaySelect.value,10);
+            if(v<0){ resultsEl.innerHTML = '<p class="note">Pick a role first.</p>'; return; }
+            const job = JOBS[v];
+            const text = document.getElementById('resume-text').value;
+            const years = parseInt(document.getElementById('years-input').value,10) || 0;
+            const hasDegree = document.getElementById('degree-input').checked;
+            const hadGap = document.getElementById('gap-input').checked;
+            resultsEl.innerHTML = '<p class="note">Loading pathway…</p>';
+            try {
+                    const res = await fetch(BACKEND_URL + '/api/learning-pathway', {
+                              method:'POST', headers:{'Content-Type':'application/json'},
+                              body: JSON.stringify({ text, years, hasDegree, hadGap, jobName: job.name })
+                    });
+                    const data = await res.json();
+                    if(data.error){ resultsEl.innerHTML = '<p class="note">'+data.error+'</p>'; return; }
+                    if(!data.pathway.length){
+                              resultsEl.innerHTML = '<p class="note">No gaps found for '+job.name+' — this candidate already covers every required and preferred skill.</p>';
+                              return;
+                    }
+                    resultsEl.innerHTML = data.pathway.map(function(p){
+                              return '<div class="breakdown-panel" style="display:block; margin-bottom:10px;">'
+                                + '<div style="font-weight:600; margin-bottom:6px;">'+p.skill+'</div>'
+                                + '<ul style="margin:0; padding-left:18px; font-size:13px; color:var(--ink-soft);">'
+                                + p.suggestions.map(function(s){ return '<li>'+s+'</li>'; }).join('')
+                                + '</ul></div>';
+                    }).join('');
+            } catch(e){
+                    resultsEl.innerHTML = '<p class="note">Could not reach backend for pathway suggestions.</p>';
+            }
+      });
+  })();
+</script>
+  
+<script>
+  /* ============ Bias Audit: full 72/72 results (post-regionals addition) ============ */
+  (function(){
+      const ghostPanel = document.getElementById('ghost-panel');
+      const section = document.createElement('div');
+      section.innerHTML = `
+          <div class="module-tag"><b>Module 3</b>, continued — the full audit, not just one example</div>
+              <div class="results-head">
+                    <h2>Every synthetic candidate, every role, identity swapped</h2>
+                          <p class="results-sub" id="audit-verdict">Loading audit results…</p>
+                              </div>
+                                  <div class="stat-row" id="audit-stats"></div>
+                                      <button class="breakdown-toggle" id="audit-toggle" type="button" style="display:none;">Show all 72 comparisons</button>
+                                          <div id="audit-table-wrap" style="display:none; margin-top:14px; max-height:420px; overflow-y:auto; border:1px solid var(--line); border-radius:var(--radius);"></div>
+                                            `;
+      ghostPanel.parentNode.insertBefore(section, ghostPanel.nextSibling);
+
+      async function loadAudit(){
+            const verdictEl = document.getElementById('audit-verdict');
+            const statsEl = document.getElementById('audit-stats');
+            try {
+                    const res = await fetch(BACKEND_URL + '/api/fairness-summary');
+                    const data = await res.json();
+                    if(data.error){ verdictEl.textContent = data.error; return; }
+
+                    verdictEl.textContent = data.verdict;
+                    statsEl.innerHTML = `
+                            <div class="stat"><div class="num teal">${data.totalComparisons - data.mismatchesFound}<span style="font-size:22px;color:var(--ink-faint);"> / ${data.totalComparisons}</span></div><div class="cap">Identity-swap comparisons with an identical score</div></div>
+                                    <div class="stat"><div class="num gold">${data.candidatesTested}</div><div class="cap">Independently-written synthetic candidates, each tested against ${data.jobsPerCandidate} roles</div></div>
+                                            <div class="stat"><div class="num ${data.maxAbsoluteScoreDelta===0?'teal':'rust'}">${data.maxAbsoluteScoreDelta}</div><div class="cap">Maximum score difference found between identity-swapped pairs</div></div>
+                                                  `;
+
+                    const toggleBtn = document.getElementById('audit-toggle');
+                    const tableWrap = document.getElementById('audit-table-wrap');
+                    toggleBtn.style.display = 'inline-block';
+                    toggleBtn.addEventListener('click', ()=>{
+                              const show = tableWrap.style.display !== 'block';
+                              tableWrap.style.display = show ? 'block' : 'none';
+                              toggleBtn.textContent = show ? 'Hide comparisons' : 'Show all 72 comparisons';
+                              if(show && !tableWrap.dataset.built){
+                                          tableWrap.dataset.built = '1';
+                                          const rows = data.comparisons.map(c => `
+                                                      <div class="breakdown-row">
+                                                                    <span class="sk-name">${c.job} <span class="req-tag">candidate ${c.candidate}</span></span>
+                                                                                  <span class="breakdown-right mono" style="font-size:11.5px;">
+                                                                                                  ${c.identityA}: ${c.scoreA}% &nbsp;↔&nbsp; ${c.identityB}: ${c.scoreB}%
+                                                                                                                  <span class="sk-tag ${c.delta===0?'explicit':'missing'}" style="margin-left:8px;">${c.delta===0?'match':'Δ'+c.delta}</span>
+                                                                                                                                </span>
+                                                                                                                                            </div>`).join('');
+                                          tableWrap.innerHTML = `<div style="padding:4px 14px;">${rows}</div>`;
+                              }
+                    });
+            } catch(e){
+                    verdictEl.textContent = 'Could not reach backend for the full audit — the single-candidate check above still applies.';
+            }
+      }
+      loadAudit();
+  })();
+</script>
+  
+<script>
+/* ============ Keyboard shortcuts: 1/2/3 switch personas ============ */
+document.addEventListener('keydown', function(e){
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  const tag = (document.activeElement && document.activeElement.tagName) || '';
+  if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  if(e.key === '1'){ selectPersona('priya'); }
+  else if(e.key === '2'){ selectPersona('arjun'); }
+  else if(e.key === '3'){ selectPersona('rahul'); }
+});
+</script>
+
+<script>
+/* ============ Module 2B: Role Architect (pre-finals addition) ============ */
+// Scores the currently-analyzed candidate against a recruiter-defined custom
+// role, through the exact same traditionalResult/skillsBreakdown functions
+// used for every built-in role. Deliberately kept out of JOBS and out of the
+// backend fairness-summary audit (which is a separate, server-driven fetch)
+// so it can never touch the rehearsed 72/72 identity-blind guarantee.
+(function(){
+  const btn = document.getElementById('arch-score-btn');
+  if(!btn) return;
+
+  function parseSkillList(raw){
+    return raw.split(',').map(s=>s.trim()).filter(Boolean);
+  }
+  function resolveKnownNames(list){
+    const known = [], unknown = [];
+    list.forEach(raw=>{
+      const id = byName[raw.toLowerCase()];
+      if(id) known.push(byId[id].name); else unknown.push(raw);
+    });
+    return {known, unknown};
+  }
+
+  btn.addEventListener('click', ()=>{
+    const resultEl = document.getElementById('arch-result');
+    const reqR = resolveKnownNames(parseSkillList(document.getElementById('arch-required').value));
+    const prefR = resolveKnownNames(parseSkillList(document.getElementById('arch-preferred').value));
+
+    if(reqR.known.length === 0){
+      resultEl.innerHTML = '<p class="note">Add at least one required skill that matches a known skill name — see the legend and node labels on the skills graph above for the full list.</p>';
+      return;
+    }
+
+    const title = document.getElementById('arch-title').value.trim() || 'Custom role';
+    const minYears = parseInt(document.getElementById('arch-years').value,10) || 0;
+    const degreeRequired = document.getElementById('arch-degree').checked;
+    const gapPolicy = document.getElementById('arch-gap').checked;
+    const job = {
+      name: title, company: 'Custom role · Role Architect',
+      required: reqR.known, preferred: prefR.known,
+      minYears, degreeRequired, gapPolicy,
+      desc: 'Defined live via Role Architect, scored against this candidate only — not part of the Module 3 fairness-audit matrix.',
+      flags: []
+    };
+
+    const text = document.getElementById('resume-text').value;
+    const years = parseInt(document.getElementById('years-input').value,10) || 0;
+    const hasDegree = document.getElementById('degree-input').checked;
+    const hadGap = document.getElementById('gap-input').checked;
+
+    const trad = traditionalResult(job, text, years, hasDegree, hadGap);
+    const bd = skillsBreakdown(job, lastExplicit, lastInferred);
+
+    const unknown = reqR.unknown.concat(prefR.unknown);
+    const unknownNote = unknown.length
+      ? `<p class="note">Skipped (not a recognized skill name): ${unknown.join(', ')}</p>` : '';
+
+    resultEl.innerHTML = `${unknownNote}
+      <div class="job-row">
+        <div class="job-rank mono">★</div>
+        <div>
+          <div class="job-title">${job.name}</div>
+          <div class="job-meta">${job.company} · ${minYears}+ yrs · ${degreeRequired?'degree required':'no degree required'}${gapPolicy?' · no employment gaps':''}</div>
+          <div class="job-desc">${job.desc}</div>
+        </div>
+        <div>
+          <div class="verdict-block">
+            <div class="verdict-label">Traditional ATS</div>
+            <div class="verdict-badge ${trad.pass?'pass':'reject'}"><span class="icon">${trad.pass?'✓':'✕'}</span>${trad.pass?'Passed':'Rejected'}</div>
+            ${trad.reasons.length? `<div class="verdict-reasons">${trad.reasons.join('<br>')}</div>` : ''}
+            ${atsTranslatorHtml(job, text, lastExplicit, lastInferred)}
+          </div>
+          <div>
+            <div class="verdict-label">Skills-based match</div>
+            <div class="bar-pct" style="color:${bd.score>=50?'var(--teal)':'var(--ink-faint)'}">${bd.score}%</div>
+            <div class="bar-track"><div class="bar-fill ${bd.score<50?'low':''}" style="width:${bd.score}%;"></div></div>
+          </div>
+        </div>
+      </div>`;
+  });
+})();
+</script>
+</body>
+</html>
