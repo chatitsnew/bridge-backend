@@ -1,1 +1,2387 @@
-{"generatedAt":"2026-09-24T16:56:45.882Z","candidatesTested":12,"jobsPerCandidate":6,"totalComparisons":72,"maxAbsoluteScoreDelta":0,"mismatchesFound":0,"verdict":"Identical scores in 72/72 identity-swap comparisons across 12 independently-written candidates.","comparisons":[{"candidate":1,"job":"Data Analyst","identityA":"Priya Selvam","scoreA":78,"identityB":"Vikram Mehta","scoreB":78,"delta":0},{"candidate":1,"job":"Frontend Developer","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":1,"job":"Junior Data Analyst (Remote)","identityA":"Priya Selvam","scoreA":79,"identityB":"Vikram Mehta","scoreB":79,"delta":0},{"candidate":1,"job":"Project Coordinator","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":1,"job":"Backend Engineer","identityA":"Priya Selvam","scoreA":9,"identityB":"Vikram Mehta","scoreB":9,"delta":0},{"candidate":1,"job":"Customer Insights Associate","identityA":"Priya Selvam","scoreA":58,"identityB":"Vikram Mehta","scoreB":58,"delta":0},{"candidate":2,"job":"Data Analyst","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":2,"job":"Frontend Developer","identityA":"Fatima Sheikh","scoreA":86,"identityB":"Arjun Kumar","scoreB":86,"delta":0},{"candidate":2,"job":"Junior Data Analyst (Remote)","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":2,"job":"Project Coordinator","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":2,"job":"Backend Engineer","identityA":"Fatima Sheikh","scoreA":36,"identityB":"Arjun Kumar","scoreB":36,"delta":0},{"candidate":2,"job":"Customer Insights Associate","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":3,"job":"Data Analyst","identityA":"Priya Selvam","scoreA":20,"identityB":"Vikram Mehta","scoreB":20,"delta":0},{"candidate":3,"job":"Frontend Developer","identityA":"Priya Selvam","scoreA":30,"identityB":"Vikram Mehta","scoreB":30,"delta":0},{"candidate":3,"job":"Junior Data Analyst (Remote)","identityA":"Priya Selvam","scoreA":14,"identityB":"Vikram Mehta","scoreB":14,"delta":0},{"candidate":3,"job":"Project Coordinator","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":3,"job":"Backend Engineer","identityA":"Priya Selvam","scoreA":100,"identityB":"Vikram Mehta","scoreB":100,"delta":0},{"candidate":3,"job":"Customer Insights Associate","identityA":"Priya Selvam","scoreA":17,"identityB":"Vikram Mehta","scoreB":17,"delta":0},{"candidate":4,"job":"Data Analyst","identityA":"Fatima Sheikh","scoreA":48,"identityB":"Arjun Kumar","scoreB":48,"delta":0},{"candidate":4,"job":"Frontend Developer","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":4,"job":"Junior Data Analyst (Remote)","identityA":"Fatima Sheikh","scoreA":54,"identityB":"Arjun Kumar","scoreB":54,"delta":0},{"candidate":4,"job":"Project Coordinator","identityA":"Fatima Sheikh","scoreA":69,"identityB":"Arjun Kumar","scoreB":69,"delta":0},{"candidate":4,"job":"Backend Engineer","identityA":"Fatima Sheikh","scoreA":18,"identityB":"Arjun Kumar","scoreB":18,"delta":0},{"candidate":4,"job":"Customer Insights Associate","identityA":"Fatima Sheikh","scoreA":47,"identityB":"Arjun Kumar","scoreB":47,"delta":0},{"candidate":5,"job":"Data Analyst","identityA":"Priya Selvam","scoreA":78,"identityB":"Vikram Mehta","scoreB":78,"delta":0},{"candidate":5,"job":"Frontend Developer","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":5,"job":"Junior Data Analyst (Remote)","identityA":"Priya Selvam","scoreA":86,"identityB":"Vikram Mehta","scoreB":86,"delta":0},{"candidate":5,"job":"Project Coordinator","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":5,"job":"Backend Engineer","identityA":"Priya Selvam","scoreA":18,"identityB":"Vikram Mehta","scoreB":18,"delta":0},{"candidate":5,"job":"Customer Insights Associate","identityA":"Priya Selvam","scoreA":100,"identityB":"Vikram Mehta","scoreB":100,"delta":0},{"candidate":6,"job":"Data Analyst","identityA":"Fatima Sheikh","scoreA":68,"identityB":"Arjun Kumar","scoreB":68,"delta":0},{"candidate":6,"job":"Frontend Developer","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":6,"job":"Junior Data Analyst (Remote)","identityA":"Fatima Sheikh","scoreA":47,"identityB":"Arjun Kumar","scoreB":47,"delta":0},{"candidate":6,"job":"Project Coordinator","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":6,"job":"Backend Engineer","identityA":"Fatima Sheikh","scoreA":9,"identityB":"Arjun Kumar","scoreB":9,"delta":0},{"candidate":6,"job":"Customer Insights Associate","identityA":"Fatima Sheikh","scoreA":48,"identityB":"Arjun Kumar","scoreB":48,"delta":0},{"candidate":7,"job":"Data Analyst","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":7,"job":"Frontend Developer","identityA":"Priya Selvam","scoreA":80,"identityB":"Vikram Mehta","scoreB":80,"delta":0},{"candidate":7,"job":"Junior Data Analyst (Remote)","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":7,"job":"Project Coordinator","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":7,"job":"Backend Engineer","identityA":"Priya Selvam","scoreA":18,"identityB":"Vikram Mehta","scoreB":18,"delta":0},{"candidate":7,"job":"Customer Insights Associate","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":8,"job":"Data Analyst","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":8,"job":"Frontend Developer","identityA":"Fatima Sheikh","scoreA":100,"identityB":"Arjun Kumar","scoreB":100,"delta":0},{"candidate":8,"job":"Junior Data Analyst (Remote)","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":8,"job":"Project Coordinator","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":8,"job":"Backend Engineer","identityA":"Fatima Sheikh","scoreA":43,"identityB":"Arjun Kumar","scoreB":43,"delta":0},{"candidate":8,"job":"Customer Insights Associate","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":9,"job":"Data Analyst","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":9,"job":"Frontend Developer","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":9,"job":"Junior Data Analyst (Remote)","identityA":"Priya Selvam","scoreA":14,"identityB":"Vikram Mehta","scoreB":14,"delta":0},{"candidate":9,"job":"Project Coordinator","identityA":"Priya Selvam","scoreA":78,"identityB":"Vikram Mehta","scoreB":78,"delta":0},{"candidate":9,"job":"Backend Engineer","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":9,"job":"Customer Insights Associate","identityA":"Priya Selvam","scoreA":33,"identityB":"Vikram Mehta","scoreB":33,"delta":0},{"candidate":10,"job":"Data Analyst","identityA":"Fatima Sheikh","scoreA":66,"identityB":"Arjun Kumar","scoreB":66,"delta":0},{"candidate":10,"job":"Frontend Developer","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":10,"job":"Junior Data Analyst (Remote)","identityA":"Fatima Sheikh","scoreA":61,"identityB":"Arjun Kumar","scoreB":61,"delta":0},{"candidate":10,"job":"Project Coordinator","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":10,"job":"Backend Engineer","identityA":"Fatima Sheikh","scoreA":9,"identityB":"Arjun Kumar","scoreB":9,"delta":0},{"candidate":10,"job":"Customer Insights Associate","identityA":"Fatima Sheikh","scoreA":48,"identityB":"Arjun Kumar","scoreB":48,"delta":0},{"candidate":11,"job":"Data Analyst","identityA":"Priya Selvam","scoreA":28,"identityB":"Vikram Mehta","scoreB":28,"delta":0},{"candidate":11,"job":"Frontend Developer","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":11,"job":"Junior Data Analyst (Remote)","identityA":"Priya Selvam","scoreA":26,"identityB":"Vikram Mehta","scoreB":26,"delta":0},{"candidate":11,"job":"Project Coordinator","identityA":"Priya Selvam","scoreA":0,"identityB":"Vikram Mehta","scoreB":0,"delta":0},{"candidate":11,"job":"Backend Engineer","identityA":"Priya Selvam","scoreA":55,"identityB":"Vikram Mehta","scoreB":55,"delta":0},{"candidate":11,"job":"Customer Insights Associate","identityA":"Priya Selvam","scoreA":30,"identityB":"Vikram Mehta","scoreB":30,"delta":0},{"candidate":12,"job":"Data Analyst","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":12,"job":"Frontend Developer","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":12,"job":"Junior Data Analyst (Remote)","identityA":"Fatima Sheikh","scoreA":14,"identityB":"Arjun Kumar","scoreB":14,"delta":0},{"candidate":12,"job":"Project Coordinator","identityA":"Fatima Sheikh","scoreA":51,"identityB":"Arjun Kumar","scoreB":51,"delta":0},{"candidate":12,"job":"Backend Engineer","identityA":"Fatima Sheikh","scoreA":0,"identityB":"Arjun Kumar","scoreB":0,"delta":0},{"candidate":12,"job":"Customer Insights Associate","identityA":"Fatima Sheikh","scoreA":33,"identityB":"Arjun Kumar","scoreB":33,"delta":0}]}
+{
+  "generatedAt": "2026-09-27T18:14:01.040Z",
+  "candidatesTested": 12,
+  "jobsPerCandidate": 22,
+  "totalComparisons": 264,
+  "maxAbsoluteScoreDelta": 0,
+  "mismatchesFound": 0,
+  "verdict": "Identical scores in 264/264 identity-swap comparisons across 12 independently-written candidates.",
+  "comparisons": [
+    {
+      "candidate": 1,
+      "job": "Data Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 78,
+      "identityB": "Vikram Mehta",
+      "scoreB": 78,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Priya Selvam",
+      "scoreA": 79,
+      "identityB": "Vikram Mehta",
+      "scoreB": 79,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Project Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Backend Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 9,
+      "identityB": "Vikram Mehta",
+      "scoreB": 9,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Customer Insights Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 58,
+      "identityB": "Vikram Mehta",
+      "scoreB": 58,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "DevOps Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 8,
+      "identityB": "Vikram Mehta",
+      "scoreB": 8,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Product Designer",
+      "identityA": "Priya Selvam",
+      "scoreA": 17,
+      "identityB": "Vikram Mehta",
+      "scoreB": 17,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Machine Learning Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 77,
+      "identityB": "Vikram Mehta",
+      "scoreB": 77,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Operations Program Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Scrum Master",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Full-Stack Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 62,
+      "identityB": "Vikram Mehta",
+      "scoreB": 62,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 20,
+      "identityB": "Vikram Mehta",
+      "scoreB": 20,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Community Operations Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Junior Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 37,
+      "identityB": "Vikram Mehta",
+      "scoreB": 37,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Data Visualization Specialist",
+      "identityA": "Priya Selvam",
+      "scoreA": 77,
+      "identityB": "Vikram Mehta",
+      "scoreB": 77,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Engineering Team Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "UX Researcher",
+      "identityA": "Priya Selvam",
+      "scoreA": 43,
+      "identityB": "Vikram Mehta",
+      "scoreB": 43,
+      "delta": 0
+    },
+    {
+      "candidate": 1,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 28,
+      "identityB": "Vikram Mehta",
+      "scoreB": 28,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Data Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 86,
+      "identityB": "Arjun Kumar",
+      "scoreB": 86,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Project Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Backend Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 36,
+      "identityB": "Arjun Kumar",
+      "scoreB": 36,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Customer Insights Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "DevOps Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 25,
+      "identityB": "Arjun Kumar",
+      "scoreB": 25,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Product Designer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 32,
+      "identityB": "Arjun Kumar",
+      "scoreB": 32,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Machine Learning Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Operations Program Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Scrum Master",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Full-Stack Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 60,
+      "identityB": "Arjun Kumar",
+      "scoreB": 60,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 17,
+      "identityB": "Arjun Kumar",
+      "scoreB": 17,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Community Operations Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Junior Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 100,
+      "identityB": "Arjun Kumar",
+      "scoreB": 100,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 33,
+      "identityB": "Arjun Kumar",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Data Visualization Specialist",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Engineering Team Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 25,
+      "identityB": "Arjun Kumar",
+      "scoreB": 25,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "UX Researcher",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 18,
+      "identityB": "Arjun Kumar",
+      "scoreB": 18,
+      "delta": 0
+    },
+    {
+      "candidate": 2,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 13,
+      "identityB": "Arjun Kumar",
+      "scoreB": 13,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Data Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 20,
+      "identityB": "Vikram Mehta",
+      "scoreB": 20,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 30,
+      "identityB": "Vikram Mehta",
+      "scoreB": 30,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Priya Selvam",
+      "scoreA": 14,
+      "identityB": "Vikram Mehta",
+      "scoreB": 14,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Project Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Backend Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 100,
+      "identityB": "Vikram Mehta",
+      "scoreB": 100,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Customer Insights Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 17,
+      "identityB": "Vikram Mehta",
+      "scoreB": 17,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "DevOps Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 88,
+      "identityB": "Vikram Mehta",
+      "scoreB": 88,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Product Designer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Machine Learning Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Operations Program Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 13,
+      "identityB": "Vikram Mehta",
+      "scoreB": 13,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Scrum Master",
+      "identityA": "Priya Selvam",
+      "scoreA": 33,
+      "identityB": "Vikram Mehta",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Full-Stack Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 63,
+      "identityB": "Vikram Mehta",
+      "scoreB": 63,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 33,
+      "identityB": "Vikram Mehta",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 67,
+      "identityB": "Vikram Mehta",
+      "scoreB": 67,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Community Operations Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Junior Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 17,
+      "identityB": "Vikram Mehta",
+      "scoreB": 17,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 50,
+      "identityB": "Vikram Mehta",
+      "scoreB": 50,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Data Visualization Specialist",
+      "identityA": "Priya Selvam",
+      "scoreA": 17,
+      "identityB": "Vikram Mehta",
+      "scoreB": 17,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Engineering Team Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 75,
+      "identityB": "Vikram Mehta",
+      "scoreB": 75,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "UX Researcher",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 3,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 63,
+      "identityB": "Vikram Mehta",
+      "scoreB": 63,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Data Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 48,
+      "identityB": "Arjun Kumar",
+      "scoreB": 48,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 54,
+      "identityB": "Arjun Kumar",
+      "scoreB": 54,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Project Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 69,
+      "identityB": "Arjun Kumar",
+      "scoreB": 69,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Backend Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 18,
+      "identityB": "Arjun Kumar",
+      "scoreB": 18,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Customer Insights Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 47,
+      "identityB": "Arjun Kumar",
+      "scoreB": 47,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "DevOps Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Product Designer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 7,
+      "identityB": "Arjun Kumar",
+      "scoreB": 7,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Machine Learning Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 7,
+      "identityB": "Arjun Kumar",
+      "scoreB": 7,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Operations Program Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 31,
+      "identityB": "Arjun Kumar",
+      "scoreB": 31,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Scrum Master",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 32,
+      "identityB": "Arjun Kumar",
+      "scoreB": 32,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Full-Stack Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 50,
+      "identityB": "Arjun Kumar",
+      "scoreB": 50,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Community Operations Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 78,
+      "identityB": "Arjun Kumar",
+      "scoreB": 78,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Junior Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Data Visualization Specialist",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 47,
+      "identityB": "Arjun Kumar",
+      "scoreB": 47,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Engineering Team Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 29,
+      "identityB": "Arjun Kumar",
+      "scoreB": 29,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "UX Researcher",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 13,
+      "identityB": "Arjun Kumar",
+      "scoreB": 13,
+      "delta": 0
+    },
+    {
+      "candidate": 4,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Data Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 78,
+      "identityB": "Vikram Mehta",
+      "scoreB": 78,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Priya Selvam",
+      "scoreA": 86,
+      "identityB": "Vikram Mehta",
+      "scoreB": 86,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Project Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Backend Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 18,
+      "identityB": "Vikram Mehta",
+      "scoreB": 18,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Customer Insights Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 100,
+      "identityB": "Vikram Mehta",
+      "scoreB": 100,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "DevOps Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Product Designer",
+      "identityA": "Priya Selvam",
+      "scoreA": 50,
+      "identityB": "Vikram Mehta",
+      "scoreB": 50,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Machine Learning Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 27,
+      "identityB": "Vikram Mehta",
+      "scoreB": 27,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Operations Program Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Scrum Master",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Full-Stack Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 78,
+      "identityB": "Vikram Mehta",
+      "scoreB": 78,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Community Operations Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Junior Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Data Visualization Specialist",
+      "identityA": "Priya Selvam",
+      "scoreA": 85,
+      "identityB": "Vikram Mehta",
+      "scoreB": 85,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Engineering Team Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 33,
+      "identityB": "Vikram Mehta",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "UX Researcher",
+      "identityA": "Priya Selvam",
+      "scoreA": 60,
+      "identityB": "Vikram Mehta",
+      "scoreB": 60,
+      "delta": 0
+    },
+    {
+      "candidate": 5,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Data Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 68,
+      "identityB": "Arjun Kumar",
+      "scoreB": 68,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 47,
+      "identityB": "Arjun Kumar",
+      "scoreB": 47,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Project Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Backend Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 9,
+      "identityB": "Arjun Kumar",
+      "scoreB": 9,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Customer Insights Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 48,
+      "identityB": "Arjun Kumar",
+      "scoreB": 48,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "DevOps Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Product Designer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 17,
+      "identityB": "Arjun Kumar",
+      "scoreB": 17,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Machine Learning Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 33,
+      "identityB": "Arjun Kumar",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Operations Program Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Scrum Master",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Full-Stack Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 73,
+      "identityB": "Arjun Kumar",
+      "scoreB": 73,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Community Operations Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Junior Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Data Visualization Specialist",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 82,
+      "identityB": "Arjun Kumar",
+      "scoreB": 82,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Engineering Team Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "UX Researcher",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 50,
+      "identityB": "Arjun Kumar",
+      "scoreB": 50,
+      "delta": 0
+    },
+    {
+      "candidate": 6,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Data Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 80,
+      "identityB": "Vikram Mehta",
+      "scoreB": 80,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Project Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Backend Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 18,
+      "identityB": "Vikram Mehta",
+      "scoreB": 18,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Customer Insights Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "DevOps Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Product Designer",
+      "identityA": "Priya Selvam",
+      "scoreA": 35,
+      "identityB": "Vikram Mehta",
+      "scoreB": 35,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Machine Learning Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Operations Program Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 25,
+      "identityB": "Vikram Mehta",
+      "scoreB": 25,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Scrum Master",
+      "identityA": "Priya Selvam",
+      "scoreA": 17,
+      "identityB": "Vikram Mehta",
+      "scoreB": 17,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Full-Stack Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 63,
+      "identityB": "Vikram Mehta",
+      "scoreB": 63,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Community Operations Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Junior Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 90,
+      "identityB": "Vikram Mehta",
+      "scoreB": 90,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Data Visualization Specialist",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Engineering Team Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 25,
+      "identityB": "Vikram Mehta",
+      "scoreB": 25,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "UX Researcher",
+      "identityA": "Priya Selvam",
+      "scoreA": 18,
+      "identityB": "Vikram Mehta",
+      "scoreB": 18,
+      "delta": 0
+    },
+    {
+      "candidate": 7,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Data Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 100,
+      "identityB": "Arjun Kumar",
+      "scoreB": 100,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Project Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Backend Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 43,
+      "identityB": "Arjun Kumar",
+      "scoreB": 43,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Customer Insights Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "DevOps Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 9,
+      "identityB": "Arjun Kumar",
+      "scoreB": 9,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Product Designer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 47,
+      "identityB": "Arjun Kumar",
+      "scoreB": 47,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Machine Learning Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Operations Program Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Scrum Master",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Full-Stack Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 94,
+      "identityB": "Arjun Kumar",
+      "scoreB": 94,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Community Operations Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Junior Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 100,
+      "identityB": "Arjun Kumar",
+      "scoreB": 100,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 12,
+      "identityB": "Arjun Kumar",
+      "scoreB": 12,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Data Visualization Specialist",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Engineering Team Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 34,
+      "identityB": "Arjun Kumar",
+      "scoreB": 34,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "UX Researcher",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 33,
+      "identityB": "Arjun Kumar",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 8,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Data Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Priya Selvam",
+      "scoreA": 14,
+      "identityB": "Vikram Mehta",
+      "scoreB": 14,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Project Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 78,
+      "identityB": "Vikram Mehta",
+      "scoreB": 78,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Backend Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Customer Insights Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 33,
+      "identityB": "Vikram Mehta",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "DevOps Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Product Designer",
+      "identityA": "Priya Selvam",
+      "scoreA": 33,
+      "identityB": "Vikram Mehta",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Machine Learning Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Operations Program Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 31,
+      "identityB": "Vikram Mehta",
+      "scoreB": 31,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Scrum Master",
+      "identityA": "Priya Selvam",
+      "scoreA": 43,
+      "identityB": "Vikram Mehta",
+      "scoreB": 43,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Full-Stack Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Community Operations Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 83,
+      "identityB": "Vikram Mehta",
+      "scoreB": 83,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Junior Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Data Visualization Specialist",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Engineering Team Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 63,
+      "identityB": "Vikram Mehta",
+      "scoreB": 63,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "UX Researcher",
+      "identityA": "Priya Selvam",
+      "scoreA": 17,
+      "identityB": "Vikram Mehta",
+      "scoreB": 17,
+      "delta": 0
+    },
+    {
+      "candidate": 9,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Data Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 66,
+      "identityB": "Arjun Kumar",
+      "scoreB": 66,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 61,
+      "identityB": "Arjun Kumar",
+      "scoreB": 61,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Project Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Backend Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 9,
+      "identityB": "Arjun Kumar",
+      "scoreB": 9,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Customer Insights Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 48,
+      "identityB": "Arjun Kumar",
+      "scoreB": 48,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "DevOps Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 13,
+      "identityB": "Arjun Kumar",
+      "scoreB": 13,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Product Designer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 17,
+      "identityB": "Arjun Kumar",
+      "scoreB": 17,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Machine Learning Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 77,
+      "identityB": "Arjun Kumar",
+      "scoreB": 77,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Operations Program Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Scrum Master",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Full-Stack Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 52,
+      "identityB": "Arjun Kumar",
+      "scoreB": 52,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 33,
+      "identityB": "Arjun Kumar",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Community Operations Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Junior Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 50,
+      "identityB": "Arjun Kumar",
+      "scoreB": 50,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Data Visualization Specialist",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 67,
+      "identityB": "Arjun Kumar",
+      "scoreB": 67,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Engineering Team Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "UX Researcher",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 43,
+      "identityB": "Arjun Kumar",
+      "scoreB": 43,
+      "delta": 0
+    },
+    {
+      "candidate": 10,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 38,
+      "identityB": "Arjun Kumar",
+      "scoreB": 38,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Data Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 28,
+      "identityB": "Vikram Mehta",
+      "scoreB": 28,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Priya Selvam",
+      "scoreA": 26,
+      "identityB": "Vikram Mehta",
+      "scoreB": 26,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Project Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Backend Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 55,
+      "identityB": "Vikram Mehta",
+      "scoreB": 55,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Customer Insights Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 30,
+      "identityB": "Vikram Mehta",
+      "scoreB": 30,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "DevOps Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 88,
+      "identityB": "Vikram Mehta",
+      "scoreB": 88,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Product Designer",
+      "identityA": "Priya Selvam",
+      "scoreA": 7,
+      "identityB": "Vikram Mehta",
+      "scoreB": 7,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Machine Learning Associate",
+      "identityA": "Priya Selvam",
+      "scoreA": 7,
+      "identityB": "Vikram Mehta",
+      "scoreB": 7,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Operations Program Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Scrum Master",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Full-Stack Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Priya Selvam",
+      "scoreA": 33,
+      "identityB": "Vikram Mehta",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 100,
+      "identityB": "Vikram Mehta",
+      "scoreB": 100,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Community Operations Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Junior Frontend Developer",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 67,
+      "identityB": "Vikram Mehta",
+      "scoreB": 67,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Data Visualization Specialist",
+      "identityA": "Priya Selvam",
+      "scoreA": 30,
+      "identityB": "Vikram Mehta",
+      "scoreB": 30,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Engineering Team Lead",
+      "identityA": "Priya Selvam",
+      "scoreA": 25,
+      "identityB": "Vikram Mehta",
+      "scoreB": 25,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Priya Selvam",
+      "scoreA": 0,
+      "identityB": "Vikram Mehta",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "UX Researcher",
+      "identityA": "Priya Selvam",
+      "scoreA": 13,
+      "identityB": "Vikram Mehta",
+      "scoreB": 13,
+      "delta": 0
+    },
+    {
+      "candidate": 11,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Priya Selvam",
+      "scoreA": 88,
+      "identityB": "Vikram Mehta",
+      "scoreB": 88,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Data Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Junior Data Analyst (Remote)",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 14,
+      "identityB": "Arjun Kumar",
+      "scoreB": 14,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Project Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 51,
+      "identityB": "Arjun Kumar",
+      "scoreB": 51,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Backend Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Customer Insights Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 33,
+      "identityB": "Arjun Kumar",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "DevOps Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Product Designer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 33,
+      "identityB": "Arjun Kumar",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Machine Learning Associate",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Operations Program Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 50,
+      "identityB": "Arjun Kumar",
+      "scoreB": 50,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Scrum Master",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 42,
+      "identityB": "Arjun Kumar",
+      "scoreB": 42,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Full-Stack Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Business Intelligence Analyst",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Cloud Infrastructure Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Community Operations Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 33,
+      "identityB": "Arjun Kumar",
+      "scoreB": 33,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Junior Frontend Developer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "QA & Release Automation Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Data Visualization Specialist",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Engineering Team Lead",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Grants & Budget Coordinator",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 83,
+      "identityB": "Arjun Kumar",
+      "scoreB": 83,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "UX Researcher",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 17,
+      "identityB": "Arjun Kumar",
+      "scoreB": 17,
+      "delta": 0
+    },
+    {
+      "candidate": 12,
+      "job": "Platform Reliability Engineer",
+      "identityA": "Fatima Sheikh",
+      "scoreA": 0,
+      "identityB": "Arjun Kumar",
+      "scoreB": 0,
+      "delta": 0
+    }
+  ]
+}

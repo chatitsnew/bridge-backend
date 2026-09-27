@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bridge — Skills-first matching demo</title>
+<title>Bridge — Skills-first hiring</title>
 <style>
   :root{
     --paper:#ECEEE3;
@@ -509,7 +509,7 @@
     <div class="brand-row">
       <h1><a href="/" style="text-decoration:none; color:inherit;">Bridge<span class="dot">.</span></a></h1>
     </div>
-    <p class="tagline">A skills-first matching demo. Paste a resume, watch it get read two ways — once by a literal keyword scanner, once by a skills graph that infers adjacent capability — and see where the two disagree.</p>
+    <p class="tagline">Skills-first candidate matching. Paste a resume, watch it get read two ways — once by a literal keyword scanner, once by a skills graph that infers adjacent capability — and see where the two disagree.</p>
     <div class="header-meta">
       <span><b>Module 1</b> — Skills discovery</span>
       <span><b>Module 2</b> — Inclusive matching</span>
@@ -541,7 +541,7 @@
       <button class="analyze-btn" id="analyze-btn">Analyze candidate</button>
       <div id="status-line"><span class="spinner"></span><span id="status-text">Reading resume text…</span></div>
       <div id="backend-indicator" style="font-size:12px; color:#7C8895; margin-top:6px;"></div>
-      <p class="note">Skills are extracted from the text above using a keyword + adjacency model. Experience, degree, and gap are set explicitly here rather than parsed, so the demo stays predictable on stage.</p>
+      <p class="note">Skills are extracted from the text above using a keyword + adjacency model. Experience, degree, and gap are set explicitly here rather than parsed, so results stay consistent and reproducible.</p>
     </div>
 
     <div class="panel">
@@ -609,7 +609,7 @@
   <div class="ghost-panel" id="ghost-panel"></div>
 
   <footer>
-    <b>How this demo works —</b> skill extraction and job scoring run on a deterministic rule engine (a ~30-node skills dictionary with weighted adjacency), not a live model call, so results are exactly reproducible in front of judges. The production version of Bridge replaces this layer with an LLM-driven skills inference agent (voice narratives, GitHub code analysis, synthetic skill validation) sitting behind the same three-module contract shown here — Discovery, Matching, Audit — so the interface and the bias-audit logic don't have to change when the inference engine does.
+    <b>How this works —</b> skill extraction and job scoring run on a deterministic rule engine (a ~30-node skills dictionary with weighted adjacency), not a live model call, so every result is exactly reproducible. Upcoming releases extend this layer with an LLM-driven skills inference agent (voice narratives, GitHub code analysis, synthetic skill validation) sitting behind the same module contract shown here — Discovery, Matching, Audit, Pathway — so the interface and the bias-audit logic don't have to change as the inference engine evolves.
   </footer>
 
 </div>
@@ -826,16 +826,16 @@ const PERSONAS = {
 
 const GHOST_IDENTITIES = {
   priya: {
-    original: {name:'Sadie Sink', college:"Govt. Arts College, Madurai — tier 3", pronouns:'she/her'},
-    ghost:    {name:'Vikram Mehta', college:'IIT Delhi — tier 1', pronouns:'he/him'}
+    original: {name:'Sadie Sink', age:29, college:"Govt. Arts College, Madurai — tier 3", pronouns:'she/her'},
+    ghost:    {name:'Vikram Mehta', age:45, college:'IIT Delhi — tier 1', pronouns:'he/him'}
   },
   arjun: {
-    original: {name:'Emma Watson', college:'No formal degree — self-taught', pronouns:'she/her'},
-    ghost:    {name:'Ananya Rao', college:'No formal degree — self-taught', pronouns:'she/her'}
+    original: {name:'Emma Watson', age:52, college:'No formal degree — self-taught', pronouns:'she/her'},
+    ghost:    {name:'Ananya Rao', age:24, college:'No formal degree — self-taught', pronouns:'she/her'}
   },
   rahul: {
-    original: {name:'Hrithik Roshan', college:'IIT Bombay — tier 1', pronouns:'he/him'},
-    ghost:    {name:'Fatima Sheikh', college:'Regional Engineering College — tier 3', pronouns:'she/her'}
+    original: {name:'Hrithik Roshan', age:40, college:'IIT Bombay — tier 1', pronouns:'he/him'},
+    ghost:    {name:'Fatima Sheikh', age:22, college:'Regional Engineering College — tier 3', pronouns:'she/her'}
   }
 };
 
@@ -1319,6 +1319,7 @@ function renderGhostPanel(personaKey, scored){
       <div class="ghost-card">
         <div class="id-eyebrow">${label}</div>
         <div class="id-row"><b>${id.name}</b></div>
+        <div class="id-row">Age ${id.age}</div>
         <div class="id-row">${id.college}</div>
         <div class="id-row">${id.pronouns}</div>
       </div>`;
@@ -1335,7 +1336,7 @@ function renderGhostPanel(personaKey, scored){
       <div class="ghost-divider"></div>
       ${cardHtml(identities.ghost, 'Identity swapped')}
     </div>
-    <div class="ghost-note"><b>Why the number doesn't move —</b> both cards are wrappers around the exact same resume text. Name, college, and pronouns live in this display only; the scoring engine's input is the candidate text box, which is byte-for-byte identical either way. A system that scores on skills can't be swayed by a signal it was never given.</div>
+    <div class="ghost-note"><b>Why the number doesn't move —</b> both cards are wrappers around the exact same resume text. Name, age, college, and pronouns live in this display only; the scoring engine's input is the candidate text box, which is byte-for-byte identical either way. A system that scores on skills can't be swayed by a signal it was never given.</div>
   `;
 }
 
@@ -1541,7 +1542,7 @@ analyze();
                           <p class="results-sub" id="audit-verdict">Loading audit results…</p>
                               </div>
                                   <div class="stat-row" id="audit-stats"></div>
-                                      <button class="breakdown-toggle" id="audit-toggle" type="button" style="display:none;">Show all 72 comparisons</button>
+                                      <button class="breakdown-toggle" id="audit-toggle" type="button" style="display:none;">Show all comparisons</button>
                                           <div id="audit-table-wrap" style="display:none; margin-top:14px; max-height:420px; overflow-y:auto; border:1px solid var(--line); border-radius:var(--radius);"></div>
                                             `;
       ghostPanel.parentNode.insertBefore(section, ghostPanel.nextSibling);
@@ -1567,7 +1568,7 @@ analyze();
                     toggleBtn.addEventListener('click', ()=>{
                               const show = tableWrap.style.display !== 'block';
                               tableWrap.style.display = show ? 'block' : 'none';
-                              toggleBtn.textContent = show ? 'Hide comparisons' : 'Show all 72 comparisons';
+                              toggleBtn.textContent = show ? 'Hide comparisons' : `Show all ${data.totalComparisons} comparisons`;
                               if(show && !tableWrap.dataset.built){
                                           tableWrap.dataset.built = '1';
                                           const rows = data.comparisons.map(c => `
