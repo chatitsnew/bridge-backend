@@ -945,86 +945,92 @@ async function fetchFairnessSummary() {
 
 
 /* ---- Hero.js ---- */
+const STEPS = [
+    {
+        num: '01', module: 'Module 1 — Discovery', title: 'Paste a resume',
+        body: "Drop in resume text — or pick one of the sample candidates. Bridge extracts explicit skills, then infers adjacent ones the text never states, like React implying JavaScript, HTML, and CSS.",
+    },
+    {
+        num: '02', module: 'Module 2 — Matching', title: 'Score against real roles',
+        body: 'See a traditional keyword pass/fail and a weighted skills-based score, side by side, across 22 open roles — plus an ATS Translator showing exactly which resume line would fix a missed keyword.',
+    },
+    {
+        num: '03', module: 'Module 3 — Audit', title: "Swap the identity, not the resume",
+        body: "The Ghost Resume panel swaps name, age, college, and pronouns live and re-scores. The number doesn't move — because the engine was never shown it. Then see the same result proven across 264 statistical comparisons.",
+    },
+    {
+        num: '04', module: 'Module 4 — Pathway', title: 'Close the gap',
+        body: "For any role a candidate doesn't yet match, get a concrete, curated learning path for the missing skills — a next step, not just a rejection.",
+    },
+];
 function Hero({ onTryLive }) {
     const triggeredRef = useRef(false);
-    const touchYRef = useRef(null);
-    const accumRef = useRef(0);
-    const decayTimerRef = useRef(null);
+    const [triggered, setTriggered] = useState(false);
     const trigger = () => {
         if (triggeredRef.current)
             return;
         triggeredRef.current = true;
+        setTriggered(true);
         onTryLive();
     };
-    // Scrolling down on the hero is the same as clicking "Try it live" — a
-    // deliberate wheel or touch-swipe gesture advances straight into the
-    // scan transition. preventDefault on every qualifying gesture so the page
-    // doesn't visibly scroll first and then jump — the transition takes over
-    // immediately, edge-to-edge.
-    //
-    // Trackpads (and plenty of mice) deliver a scroll gesture as a stream of
-    // SMALL deltaY events rather than one big jump, so a threshold on a
-    // single event's deltaY misses them entirely. Accumulate deltaY across
-    // the gesture instead, with a short decay so unrelated tiny/stray scrolls
-    // spread over time don't add up to an accidental trigger.
+    // Reaching the bottom of the hero content — after actually scrolling past
+    // the walkthrough, not just brushing the trackpad — is the same as
+    // clicking "Try it live". Using real scroll position (rather than
+    // guessing from wheel-event deltas) means every input method works the
+    // same way: mouse wheel, trackpad, touch drag, scrollbar, keyboard.
     useEffect(() => {
-        const handleWheel = (e) => {
+        const handleScroll = () => {
             if (triggeredRef.current)
                 return;
-            if (e.deltaY <= 0)
-                return;
-            e.preventDefault();
-            accumRef.current += e.deltaY;
-            if (decayTimerRef.current)
-                clearTimeout(decayTimerRef.current);
-            decayTimerRef.current = setTimeout(() => { accumRef.current = 0; }, 450);
-            if (accumRef.current > 60) {
+            const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 48;
+            if (nearBottom)
                 trigger();
-            }
         };
-        const handleTouchStart = (e) => { touchYRef.current = e.touches[0]?.clientY ?? null; };
-        const handleTouchMove = (e) => {
-            if (triggeredRef.current || touchYRef.current == null)
-                return;
-            const y = e.touches[0]?.clientY;
-            if (y == null)
-                return;
-            if (touchYRef.current - y > 28) {
-                if (e.cancelable)
-                    e.preventDefault();
-                trigger();
-            }
-        };
-        window.addEventListener('wheel', handleWheel, { passive: false });
-        window.addEventListener('touchstart', handleTouchStart, { passive: true });
-        window.addEventListener('touchmove', handleTouchMove, { passive: false });
-        return () => {
-            if (decayTimerRef.current)
-                clearTimeout(decayTimerRef.current);
-            window.removeEventListener('wheel', handleWheel);
-            window.removeEventListener('touchstart', handleTouchStart);
-            window.removeEventListener('touchmove', handleTouchMove);
-        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
-    return (React.createElement("div", { className: "wrap", style: { position: 'relative', paddingTop: 60, minHeight: 'calc(100vh - 60px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' } },
-        React.createElement("div", { className: "badge-row" },
-            React.createElement("span", { className: "badge" }, "Skills-first"),
-            React.createElement("span", { className: "badge-connector" }),
-            React.createElement("span", { className: "badge" }, "Bias-audited")),
-        React.createElement("div", { className: "hero-grid" },
-            React.createElement("div", null,
-                React.createElement(motion.h1, { id: "hero-headline", initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: 0.1 } }, "Hiring that can't see who you are \u2014 only what you can do."),
-                React.createElement(motion.p, { className: "tagline", initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: 0.22 } }, "Bridge reads a resume two ways at once: once as a literal keyword scanner would, and once through a skills graph that infers adjacent capability a scanner misses. Then it proves, live, that the score never moves when the name, college, or pronouns on the page do."),
-                React.createElement(motion.div, { className: "hero-cta", initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5, delay: 0.34 } },
-                    React.createElement("button", { className: "btn-primary", style: { padding: '13px 26px', fontSize: 14.5 }, onClick: trigger }, "Try it live \u2192"),
-                    React.createElement("span", { style: { fontSize: 13, color: 'var(--ink-faint)' } }, "No sign-up \u2014 paste a resume and go."))),
-            React.createElement(motion.svg, { viewBox: "0 0 260 260", initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, transition: { duration: 0.7, delay: 0.2 }, style: { width: '100%', maxWidth: 340 } },
-                React.createElement("path", { d: "M20 240 L20 60 L200 60", stroke: "var(--line)", strokeWidth: "1", fill: "none" }),
-                [[210, 60, true], [150, 95, false], [230, 150, true], [95, 190, false], [210, 220, true], [145, 145, false]].map(([cx, cy, filled], i) => (React.createElement("circle", { key: i, cx: cx, cy: cy, r: filled ? 9 : 7, fill: filled ? 'var(--gold,#C4571F)' : 'none', stroke: filled ? 'none' : 'var(--gold,#C4571F)', strokeDasharray: filled ? 'none' : '3,2' }))))),
-        React.createElement(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1, y: [0, 7, 0] }, transition: { opacity: { duration: 0.6, delay: 0.8 }, y: { duration: 1.7, delay: 1.1, repeat: Infinity, ease: 'easeInOut' } }, style: { position: 'absolute', left: 0, right: 0, bottom: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, pointerEvents: 'none' } },
-            React.createElement("span", { style: { fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--ink-faint)' } }, "Scroll to try it live"),
+    return (React.createElement("div", { style: { position: 'relative' } },
+        React.createElement("div", { className: "wrap", style: { paddingTop: 60 } },
+            React.createElement("div", { className: "badge-row" },
+                React.createElement("span", { className: "badge" }, "Skills-first"),
+                React.createElement("span", { className: "badge-connector" }),
+                React.createElement("span", { className: "badge" }, "Bias-audited")),
+            React.createElement("div", { className: "hero-grid" },
+                React.createElement("div", null,
+                    React.createElement(motion.h1, { id: "hero-headline", initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: 0.1 } }, "Hiring that can't see who you are \u2014 only what you can do."),
+                    React.createElement(motion.p, { className: "tagline", initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: 0.22 } }, "Bridge reads a resume two ways at once: once as a literal keyword scanner would, and once through a skills graph that infers adjacent capability a scanner misses. Then it proves, live, that the score never moves when the name, college, or pronouns on the page do."),
+                    React.createElement(motion.div, { className: "hero-cta", initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5, delay: 0.34 } },
+                        React.createElement("button", { className: "btn-primary", style: { padding: '13px 26px', fontSize: 14.5 }, onClick: trigger }, "Try it live \u2192"),
+                        React.createElement("span", { style: { fontSize: 13, color: 'var(--ink-faint)' } }, "No sign-up \u2014 paste a resume and go."))),
+                React.createElement(motion.svg, { viewBox: "0 0 260 260", initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, transition: { duration: 0.7, delay: 0.2 }, style: { width: '100%', maxWidth: 340 } },
+                    React.createElement("path", { d: "M20 240 L20 60 L200 60", stroke: "var(--line)", strokeWidth: "1", fill: "none" }),
+                    [[210, 60, true], [150, 95, false], [230, 150, true], [95, 190, false], [210, 220, true], [145, 145, false]].map(([cx, cy, filled], i) => (React.createElement("circle", { key: i, cx: cx, cy: cy, r: filled ? 9 : 7, fill: filled ? 'var(--gold,#C4571F)' : 'none', stroke: filled ? 'none' : 'var(--gold,#C4571F)', strokeDasharray: filled ? 'none' : '3,2' }))))),
+            React.createElement("div", { className: "stat-row" },
+                React.createElement("div", { className: "stat" },
+                    React.createElement("div", { className: "num gold" }, "22"),
+                    React.createElement("div", { className: "cap" }, "Open roles to test a candidate against, from junior frontend to engineering lead")),
+                React.createElement("div", { className: "stat" },
+                    React.createElement("div", { className: "num teal" }, "264 / 264"),
+                    React.createElement("div", { className: "cap" }, "Identity-swap comparisons with an identical score, across 12 independent candidates")),
+                React.createElement("div", { className: "stat" },
+                    React.createElement("div", { className: "num teal" }, "0"),
+                    React.createElement("div", { className: "cap" }, "Maximum score difference found between any identity-swapped pair"))),
+            React.createElement("div", { style: { margin: '56px 0 8px' } },
+                React.createElement("div", { style: { fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--gold,#C4571F)', marginBottom: 8 } }, "Walkthrough"),
+                React.createElement("h2", { style: { fontFamily: 'Fraunces, Georgia, serif', fontWeight: 500, fontSize: 'clamp(22px,3vw,30px)', margin: '0 0 6px' } }, "Four steps, in the order you'll actually use them"),
+                React.createElement("p", { style: { fontSize: 14, color: 'var(--ink-soft)', maxWidth: 560, marginBottom: 30 } }, "Everything below is live in the tool \u2014 this is exactly what you'll see after you click \"Try it live,\" in order, top to bottom.")),
+            React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '28px 24px', marginBottom: 50 } }, STEPS.map((s, i) => (React.createElement(motion.div, { key: s.num, initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-60px' }, transition: { duration: 0.5, delay: i * 0.05 } },
+                React.createElement("div", { style: { fontFamily: 'Georgia, serif', fontSize: 26, color: 'var(--ink-faint)', marginBottom: 6 } }, s.num),
+                React.createElement("div", { style: { fontSize: 11, textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--gold,#C4571F)', fontWeight: 600, marginBottom: 8 } }, s.module),
+                React.createElement("h3", { style: { fontFamily: 'Fraunces, Georgia, serif', fontWeight: 500, fontSize: 18, margin: '0 0 8px' } }, s.title),
+                React.createElement("p", { style: { fontSize: 13.5, color: 'var(--ink-soft)', lineHeight: 1.5, margin: 0 } }, s.body))))),
+            React.createElement(motion.div, { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-60px' }, transition: { duration: 0.5 }, style: { borderTop: '1px solid var(--line)', paddingTop: 34, marginBottom: 60, textAlign: 'center' } },
+                React.createElement("h2", { style: { fontFamily: 'Fraunces, Georgia, serif', fontWeight: 500, fontSize: 'clamp(22px,3vw,28px)', margin: '0 0 16px' } }, "Paste a resume. Watch the score hold still."),
+                React.createElement("button", { className: "btn-primary", style: { padding: '13px 26px', fontSize: 14.5 }, onClick: trigger }, "Try it live \u2192"))),
+        !triggered && (React.createElement(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1, y: [0, 7, 0] }, transition: { opacity: { duration: 0.6, delay: 0.8 }, y: { duration: 1.7, delay: 1.1, repeat: Infinity, ease: 'easeInOut' } }, style: { position: 'fixed', left: 0, right: 0, bottom: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, pointerEvents: 'none', zIndex: 5 } },
+            React.createElement("span", { style: { fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--ink-faint)', background: 'var(--paper)', padding: '4px 10px', borderRadius: 20, border: '1px solid var(--line)' } }, "Scroll to try it live"),
             React.createElement("svg", { width: "16", height: "16", viewBox: "0 0 16 16" },
-                React.createElement("path", { d: "M3 6 L8 11 L13 6", stroke: "var(--ink-faint)", strokeWidth: "1.6", fill: "none", strokeLinecap: "round", strokeLinejoin: "round" })))));
+                React.createElement("path", { d: "M3 6 L8 11 L13 6", stroke: "var(--ink-faint)", strokeWidth: "1.6", fill: "none", strokeLinecap: "round", strokeLinejoin: "round" }))))));
 }
 
 
@@ -1826,7 +1832,12 @@ function App() {
     const bridgeRunRef = useRef(null);
     const resultsRef = useRef(null);
     const auditRef = useRef(null);
-    const handleTryLive = () => setScanActive(true);
+    // The hero now scrolls through a walkthrough before the transition fires,
+    // so by the time it does, the page may be scrolled deep into that content.
+    // Reset to the top immediately — while the full-screen transition overlay
+    // is covering everything — so Discovery starts at its own top rather than
+    // wherever the hero happened to be scrolled to.
+    const handleTryLive = () => { window.scrollTo(0, 0); setScanActive(true); };
     const handleScanComplete = () => { setScanActive(false); setScreen('app'); };
     const handleAnalyze = async () => {
         setAnalyzing(true);
