@@ -117,7 +117,11 @@ const server = http.createServer(async (req, res) => {
     const isExperience = url.pathname === '/experience' || url.pathname === '/experience.html';
     const filePath = path.join(__dirname, isExperience ? 'experience.html' : (isApp ? 'app.html' : 'index.html'));
     if(fs.existsSync(filePath)){
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      // No caching: these pages are being iterated on right up to launch,
+      // and a stale cached copy in someone's browser (showing an old build
+      // with an already-fixed bug) is worse than one extra network round
+      // trip on every load.
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
       return res.end(fs.readFileSync(filePath, 'utf8'));
     }
   }
