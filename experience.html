@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bridge — Skills-first hiring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1F1EC;
+  --paper-raised:#FAFAF7;
+  --ink:#0C0D0B;
+  --ink-soft:#4A4B46;
+  --ink-faint:#8B8C84;
+  --line:#D6D6CD;
+  --gold:#C4571F;
+  --gold-fill:#C4571F;
+  --gold-soft:#F0DDCD;
+  --teal:#2C6656;
+  --teal-soft:#CFE3DA;
+  --rust:#A6432F;
+  --rust-soft:#EFD6CE;
+  --shadow: none;
+  --radius: 2px;
+  --bg:#F1F1EC; --bg-raised:#FAFAF7; --accent:#C4571F;
+}
+:root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark){
+    --paper:#0B0C0A; --paper-raised:#15160F; --ink:#F1F1EC; --ink-soft:#B7B8AF;
+    --ink-faint:#7A7B73; --line:#2A2B24; --gold:#E07B3F; --gold-fill:#E07B3F;
+    --gold-soft:#3A2A1C; --teal:#65B79B; --teal-soft:#1D332C; --rust:#DE8A72; --rust-soft:#3A2521;
+    --bg:#0B0C0A; --bg-raised:#15160F; --accent:#E07B3F;
+  }
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration:.01ms !important; animation-iteration-count:1 !important;
+    transition-duration:.01ms !important; scroll-behavior:auto !important;
+  }
+}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height:1.5; min-height:100vh;
+}
+.grid-bg{
+  position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:64px 64px; opacity:.3;
+  mask-image:linear-gradient(to bottom, black, transparent 65%);
+}
+.reveal{ opacity:0; transform:translateY(22px); transition:opacity .55s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1); }
+.reveal.in-view{opacity:1; transform:translateY(0);}
+h1,h2,h3,.serif{ font-family:"Fraunces", Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif; font-weight:500; letter-spacing:-0.01em; margin:0; }
+.mono{ font-family:ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", monospace; }
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px 80px;}
+
+/* ---------- Hero (from marketing page) ---------- */
+.badge-row{display:flex; align-items:center; gap:10px; margin-bottom:26px;}
+.badge{ display:inline-flex; align-items:center; font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-soft); border:1px solid var(--line); border-radius:20px; padding:6px 14px; background:var(--paper-raised); }
+.badge-connector{width:26px; height:1px; background:var(--line);}
+.hero-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:40px; align-items:center; margin-top:20px;}
+@media (max-width:900px){ .hero-grid{grid-template-columns:1fr;} }
+.hero-grid h1{font-size:clamp(34px,4.6vw,52px); line-height:1.08;}
+.hero-grid .tagline{ max-width:56ch; color:var(--ink-soft); font-size:16.5px; margin-top:20px; }
+.hero-cta{margin-top:30px; display:flex; gap:14px; flex-wrap:wrap; align-items:center;}
+
+/* ---------- Header ---------- */
+header{ padding:44px 0 30px; border-bottom:1px solid var(--line); }
+.brand-row{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
+header h1{font-size:clamp(32px,5vw,44px); color:var(--ink);}
+.dot{color:var(--gold);}
+.tagline{ max-width:56ch; color:var(--ink-soft); font-size:16px; margin-top:10px; }
+.header-meta{ margin-top:18px; display:flex; gap:22px; flex-wrap:wrap; font-size:13px; color:var(--ink-faint); }
+.header-meta span b{color:var(--ink-soft); font-weight:500;}
+
+.module-tag{
+  font-size:11px; color:var(--ink-faint); letter-spacing:.07em; text-transform:uppercase;
+  margin:26px 0 10px; display:flex; align-items:center; gap:10px;
+}
+.module-tag::before{content:""; width:22px; height:1px; background:var(--line); flex-shrink:0;}
+.module-tag b{color:var(--ink-soft); font-weight:600;}
+
+.clear-link{ background:none; border:none; color:var(--ink-faint); font-size:12px; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:0; font-family:inherit; }
+.clear-link:hover{color:var(--ink);}
+.persona-head-row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;}
+
+.workbench{ display:grid; grid-template-columns:minmax(280px, 380px) 1fr; gap:0; margin-top:0; border-bottom:1px solid var(--line); }
+@media (max-width:860px){ .workbench{grid-template-columns:1fr;} }
+.panel{padding:34px 30px;}
+.panel + .panel{border-left:1px solid var(--line);}
+@media (max-width:860px){ .panel + .panel{border-left:none; border-top:1px solid var(--line);} }
+
+.panel-label{ font-size:12px; color:var(--ink-faint); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.panel-label::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+.persona-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;}
+.persona-chip{
+  border:1px solid var(--line); background:var(--paper-raised); color:var(--ink-soft);
+  padding:7px 13px; border-radius:var(--radius); font-size:13px; font-family:inherit; cursor:pointer;
+  transition:border-color .15s, color .15s, transform .18s cubic-bezier(.34,1.56,.64,1), background .15s;
+}
+.persona-chip:hover{border-color:var(--gold); transform:translateY(-1px);}
+.persona-chip.active{ border-color:var(--gold); color:var(--ink); background:var(--gold-soft); font-weight:500; transform:scale(1.04); }
+
+textarea{
+  width:100%; min-height:172px; resize:vertical; background:var(--paper-raised); border:1px solid var(--line);
+  border-radius:var(--radius); color:var(--ink); font-family:inherit; font-size:14px; line-height:1.55; padding:12px 13px;
+}
+textarea:focus, input:focus, button:focus-visible{ outline:2px solid var(--gold); outline-offset:1px; }
+
+.field-row{display:flex; gap:16px; margin-top:16px; flex-wrap:wrap;}
+.field{display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-soft);}
+.field input[type="number"]{ width:84px; background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); padding:7px 9px; color:var(--ink); font-family:inherit; font-size:14px; }
+.field input[type="text"]{ width:100%; background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); padding:7px 9px; color:var(--ink); font-family:inherit; font-size:14px; box-sizing:border-box; }
+.architect-note{font-size:12px; color:var(--ink-faint); margin:10px 0 16px; line-height:1.5;}
+.verify-block{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
+.verify-block b{color:var(--ink);}
+.ats-block{ margin-top:8px; padding:10px 12px; background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
+.ats-block .ats-line{font-family:Georgia,serif; color:var(--ink); font-style:italic;}
+.check-field{ display:flex; align-items:center; gap:7px; font-size:13px; color:var(--ink-soft); cursor:pointer; margin-top:16px; }
+.check-field input{accent-color:var(--gold);}
+
+.analyze-btn{
+  margin-top:22px; width:100%; padding:13px; background:var(--ink); color:var(--paper); border:none;
+  border-radius:var(--radius); font-family:inherit; font-size:14.5px; font-weight:500; cursor:pointer;
+  transition:opacity .15s, transform .15s cubic-bezier(.34,1.56,.64,1);
+}
+.analyze-btn:hover{opacity:.85;}
+.analyze-btn:active{transform:scale(.98);}
+
+.btn-primary{
+  padding:9px 18px; background:var(--ink); color:var(--paper); border:none; border-radius:var(--radius);
+  font-family:inherit; font-size:13.5px; font-weight:500; cursor:pointer;
+  transition:opacity .15s, transform .15s cubic-bezier(.34,1.56,.64,1); white-space:nowrap;
+}
+.btn-primary:hover{opacity:.85;}
+.btn-primary:active{transform:scale(.97);}
+.btn-primary:disabled{opacity:.5; cursor:default;}
+
+.note{font-size:12px; color:var(--ink-faint); margin-top:10px; line-height:1.5;}
+
+.graph-head{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:6px;}
+.legend{display:flex; gap:16px; font-size:12px; color:var(--ink-faint); flex-wrap:wrap;}
+.legend span{display:flex; align-items:center; gap:6px;}
+.legend i{width:10px; height:10px; border-radius:50%; display:inline-block;}
+.legend .dot-explicit{background:var(--gold-fill);}
+.legend .dot-inferred{background:transparent; border:1.5px dashed var(--gold);}
+.legend .dot-gap{background:var(--rust-soft); border:1.3px dashed var(--rust);}
+
+.gap-select-row{ display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin:14px 0 4px; font-size:13px; color:var(--ink-soft); }
+.gap-select-row select{ background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); padding:6px 9px; color:var(--ink); font-family:inherit; font-size:13px; }
+#gap-summary{font-size:12px; color:var(--rust);}
+
+#graph-svg{width:100%; height:380px; display:block;}
+@media (max-width:860px){ #graph-svg{ width:100vw; max-width:100vw; position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; } }
+.node-label{ font-family:inherit; font-size:11px; fill:var(--ink-soft); pointer-events:none; }
+.link-line{stroke:var(--line); stroke-width:1.3;}
+.node-circle{cursor:pointer;}
+
+#rationale{ margin-top:10px; min-height:44px; padding:12px 14px; background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); font-size:13px; color:var(--ink-soft); }
+#rationale b{color:var(--ink); font-weight:600;}
+#rationale .empty{color:var(--ink-faint); font-style:italic;}
+
+.results-head{padding:38px 0 10px;}
+.results-head h2{font-size:26px;}
+.results-sub{color:var(--ink-soft); font-size:14.5px; margin-top:8px; max-width:70ch;}
+
+.stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin:26px 0 34px; }
+@media (max-width:600px){ .stat-row{grid-template-columns:1fr;} }
+.stat{background:var(--paper); padding:22px 22px 20px;}
+.stat .num{font-family:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif; font-size:44px; font-weight:600; line-height:1;}
+.stat .num.rust{color:var(--rust);} .stat .num.teal{color:var(--teal);} .stat .num.gold{color:var(--gold);}
+.stat .cap{font-size:13px; color:var(--ink-soft); margin-top:8px; max-width:32ch;}
+
+.job-row{
+  border-bottom:1px solid var(--line); padding:22px 0; display:grid; grid-template-columns:26px 1.5fr 1fr; gap:22px; align-items:start;
+  opacity:1; transform:translateY(0); transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+}
+@starting-style{ .job-row{ opacity:0; transform:translateY(16px); } }
+@media (max-width:760px){ .job-row{grid-template-columns:1fr; gap:10px;} .job-rank{display:none;} }
+.job-rank{font-family:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif; color:var(--ink-faint); font-size:18px; padding-top:2px;}
+.job-title{font-size:16.5px; font-weight:600; font-family:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif;}
+.job-meta{font-size:12.5px; color:var(--ink-faint); margin-top:4px;}
+.job-desc{font-size:13px; color:var(--ink-soft); margin-top:10px; max-width:62ch; line-height:1.6;}
+.job-desc mark{background:var(--rust-soft); color:var(--rust); padding:0 3px; border-radius:2px; font-weight:500;}
+
+.verdict-block{margin-bottom:12px;}
+.verdict-label{font-size:11.5px; color:var(--ink-faint); margin-bottom:5px;}
+.verdict-badge{
+  display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; padding:4px 10px 4px 8px; border-radius:20px;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1), opacity .4s ease;
+}
+@starting-style{ .verdict-badge{ opacity:0; transform:scale(.82); } }
+.verdict-badge.pass{color:var(--teal); background:var(--teal-soft);}
+.verdict-badge.reject{color:var(--rust); background:var(--rust-soft);}
+.verdict-badge .icon{font-size:12px;}
+
+@keyframes pulse-ring{ 0%,100%{ stroke-opacity:1; } 50%{ stroke-opacity:.35; } }
+.inferred-node{ animation: pulse-ring 2.4s ease-in-out infinite; }
+.verdict-reasons{font-size:12px; color:var(--ink-faint); margin-top:4px; line-height:1.55;}
+
+.bar-track{ height:8px; background:var(--paper-raised); border:1px solid var(--line); border-radius:20px; overflow:hidden; margin-top:6px; position:relative; }
+.bar-fill{height:100%; background:var(--teal); transition:width .8s cubic-bezier(.16,1,.3,1);}
+@starting-style{ .bar-fill{ width:0% !important; } }
+.bar-fill.low{background:var(--ink-faint);}
+.bar-pct{font-family:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif; font-size:19px; font-weight:600;}
+
+.breakdown-toggle{ background:none; border:none; color:var(--ink-soft); font-size:12px; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:0; margin-top:10px; font-family:inherit; }
+.breakdown-toggle:hover{color:var(--ink);}
+.breakdown-panel{
+  max-height:0; overflow:hidden; opacity:0; margin-top:0; padding:0 13px; background:var(--paper-raised); border:1px solid transparent; border-radius:var(--radius);
+  transition:max-height .4s cubic-bezier(.16,1,.3,1), opacity .3s ease, margin-top .4s cubic-bezier(.16,1,.3,1), padding .4s cubic-bezier(.16,1,.3,1), border-color .3s ease;
+}
+.breakdown-panel.open{ max-height:900px; opacity:1; margin-top:10px; padding:11px 13px; border-color:var(--line); }
+.breakdown-row{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid var(--line); font-size:12.5px; flex-wrap:wrap; }
+.breakdown-row:last-child{border-bottom:none;}
+.breakdown-row .sk-name{color:var(--ink);}
+.breakdown-row .req-tag{font-size:10.5px; color:var(--ink-faint); margin-left:5px;}
+.breakdown-right{display:flex; align-items:center; gap:8px;}
+.sk-tag{font-size:11px; padding:2px 8px; border-radius:20px; white-space:nowrap;}
+.sk-tag.explicit{background:var(--gold-soft); color:var(--gold);}
+.sk-tag.inferred{background:var(--paper); color:var(--gold); border:1px dashed var(--gold);}
+.sk-tag.missing{background:var(--rust-soft); color:var(--rust);}
+.sk-pts{font-size:11px; color:var(--ink-faint); min-width:44px; text-align:right;}
+
+.ghost-panel{border:1px solid var(--line); margin:20px 0 12px;}
+.ghost-grid{display:grid; grid-template-columns:1fr auto 1fr;}
+@media (max-width:760px){ .ghost-grid{grid-template-columns:1fr;} .ghost-divider{width:auto !important; height:1px;} }
+.ghost-card{padding:24px;}
+.ghost-card .id-eyebrow{font-size:11px; color:var(--ink-faint); margin-bottom:12px;}
+.ghost-card .id-row{font-size:14.5px; margin-bottom:7px; color:var(--ink-soft);}
+.ghost-card .id-row b{color:var(--ink); font-weight:600;}
+.ghost-divider{width:1px; background:var(--line);}
+.ghost-center{ padding:24px; text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center; background:var(--teal-soft); min-width:170px; }
+.ghost-center .ghost-num{font-family:Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif; font-size:36px; font-weight:600; color:var(--teal); line-height:1;}
+.ghost-center .ghost-cap{font-size:11.5px; color:var(--ink-soft); margin-top:9px; max-width:24ch; line-height:1.5;}
+.ghost-note{padding:16px 24px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-faint); line-height:1.6;}
+.ghost-note b{color:var(--ink-soft);}
+.ghost-empty{padding:24px; font-size:13.5px; color:var(--ink-faint);}
+
+footer{ margin-top:44px; padding-top:22px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-faint); line-height:1.7; max-width:78ch; }
+footer b{color:var(--ink-soft);}
+
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.2.6",
+    "react-dom": "https://esm.sh/react-dom@19.2.6?external=react",
+    "react-dom/client": "https://esm.sh/react-dom@19.2.6/client?external=react",
+    "framer-motion": "https://esm.sh/framer-motion@11?external=react,react-dom"
+  }
+}
+</script>
+</head>
+<body>
+<noscript>This experience needs JavaScript. <a href="/app">Use the standard tool instead →</a></noscript>
+<div id="root"></div>
+<div id="load-fallback" style="display:none; max-width:640px; margin:15vh auto; padding:0 28px; font-family:-apple-system,sans-serif; text-align:center; color:#4A4B46;">
+  <h2 style="font-family:Georgia,serif; color:#0C0D0B;">This experience didn't load</h2>
+  <p>It depends on a few external libraries loading over the network. If your connection is flaky, use the standard tool instead — same engine, same results, zero external dependencies.</p>
+  <a href="/app" style="display:inline-block; margin-top:12px; padding:12px 24px; background:#0C0D0B; color:#F1F1EC; text-decoration:none; border-radius:2px;">Open the standard tool →</a>
+</div>
+<script>
+  setTimeout(function(){
+    var root = document.getElementById('root');
+    if(root && root.children.length === 0){
+      document.getElementById('load-fallback').style.display = 'block';
+    }
+  }, 6000);
+</script>
+<script type="module">
+import { AnimatePresence, motion } from 'framer-motion';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+
+/* ---- data.js ---- */
+/* ============ DATA ============
+   Ported verbatim from the working vanilla app.html so scoring stays
+   byte-for-byte identical to what's already tested and deployed. */
+const SKILLS = [
+    { id: 'python', name: 'Python', aliases: ['python'] },
+    { id: 'javascript', name: 'JavaScript', aliases: ['javascript', 'js'] },
+    { id: 'react', name: 'React', aliases: ['react', 'react.js', 'reactjs'] },
+    { id: 'nodejs', name: 'Node.js', aliases: ['node.js', 'nodejs', 'node'] },
+    { id: 'html', name: 'HTML', aliases: ['html'] },
+    { id: 'css', name: 'CSS', aliases: ['css'] },
+    { id: 'git', name: 'Git', aliases: ['git', 'github', 'version control'] },
+    { id: 'sql', name: 'SQL', aliases: ['sql'] },
+    { id: 'excel', name: 'Excel', aliases: ['excel', 'google sheets', 'spreadsheet', 'spreadsheets'] },
+    { id: 'data_analysis', name: 'Data Analysis', aliases: ['data analysis', 'analyzing data', 'analysed data', 'analyzed data'] },
+    { id: 'statistics', name: 'Statistics', aliases: ['statistics', 'statistical analysis'] },
+    { id: 'data_viz', name: 'Data Visualization', aliases: ['data visualization', 'dashboards'] },
+    { id: 'ml', name: 'Machine Learning', aliases: ['machine learning'] },
+    { id: 'agile', name: 'Agile/Scrum', aliases: ['agile', 'scrum'] },
+    { id: 'project_mgmt', name: 'Project Management', aliases: ['project management', 'managing projects'] },
+    { id: 'stakeholder_comm', name: 'Stakeholder Communication', aliases: ['stakeholder communication', 'coordinating stakeholders'] },
+    { id: 'scheduling', name: 'Scheduling', aliases: ['scheduling', 'coordinating appointments', 'coordinating schedules'] },
+    { id: 'budget_mgmt', name: 'Budget Management', aliases: ['budget management', 'household budget', 'managing a budget'] },
+    { id: 'crisis_mgmt', name: 'Crisis Management', aliases: ['crisis management', 'under pressure', 'fast decisions', 'high-pressure'] },
+    { id: 'resource_prior', name: 'Resource Prioritization', aliases: ['resource prioritization', 'prioritizing resources', 'prioritization'] },
+    { id: 'communication', name: 'Communication', aliases: ['communication', 'communicating'] },
+    { id: 'leadership', name: 'Leadership', aliases: ['leadership', 'mentoring', 'led a team', 'leading a team'] },
+    { id: 'uiux', name: 'UI/UX', aliases: ['ui/ux', 'user experience', 'ui design'] },
+    { id: 'component_arch', name: 'Component Architecture', aliases: ['componentized', 'component-based', 'component architecture'] },
+    { id: 'rest_api', name: 'REST APIs', aliases: ['rest api', 'rest apis'] },
+    { id: 'aws', name: 'AWS', aliases: ['aws'] },
+    { id: 'docker', name: 'Docker', aliases: ['docker', 'containers'] },
+    { id: 'automation', name: 'Automation', aliases: ['automate', 'automation', 'automated'] },
+];
+const ADJ = [
+    ['python', 'data_analysis', 0.65], ['python', 'automation', 0.6], ['python', 'ml', 0.5],
+    ['react', 'javascript', 0.95], ['react', 'html', 0.85], ['react', 'css', 0.85],
+    ['react', 'component_arch', 0.8], ['react', 'uiux', 0.55],
+    ['nodejs', 'javascript', 0.9], ['nodejs', 'rest_api', 0.7],
+    ['data_analysis', 'statistics', 0.6], ['data_analysis', 'sql', 0.5],
+    ['data_analysis', 'data_viz', 0.55], ['data_analysis', 'excel', 0.4],
+    ['excel', 'data_analysis', 0.4],
+    ['crisis_mgmt', 'project_mgmt', 0.6], ['crisis_mgmt', 'stakeholder_comm', 0.65], ['crisis_mgmt', 'resource_prior', 0.75],
+    ['scheduling', 'stakeholder_comm', 0.55], ['scheduling', 'project_mgmt', 0.5],
+    ['budget_mgmt', 'resource_prior', 0.6], ['budget_mgmt', 'project_mgmt', 0.45],
+    ['resource_prior', 'project_mgmt', 0.55],
+    ['automation', 'data_analysis', 0.4],
+].map(([from, to, w]) => ({ from, to, w }));
+const VERIFY_MAP = {
+    'python|data_analysis': { q: "Ask them to walk through a specific Python script or notebook where they cleaned or analyzed a real dataset — what did the data look like, and what did they conclude from it?", p: "Ask for a link to the script/notebook, or a before/after look at the dataset they cleaned." },
+    'python|automation': { q: "Ask what repetitive task they automated with Python, how long it used to take by hand, and how much time it saved.", p: "Ask for the script itself, or a short before/after description of the manual process it replaced." },
+    'python|ml': { q: "Ask whether any of their Python work touched a predictive or classification model — even a simple one — and what problem it solved.", p: "Ask for the notebook, or a one-paragraph write-up of the model's inputs and accuracy." },
+    'react|javascript': { q: "Ask them to describe a JavaScript concept (closures, async/await, state updates) they had to reason about carefully while building their React app.", p: "Ask for a link to the deployed app or repo, plus one tricky bug they remember fixing." },
+    'react|html': { q: "Ask how they structure and semantically mark up a page before adding React components on top of it.", p: "Ask for a screenshot of a component's rendered markup, or an accessibility/Lighthouse score." },
+    'react|css': { q: "Ask how they approach responsive styling in a React app — CSS modules, a utility framework, or plain CSS — and why.", p: "Ask for a live link to a page they styled, viewed on both desktop and mobile." },
+    'react|component_arch': { q: "Ask them to describe how they split one of their React apps into components, and why they drew the boundaries where they did.", p: "Ask for a component-tree sketch or a quick look at the repo's folder structure." },
+    'react|uiux': { q: "Ask what user feedback or usability issue shaped a design decision in one of their React interfaces.", p: "Ask for a before/after screenshot, or the wireframe they built from." },
+    'nodejs|javascript': { q: "Ask them to describe one way Node.js's runtime behaves differently from browser JavaScript, in the context of something they built.", p: "Ask for a link to a repo showing their Node.js code." },
+    'nodejs|rest_api': { q: "Ask them to describe an endpoint they built in Node.js — its inputs, outputs, and one edge case they had to handle.", p: "Ask for API docs, a Postman collection, or a live demo of the endpoint responding to a request." },
+    'data_analysis|statistics': { q: "Ask what statistical method (an average, a correlation, a significance test) they used to support a conclusion from their analysis.", p: "Ask for the chart or summary table that used that method." },
+    'data_analysis|sql': { q: "Ask whether any of their analysis pulled from a database, and what a query they wrote looked like.", p: "Ask them to sketch or describe one SQL query from memory." },
+    'data_analysis|data_viz': { q: "Ask what chart type they chose to represent a finding, and why that type over another.", p: "Ask for a screenshot of a chart or dashboard they built." },
+    'data_analysis|excel': { q: "Ask whether their analysis happened in a spreadsheet, and what formulas or pivot tables it relied on.", p: "Ask for a (redacted) screenshot of the formula bar or a pivot table behind it." },
+    'excel|data_analysis': { q: "Ask what conclusion they drew from a workbook, and how they'd double-check it wasn't a spreadsheet error.", p: "Ask for a screenshot of the summary tab or pivot table behind that conclusion." },
+    'crisis_mgmt|project_mgmt': { q: "Ask how they kept a project on track while also handling the high-pressure situation they described.", p: "Ask for a timeline, task list, or plan they kept during that period." },
+    'crisis_mgmt|stakeholder_comm': { q: "Ask who they had to keep informed during that high-pressure period, and how often.", p: "Ask for an example update or message from that time, names redacted." },
+    'crisis_mgmt|resource_prior': { q: "Ask them to walk through a moment where they had to choose between two competing needs under pressure, and how they decided.", p: "Ask for that specific example, with the reasoning behind the trade-off." },
+    'scheduling|stakeholder_comm': { q: "Ask how they coordinated schedules across multiple people, and what they did when two commitments conflicted.", p: "Ask for a redacted screenshot of a calendar or scheduling tool they used." },
+    'scheduling|project_mgmt': { q: "Ask what tool or system they used to track scheduling across a project, and one deadline they had to move.", p: "Ask for a redacted screenshot of the tracker or calendar." },
+    'budget_mgmt|resource_prior': { q: "Ask about a time the budget was tighter than planned, and what they cut or delayed as a result.", p: "Ask for a (redacted) budget sheet, or a short written account of the trade-off." },
+    'budget_mgmt|project_mgmt': { q: "Ask how they tracked spend against a plan, and what they did when a cost ran over.", p: "Ask for a redacted budget tracker, or a summary of the overage and the fix." },
+    'resource_prior|project_mgmt': { q: "Ask for an example of reprioritizing a project's task list when resources suddenly got tight.", p: "Ask for the before/after task list or plan." },
+    'automation|data_analysis': { q: "Ask what data the automation they built touched, and what it let them analyze that manual work didn't.", p: "Ask for the script, plus a one-line description of what it outputs." },
+};
+const ATS_HINTS = {
+    python: "Automated recurring tasks and analyzed datasets using Python.",
+    javascript: "Built interactive product features using JavaScript.",
+    react: "Developed component-based user interfaces using React.",
+    nodejs: "Built backend services and REST APIs using Node.js.",
+    html: "Built responsive page markup using HTML.",
+    css: "Styled responsive interfaces using CSS.",
+    git: "Managed version control and collaborative workflows using Git.",
+    sql: "Queried and filtered structured data using SQL.",
+    excel: "Built reporting workflows and tracked data using Excel.",
+    data_analysis: "Analyzed datasets to surface trends through Data Analysis.",
+    statistics: "Applied Statistics to validate trends in operational data.",
+    data_viz: "Built dashboards and charts for Data Visualization of key metrics.",
+    ml: "Applied Machine Learning to a classification or prediction problem.",
+    agile: "Worked within Agile/Scrum sprints to plan and deliver features.",
+    project_mgmt: "Managed a cross-functional project end-to-end, i.e. Project Management.",
+    stakeholder_comm: "Coordinated regularly with stakeholders to align priorities (Stakeholder Communication).",
+    scheduling: "Managed complex, multi-party Scheduling across teams or specialists.",
+    budget_mgmt: "Tracked spend against a plan, i.e. Budget Management.",
+    crisis_mgmt: "Made fast decisions under pressure during a high-stakes situation (Crisis Management).",
+    resource_prior: "Prioritized limited resources across competing needs (Resource Prioritization).",
+    communication: "Communicated updates clearly across technical and non-technical audiences.",
+    leadership: "Led and mentored a team, i.e. Leadership.",
+    uiux: "Designed user flows and interfaces with UI/UX best practices in mind.",
+    component_arch: "Built reusable, componentized architecture (Component Architecture).",
+    rest_api: "Designed and integrated REST APIs.",
+    aws: "Deployed and managed services on AWS.",
+    docker: "Containerized services using Docker.",
+    automation: "Built scripts to automate a repetitive workflow (Automation).",
+};
+const byId = Object.fromEntries(SKILLS.map(s => [s.id, s]));
+const byName = Object.fromEntries(SKILLS.map(s => [s.name.toLowerCase(), s.id]));
+const JOBS = [
+    { name: 'Data Analyst', company: 'Healthcare Analytics Co.', required: ['SQL', 'Excel', 'Data Analysis', 'Statistics'], preferred: ['Python', 'Data Visualization'], minYears: 2, degreeRequired: true, gapPolicy: true,
+        desc: "We're looking for a rockstar Data Analyst to join our fast-paced healthcare analytics team. Bachelor's degree required. Candidates must have a continuous work history with no employment gaps in the last 3 years. 2+ years experience with SQL, Excel, and statistical analysis required.",
+        flags: ['rockstar', 'fast-paced', 'continuous work history'] },
+    { name: 'Frontend Developer', company: 'Nimbus Retail Tech', required: ['JavaScript', 'React', 'HTML', 'CSS'], preferred: ['Node.js', 'UI/UX'], minYears: 3, degreeRequired: true, gapPolicy: false,
+        desc: "Looking for a coding ninja who's a true digital native. Must have a B.Tech/BE degree and 3+ years of professional experience with JavaScript, React, HTML, and CSS.",
+        flags: ['coding ninja', 'digital native'] },
+    { name: 'Junior Data Analyst (Remote)', company: 'Meridian Insights', required: ['Data Analysis', 'Excel'], preferred: ['SQL', 'Python', 'Communication'], minYears: 0, degreeRequired: false, gapPolicy: false,
+        desc: "We welcome applicants from all educational backgrounds and career paths, including those returning after a career break. 0–1 years experience welcome; on-the-job training provided.",
+        flags: [] },
+    { name: 'Project Coordinator', company: 'Lighthouse Health Systems', required: ['Project Management', 'Stakeholder Communication', 'Scheduling'], preferred: ['Budget Management', 'Crisis Management'], minYears: 2, degreeRequired: false, gapPolicy: true,
+        desc: "Seeking an organized Project Coordinator. Must have no employment gaps in the last 3 years. 2+ years managing projects, coordinating stakeholders, and scheduling required.",
+        flags: ['no employment gaps'] },
+    { name: 'Backend Engineer', company: 'Forge Cloud Systems', required: ['JavaScript', 'Node.js', 'Git', 'SQL'], preferred: ['REST APIs', 'Docker', 'AWS'], minYears: 2, degreeRequired: true, gapPolicy: false,
+        desc: "Join our elite engineering team as a 10x Backend Engineer. Bachelor's in CS required. 2+ years with JavaScript, Node.js, Git, and SQL.",
+        flags: ['elite', '10x'] },
+    { name: 'Customer Insights Associate', company: 'Bridgewell Analytics', required: ['Data Analysis', 'Communication'], preferred: ['SQL', 'Excel'], minYears: 1, degreeRequired: false, gapPolicy: false,
+        desc: "An entry-friendly analyst role. No specific degree required — we care about how you think about data. 1+ years of relevant experience, formal or informal.",
+        flags: [] },
+    { name: 'DevOps Engineer', company: 'Forge Cloud Systems', required: ['Git', 'Docker', 'AWS'], preferred: ['Automation', 'REST APIs'], minYears: 2, degreeRequired: false, gapPolicy: false,
+        desc: "Keep our deployment pipelines and cloud infrastructure running smoothly. No specific degree required — we care about hands-on experience. 2+ years working with Git, Docker, and AWS.",
+        flags: [] },
+    { name: 'Product Designer', company: 'Nimbus Retail Tech', required: ['UI/UX', 'Communication'], preferred: ['Component Architecture', 'Data Analysis'], minYears: 1, degreeRequired: false, gapPolicy: false,
+        desc: "Looking for a designer who can turn user feedback into clean, usable interfaces. No specific design pedigree required — we care about your process. 1+ years designing for real users.",
+        flags: [] },
+    { name: 'Machine Learning Associate', company: 'Bridgewell Analytics', required: ['Python', 'Machine Learning'], preferred: ['Data Analysis', 'Statistics'], minYears: 1, degreeRequired: true, gapPolicy: false,
+        desc: "Support our data science team building and evaluating predictive models. Bachelor's degree required. 1+ years of hands-on Python and machine learning experience.",
+        flags: [] },
+    { name: 'Operations Program Lead', company: 'Lighthouse Health Systems', required: ['Leadership', 'Resource Prioritization', 'Budget Management'], preferred: ['Crisis Management', 'Agile/Scrum'], minYears: 3, degreeRequired: false, gapPolicy: true,
+        desc: "Seeking a Program Lead who can juggle competing priorities and keep a budget on track under pressure. Must have no employment gaps in the last 3 years. 3+ years leading programs, managing budgets, and prioritizing resources.",
+        flags: ['no employment gaps'] },
+    { name: 'Scrum Master', company: 'Orbital Cloud Works', required: ['Agile/Scrum', 'Stakeholder Communication'], preferred: ['Project Management', 'Leadership'], minYears: 2, degreeRequired: false, gapPolicy: false,
+        desc: "Facilitate sprints and keep cross-functional teams aligned. No specific certification required — we care about how you run a room. 2+ years working in Agile/Scrum environments.",
+        flags: [] },
+    { name: 'Full-Stack Engineer', company: 'Nimbus Retail Tech', required: ['JavaScript', 'React', 'Node.js'], preferred: ['REST APIs', 'Component Architecture'], minYears: 3, degreeRequired: true, gapPolicy: false,
+        desc: "Join our elite full-stack squad shipping features end to end. Bachelor's in CS required. 3+ years across JavaScript, React, and Node.js.",
+        flags: ['elite'] },
+    { name: 'Business Intelligence Analyst', company: 'Healthcare Analytics Co.', required: ['SQL', 'Data Visualization'], preferred: ['Excel', 'Statistics'], minYears: 2, degreeRequired: true, gapPolicy: true,
+        desc: "Build dashboards that leadership actually reads. Bachelor's degree required. Candidates must have no employment gaps in the last 3 years. 2+ years with SQL and dashboarding tools.",
+        flags: ['no employment gaps'] },
+    { name: 'Cloud Infrastructure Automation Engineer', company: 'Forge Cloud Systems', required: ['Automation', 'AWS'], preferred: ['Docker', 'Git'], minYears: 2, degreeRequired: false, gapPolicy: false,
+        desc: "We're a lean team obsessed with automating away toil. Must be a 10x self-starter. 2+ years automating cloud infrastructure.",
+        flags: ['10x', 'self-starter'] },
+    { name: 'Community Operations Coordinator', company: 'Lighthouse Health Systems', required: ['Scheduling', 'Crisis Management'], preferred: ['Stakeholder Communication', 'Budget Management'], minYears: 1, degreeRequired: false, gapPolicy: false,
+        desc: "Keep community programs running when things get chaotic. We welcome applicants from all backgrounds, including career-break returners. 1+ years coordinating under pressure.",
+        flags: [] },
+    { name: 'Junior Frontend Developer', company: 'Meridian Insights', required: ['HTML', 'CSS'], preferred: ['JavaScript', 'React'], minYears: 0, degreeRequired: false, gapPolicy: false,
+        desc: "Entry point into frontend work — no professional experience required, just a portfolio and curiosity. 0+ years, on-the-job mentorship provided.",
+        flags: [] },
+    { name: 'QA & Release Automation Engineer', company: 'Bridgewell Analytics', required: ['Automation', 'Git'], preferred: ['Python', 'REST APIs'], minYears: 2, degreeRequired: true, gapPolicy: false,
+        desc: "Own our test automation and release pipeline. Bachelor's degree required. 2+ years automating QA workflows.",
+        flags: [] },
+    { name: 'Data Visualization Specialist', company: 'Healthcare Analytics Co.', required: ['Data Visualization', 'Data Analysis'], preferred: ['SQL', 'Excel'], minYears: 1, degreeRequired: false, gapPolicy: false,
+        desc: "Turn messy datasets into charts people actually understand. No design degree required. 1+ years building dashboards or reports.",
+        flags: [] },
+    { name: 'Engineering Team Lead', company: 'Forge Cloud Systems', required: ['Leadership', 'Node.js', 'Git'], preferred: ['Agile/Scrum', 'REST APIs'], minYears: 4, degreeRequired: true, gapPolicy: false,
+        desc: "Lead a small team of backend engineers as a true 10x tech lead. Bachelor's in CS required. 4+ years, including people leadership.",
+        flags: ['10x'] },
+    { name: 'Grants & Budget Coordinator', company: 'Lighthouse Health Systems', required: ['Budget Management', 'Communication'], preferred: ['Scheduling', 'Resource Prioritization'], minYears: 1, degreeRequired: false, gapPolicy: true,
+        desc: "Track program budgets and communicate spend to stakeholders. Must have no employment gaps in the last 3 years. 1+ years managing a budget.",
+        flags: ['no employment gaps'] },
+    { name: 'UX Researcher', company: 'Nimbus Retail Tech', required: ['UI/UX', 'Data Analysis'], preferred: ['Communication', 'Statistics'], minYears: 2, degreeRequired: true, gapPolicy: false,
+        desc: "Study how real users struggle with our product and turn it into design decisions. Bachelor's degree required. 2+ years of UX research or related analysis.",
+        flags: [] },
+    { name: 'Platform Reliability Engineer', company: 'Forge Cloud Systems', required: ['Docker', 'AWS', 'Automation'], preferred: ['Python', 'Git'], minYears: 3, degreeRequired: false, gapPolicy: false,
+        desc: "Keep production reliable at 3am too. No specific degree required — we care about incident scars. 3+ years running production infrastructure.",
+        flags: [] },
+];
+const PERSONAS = {
+    priya: {
+        label: 'Sadie',
+        text: "I have a Bachelor's degree from a state college in Tamil Nadu. After graduating, I worked for one year as a data entry associate at a small logistics firm, where I organized shipment records in Google Sheets and flagged discrepancies for the operations team. I took a two-year career gap to coordinate my mother's cancer treatment — managing a household budget, scheduling appointments across multiple specialists, and making fast decisions under pressure. During this time I also completed three online courses in Python programming and data analysis fundamentals, and built small scripts to automate my own expense tracking. I am now looking to return to a data-focused role.",
+        years: 1, hasDegree: true, hadGap: true
+    },
+    arjun: {
+        label: 'Emma',
+        text: "I am a self-taught software developer. I don't hold a formal computer science degree — I learned programming through freelance projects and open-source contributions on GitHub. Over the past two years I've built and shipped three React web applications, including an e-commerce dashboard. I write clean, componentized JavaScript, use Git for version control, and have started exploring Node.js for backend APIs. I'm comfortable with HTML and CSS and enjoy solving tricky UI bugs.",
+        years: 2, hasDegree: false, hadGap: false
+    },
+    rahul: {
+        label: 'Hrithik',
+        text: "I completed my B.Tech in Computer Science from a top engineering institute. After graduating I've spent two years as a full-time developer working with JavaScript, React, Node.js, SQL, and Git in an agile team environment. I hold strong fundamentals and enjoy mentoring junior engineers.",
+        years: 2, hasDegree: true, hadGap: false
+    },
+    custom: {
+        label: 'Write your own',
+        text: "", years: 0, hasDegree: false, hadGap: false
+    }
+};
+const GHOST_IDENTITIES = {
+    priya: {
+        original: { name: 'Sadie Sink', age: 29, college: "Govt. Arts College, Madurai — tier 3", pronouns: 'she/her' },
+        ghost: { name: 'Vikram Mehta', age: 45, college: 'IIT Delhi — tier 1', pronouns: 'he/him' }
+    },
+    arjun: {
+        original: { name: 'Emma Watson', age: 52, college: 'No formal degree — self-taught', pronouns: 'she/her' },
+        ghost: { name: 'Ananya Rao', age: 24, college: 'No formal degree — self-taught', pronouns: 'she/her' }
+    },
+    rahul: {
+        original: { name: 'Hrithik Roshan', age: 40, college: 'IIT Bombay — tier 1', pronouns: 'he/him' },
+        ghost: { name: 'Fatima Sheikh', age: 22, college: 'Regional Engineering College — tier 3', pronouns: 'she/her' }
+    }
+};
+
+
+/* ---- engine.js ---- */
+/* ============ LOGIC ============
+   Ported verbatim from the working vanilla app.html. */
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+const ALIAS_PATTERN_OVERRIDES = {
+    'excel': '\\bexcel\\b(?!\\s+(?:at|in|as|when|beyond))',
+};
+const NEGATION_TAIL = /\b(?:no|not|never|without|lack(?:ing)?\s+of|unfamiliar\s+with|not\s+familiar\s+with|no\s+experience\s+(?:with|in)|no\s+knowledge\s+of|no\s+formal\s+experience\s+(?:with|in)|haven't|hasn't|don't\s+have|doesn't\s+have)\s*$/i;
+function extractExplicit(text) {
+    const lower = text.toLowerCase().replace(/-/g, ' ');
+    const found = new Set();
+    for (const s of SKILLS) {
+        for (const alias of s.aliases) {
+            const source = ALIAS_PATTERN_OVERRIDES[alias] || ('\\b' + escapeRegex(alias.replace(/-/g, ' ')) + '\\b');
+            const re = new RegExp(source, 'gi');
+            let m, matched = false;
+            while ((m = re.exec(lower)) !== null) {
+                const before = lower.slice(Math.max(0, m.index - 40), m.index);
+                if (!NEGATION_TAIL.test(before)) {
+                    matched = true;
+                    break;
+                }
+                if (m.index === re.lastIndex)
+                    re.lastIndex++;
+            }
+            if (matched) {
+                found.add(s.id);
+                break;
+            }
+        }
+    }
+    return found;
+}
+function literalFound(text, name) {
+    const pat = new RegExp('\\b' + escapeRegex(name.toLowerCase()) + '\\b', 'i');
+    return pat.test(text.toLowerCase());
+}
+function inferSkills(explicitSet) {
+    const inferred = new Map();
+    for (const e of ADJ) {
+        if (explicitSet.has(e.from) && !explicitSet.has(e.to)) {
+            const cur = inferred.get(e.to);
+            if (!cur || cur.confidence < e.w)
+                inferred.set(e.to, { confidence: e.w, from: e.from });
+        }
+    }
+    return inferred;
+}
+function skillsBreakdown(job, explicitSet, inferredMap) {
+    const rows = [];
+    function addSkill(name, weight, isRequired) {
+        const id = byName[name.toLowerCase()];
+        let type, contribution, confidence = null;
+        if (explicitSet.has(id)) {
+            type = 'explicit';
+            contribution = weight;
+        }
+        else if (inferredMap.has(id)) {
+            type = 'inferred';
+            confidence = inferredMap.get(id).confidence;
+            contribution = weight * confidence;
+        }
+        else {
+            type = 'missing';
+            contribution = 0;
+        }
+        rows.push({ name, weight, isRequired, type, contribution, confidence });
+    }
+    job.required.forEach((n) => addSkill(n, 2, true));
+    job.preferred.forEach((n) => addSkill(n, 1, false));
+    const totalWeight = rows.reduce((a, r) => a + r.weight, 0);
+    const totalGot = rows.reduce((a, r) => a + r.contribution, 0);
+    return { rows, score: Math.round(100 * totalGot / totalWeight) };
+}
+function traditionalResult(job, text, years, hasDegree, hadGap) {
+    const missing = job.required.filter((name) => !literalFound(text, name));
+    const reasons = [];
+    if (missing.length)
+        reasons.push('Missing required keyword' + (missing.length > 1 ? 's' : '') + ': ' + missing.join(', '));
+    if (years < job.minYears)
+        reasons.push(`Needs ${job.minYears}+ yrs experience (has ${years})`);
+    if (job.degreeRequired && !hasDegree)
+        reasons.push("Requires a bachelor's degree on file");
+    if (job.gapPolicy && hadGap)
+        reasons.push('Employment-gap policy disqualifies');
+    return { pass: reasons.length === 0, reasons };
+}
+function highlightDesc(job) {
+    let html = job.desc;
+    job.flags.forEach((f) => {
+        const pat = new RegExp('(' + escapeRegex(f) + ')', 'ig');
+        html = html.replace(pat, '<mark>$1</mark>');
+    });
+    return html;
+}
+function verifyFor(fromId, toId) {
+    return VERIFY_MAP[fromId + '|' + toId] || {
+        q: `Ask for a specific example that shows both ${byId[fromId] ? byId[fromId].name : fromId} and this capability together — inference is a hint, not proof.`,
+        p: `Ask for a concrete artifact (a file, link, or screenshot) that demonstrates it directly.`
+    };
+}
+function atsTranslatorLines(job, text, explicitSet, inferredMap) {
+    const missingNames = job.required.filter((name) => !literalFound(text, name));
+    if (!missingNames.length)
+        return [];
+    return missingNames.slice(0, 2).map((name) => {
+        const id = byName[name.toLowerCase()];
+        const hint = (id && ATS_HINTS[id]) || `Add a line naming ${name} directly, if it applies.`;
+        const rescuable = id && (explicitSet.has(id) || inferredMap.has(id));
+        const lead = rescuable
+            ? `Your skills graph already shows ${name} — the ATS scanner just never saw the literal word. Try adding:`
+            : `No sign of ${name} in the text at all. If you have it, try adding a line like:`;
+        return { lead, hint };
+    });
+}
+
+
+/* ---- graph.js ---- */
+/* ============ Graph rendering (no external libraries) ============
+   Ported verbatim (imperative SVG + hand-written force simulation) from
+   the working vanilla app.html. Invoked from a React component via a ref;
+   deliberately NOT rewritten as declarative React/SVG, since the physics
+   and drag-handling are already correct and tested. */
+const SVGNS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs) {
+    const el = document.createElementNS(SVGNS, tag);
+    for (const k in attrs)
+        el.setAttribute(k, attrs[k]);
+    return el;
+}
+function screenToSvg(svgRoot, clientX, clientY) {
+    const pt = svgRoot.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const ctm = svgRoot.getScreenCTM();
+    if (!ctm)
+        return { x: clientX, y: clientY };
+    const p = pt.matrixTransform(ctm.inverse());
+    return { x: p.x, y: p.y };
+}
+function renderGraph(svgRoot, rationaleEl, gapSummaryEl, explicitSet, inferredMap, gapJob) {
+    svgRoot.innerHTML = '';
+    const w = svgRoot.clientWidth || 600;
+    const compact = w < 480;
+    const h = compact ? Math.max(440, Math.min(620, Math.round(w * 1.15))) : 420;
+    svgRoot.style.height = h + 'px';
+    svgRoot.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    const nodes = [];
+    const nodeIds = new Set();
+    explicitSet.forEach(id => { nodes.push({ id, kind: 'explicit', confidence: 1 }); nodeIds.add(id); });
+    inferredMap.forEach((v, id) => { if (!nodeIds.has(id)) {
+        nodes.push({ id, kind: 'inferred', confidence: v.confidence, from: v.from });
+        nodeIds.add(id);
+    } });
+    let gapCount = 0, gapTotal = 0;
+    if (gapJob) {
+        const reqIds = gapJob.required.map((n) => byName[n.toLowerCase()]);
+        const prefIds = gapJob.preferred.map((n) => byName[n.toLowerCase()]);
+        gapTotal = reqIds.length + prefIds.length;
+        [...reqIds, ...prefIds].forEach((id) => {
+            if (!nodeIds.has(id)) {
+                nodes.push({ id, kind: 'gap', required: reqIds.includes(id) });
+                nodeIds.add(id);
+                gapCount++;
+            }
+        });
+        if (gapSummaryEl)
+            gapSummaryEl.textContent =
+                gapCount === 0 ? `Fully covers ${gapJob.name}'s stated requirements.`
+                    : `${gapCount} of ${gapTotal} requirement(s) for ${gapJob.name} not found, explicit or inferred.`;
+    }
+    else {
+        if (gapSummaryEl)
+            gapSummaryEl.textContent = '';
+    }
+    const links = [];
+    ADJ.forEach(e => {
+        if (nodeIds.has(e.from) && nodeIds.has(e.to)) {
+            links.push({ source: e.from, target: e.to });
+        }
+    });
+    if (nodes.length === 0) {
+        const t = svgEl('text', { x: 20, y: 40, class: 'node-label' });
+        t.textContent = 'No recognizable skills in this text yet.';
+        svgRoot.appendChild(t);
+        return;
+    }
+    nodes.forEach((n, i) => {
+        const angle = (i / nodes.length) * Math.PI * 2;
+        n.x = w / 2 + Math.cos(angle) * Math.min(w, h) * 0.28;
+        n.y = h / 2 + Math.sin(angle) * Math.min(w, h) * 0.28;
+        n.vx = 0;
+        n.vy = 0;
+        n.fixed = false;
+    });
+    const byNodeId = Object.fromEntries(nodes.map(n => [n.id, n]));
+    links.forEach(l => { l.sourceNode = byNodeId[l.source]; l.targetNode = byNodeId[l.target]; });
+    function labelFootprint(name) {
+        if (compact && name.length > 12 && name.includes(' ')) {
+            const words = name.split(' ');
+            const mid = Math.ceil(words.length / 2);
+            const l1 = words.slice(0, mid).join(' ');
+            const l2 = words.slice(mid).join(' ');
+            return Math.max(l1.length, l2.length);
+        }
+        return name.length;
+    }
+    function radiusOf(n) {
+        const base = n.kind === 'explicit' ? 26 : 20;
+        const labelHalf = 9 + labelFootprint(byId[n.id].name) * (compact ? 2.4 : 3.0);
+        return Math.max(base, labelHalf);
+    }
+    const linkGroup = svgEl('g', {});
+    const nodeGroup = svgEl('g', {});
+    svgRoot.appendChild(linkGroup);
+    svgRoot.appendChild(nodeGroup);
+    const linkEls = links.map(() => {
+        const line = svgEl('line', { class: 'link-line' });
+        linkGroup.appendChild(line);
+        return line;
+    });
+    const sizeScale = compact ? 0.78 : 1;
+    const nodeEls = nodes.map(n => {
+        const g = svgEl('g', { class: 'node-circle' });
+        const circle = svgEl('circle', {
+            r: (n.kind === 'explicit' ? 22 : (n.kind === 'gap' ? 16 : 14 + 6 * n.confidence)) * sizeScale,
+            fill: n.kind === 'explicit' ? 'var(--gold-fill)' : (n.kind === 'gap' ? 'var(--rust-soft)' : 'var(--paper-raised)'),
+            stroke: n.kind === 'gap' ? 'var(--rust)' : 'var(--gold)',
+            'stroke-width': n.kind === 'gap' ? 1.3 : 1.5,
+            'stroke-dasharray': n.kind === 'explicit' ? 'none' : (n.kind === 'gap' ? '1.5,2.5' : '3,2')
+        });
+        if (n.kind === 'inferred')
+            circle.setAttribute('class', 'inferred-node');
+        const fontSize = compact ? 9.5 : 11;
+        const labelDY = compact ? 24 : 34;
+        const text = svgEl('text', { class: 'node-label', 'text-anchor': 'middle', 'font-size': fontSize, fill: n.kind === 'gap' ? 'var(--rust)' : 'var(--ink-soft)' });
+        const fullName = byId[n.id].name;
+        if (compact && fullName.length > 12 && fullName.includes(' ')) {
+            const words = fullName.split(' ');
+            const mid = Math.ceil(words.length / 2);
+            const t1 = svgEl('tspan', { x: 0, dy: labelDY });
+            t1.textContent = words.slice(0, mid).join(' ');
+            const t2 = svgEl('tspan', { x: 0, dy: fontSize + 2 });
+            t2.textContent = words.slice(mid).join(' ');
+            text.appendChild(t1);
+            text.appendChild(t2);
+        }
+        else {
+            text.setAttribute('dy', String(labelDY));
+            text.textContent = fullName;
+        }
+        g.appendChild(circle);
+        g.appendChild(text);
+        nodeGroup.appendChild(g);
+        g.addEventListener('pointerdown', (ev) => {
+            ev.preventDefault();
+            let moved = false;
+            n.fixed = true;
+            wake(0.4);
+            const onMove = (mv) => {
+                const p = screenToSvg(svgRoot, mv.clientX, mv.clientY);
+                n.x = p.x;
+                n.y = p.y;
+                n.vx = 0;
+                n.vy = 0;
+                moved = true;
+            };
+            const onUp = () => {
+                n.fixed = false;
+                wake(0);
+                window.removeEventListener('pointermove', onMove);
+                window.removeEventListener('pointerup', onUp);
+                if (!moved) {
+                    if (n.kind === 'gap') {
+                        rationaleEl.innerHTML = `<b>${byId[n.id].name}</b> — ${n.required ? 'required' : 'preferred'} for <b>${gapJob.name}</b>, and not found, explicit or inferred, in this candidate's profile. This is a genuine gap, not a keyword miss.`;
+                    }
+                    else if (n.kind === 'explicit') {
+                        rationaleEl.innerHTML = `<b>${byId[n.id].name}</b> — stated directly in the candidate's text.`;
+                    }
+                    else {
+                        const v = verifyFor(n.from, n.id);
+                        rationaleEl.innerHTML = `<b>${byId[n.id].name}</b> — inferred from <b>${byId[n.from].name}</b> at ${Math.round(n.confidence * 100)}% confidence. Candidates who show ${byId[n.from].name.toLowerCase()} typically also carry this capability, even if they never wrote the word down.
+              <div class="verify-block"><b>Verify it — interview question:</b> ${v.q}</div>
+              <div class="verify-block"><b>Ask for proof of skill:</b> ${v.p}</div>`;
+                    }
+                }
+            };
+            window.addEventListener('pointermove', onMove);
+            window.addEventListener('pointerup', onUp);
+        });
+        return g;
+    });
+    function draw() {
+        linkEls.forEach((line, i) => {
+            line.setAttribute('x1', links[i].sourceNode.x);
+            line.setAttribute('y1', links[i].sourceNode.y);
+            line.setAttribute('x2', links[i].targetNode.x);
+            line.setAttribute('y2', links[i].targetNode.y);
+        });
+        nodeEls.forEach((g, i) => g.setAttribute('transform', `translate(${nodes[i].x},${nodes[i].y})`));
+    }
+    let alpha = 1, alphaTarget = 0, rafId = null;
+    function wake(target) {
+        alphaTarget = target || 0;
+        alpha = Math.max(alpha, 0.4);
+        if (!rafId)
+            rafId = requestAnimationFrame(tick);
+    }
+    function tick() {
+        alpha += (alphaTarget - alpha) * 0.05;
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const a = nodes[i], b = nodes[j];
+                let dx = b.x - a.x, dy = b.y - a.y;
+                let d2 = dx * dx + dy * dy || 0.01;
+                const force = ((compact ? 3400 : 2200) / d2) * alpha;
+                const d = Math.sqrt(d2);
+                const fx = dx / d * force, fy = dy / d * force;
+                if (!a.fixed) {
+                    a.vx -= fx;
+                    a.vy -= fy;
+                }
+                if (!b.fixed) {
+                    b.vx += fx;
+                    b.vy += fy;
+                }
+            }
+        }
+        links.forEach(l => {
+            const a = l.sourceNode, b = l.targetNode;
+            let dx = b.x - a.x, dy = b.y - a.y;
+            const d = Math.sqrt(dx * dx + dy * dy) || 0.01;
+            const diff = (d - (compact ? 92 : 78)) / d * 0.06 * alpha;
+            const ox = dx * diff, oy = dy * diff;
+            if (!a.fixed) {
+                a.vx += ox;
+                a.vy += oy;
+            }
+            if (!b.fixed) {
+                b.vx -= ox;
+                b.vy -= oy;
+            }
+        });
+        nodes.forEach(n => {
+            if (n.fixed)
+                return;
+            n.vx += (w / 2 - n.x) * 0.006 * alpha;
+            n.vy += (h / 2 - n.y) * 0.008 * alpha;
+        });
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const a = nodes[i], b = nodes[j];
+                const minDist = radiusOf(a) + radiusOf(b) + 2;
+                let dx = b.x - a.x, dy = b.y - a.y;
+                const d = Math.sqrt(dx * dx + dy * dy) || 0.01;
+                if (d < minDist) {
+                    const overlap = (minDist - d) / 2;
+                    const ox = dx / d * overlap, oy = dy / d * overlap;
+                    if (!a.fixed) {
+                        a.x -= ox;
+                        a.y -= oy;
+                    }
+                    if (!b.fixed) {
+                        b.x += ox;
+                        b.y += oy;
+                    }
+                }
+            }
+        }
+        const pad = compact ? 52 : 30;
+        nodes.forEach(n => {
+            if (n.fixed)
+                return;
+            n.vx *= 0.82;
+            n.vy *= 0.82;
+            n.x += n.vx;
+            n.y += n.vy;
+            n.x = Math.max(pad, Math.min(w - pad, n.x));
+            n.y = Math.max(pad, Math.min(h - pad, n.y));
+        });
+        draw();
+        if (alpha > 0.005) {
+            rafId = requestAnimationFrame(tick);
+        }
+        else {
+            rafId = null;
+        }
+    }
+    draw();
+    wake(0);
+}
+
+
+/* ---- api.js ---- */
+/* ============ Backend wiring ============
+   Ported verbatim from the working vanilla app.html: tries the real
+   backend first, falls back to the local engine if unreachable. */
+const BACKEND_URL = 'https://bridge-here-for-food.up.railway.app';
+async function fetchFromBackend(text, years, hasDegree, hadGap) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 1500);
+    try {
+        const res = await fetch(BACKEND_URL + '/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, years, hasDegree, hadGap }),
+            signal: controller.signal
+        });
+        clearTimeout(timeout);
+        if (!res.ok)
+            return null;
+        const data = await res.json();
+        const explicit = new Set(data.explicitSkills.map((name) => byName[name.toLowerCase()]).filter(Boolean));
+        const inferred = new Map();
+        data.inferredSkills.forEach((s) => {
+            const id = byName[s.name.toLowerCase()];
+            const fromId = byName[(s.inferredFrom || '').toLowerCase()];
+            if (id)
+                inferred.set(id, { confidence: s.confidence, from: fromId });
+        });
+        return { explicit, inferred };
+    }
+    catch (e) {
+        clearTimeout(timeout);
+        return null;
+    }
+}
+async function analyzeCandidate(text, years, hasDegree, hadGap) {
+    const backendResult = await fetchFromBackend(text, years, hasDegree, hadGap);
+    if (backendResult) {
+        return { ...backendResult, live: true };
+    }
+    const explicit = extractExplicit(text);
+    const inferred = inferSkills(explicit);
+    return { explicit, inferred, live: false };
+}
+async function fetchLearningPathway(jobName, text, years, hasDegree, hadGap) {
+    const res = await fetch(BACKEND_URL + '/api/learning-pathway', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, years, hasDegree, hadGap, jobName })
+    });
+    return res.json();
+}
+async function fetchFairnessSummary() {
+    const res = await fetch(BACKEND_URL + '/api/fairness-summary');
+    return res.json();
+}
+
+
+/* ---- Hero.js ---- */
+function Hero({ onTryLive }) {
+    return (React.createElement("div", { className: "wrap", style: { paddingTop: 60 } },
+        React.createElement("div", { className: "badge-row" },
+            React.createElement("span", { className: "badge" }, "Skills-first"),
+            React.createElement("span", { className: "badge-connector" }),
+            React.createElement("span", { className: "badge" }, "Bias-audited")),
+        React.createElement("div", { className: "hero-grid" },
+            React.createElement("div", null,
+                React.createElement(motion.h1, { id: "hero-headline", initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: 0.1 } }, "Hiring that can't see who you are \u2014 only what you can do."),
+                React.createElement(motion.p, { className: "tagline", initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: 0.22 } }, "Bridge reads a resume two ways at once: once as a literal keyword scanner would, and once through a skills graph that infers adjacent capability a scanner misses. Then it proves, live, that the score never moves when the name, college, or pronouns on the page do."),
+                React.createElement(motion.div, { className: "hero-cta", initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5, delay: 0.34 } },
+                    React.createElement("button", { className: "btn-primary", style: { padding: '13px 26px', fontSize: 14.5 }, onClick: onTryLive }, "Try it live \u2192"),
+                    React.createElement("span", { style: { fontSize: 13, color: 'var(--ink-faint)' } }, "No sign-up \u2014 paste a resume and go."))),
+            React.createElement(motion.svg, { viewBox: "0 0 260 260", initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, transition: { duration: 0.7, delay: 0.2 }, style: { width: '100%', maxWidth: 340 } },
+                React.createElement("path", { d: "M20 240 L20 60 L200 60", stroke: "var(--line)", strokeWidth: "1", fill: "none" }),
+                [[210, 60, true], [150, 95, false], [230, 150, true], [95, 190, false], [210, 220, true], [145, 145, false]].map(([cx, cy, filled], i) => (React.createElement("circle", { key: i, cx: cx, cy: cy, r: filled ? 9 : 7, fill: filled ? 'var(--gold,#C4571F)' : 'none', stroke: filled ? 'none' : 'var(--gold,#C4571F)', strokeDasharray: filled ? 'none' : '3,2' })))))));
+}
+
+
+/* ---- Discovery.js ---- */
+function Discovery({ candidate, setCandidate, explicit, inferred, analyzing, onAnalyze }) {
+    const svgRef = useRef(null);
+    const rationaleRef = useRef(null);
+    const gapSummaryRef = useRef(null);
+    const [gapJobIdx, setGapJobIdx] = useState(-1);
+    const selectPersona = (key) => {
+        const p = PERSONAS[key];
+        setCandidate({ personaKey: key, text: p.text, years: p.years, hasDegree: p.hasDegree, hadGap: p.hadGap });
+    };
+    useEffect(() => {
+        if (!svgRef.current || !rationaleRef.current)
+            return;
+        const gapJob = gapJobIdx >= 0 ? JOBS[gapJobIdx] : null;
+        renderGraph(svgRef.current, rationaleRef.current, gapSummaryRef.current, explicit, inferred, gapJob);
+    }, [explicit, inferred, gapJobIdx]);
+    useEffect(() => {
+        const onResize = () => {
+            if (!svgRef.current || !rationaleRef.current)
+                return;
+            const gapJob = gapJobIdx >= 0 ? JOBS[gapJobIdx] : null;
+            renderGraph(svgRef.current, rationaleRef.current, gapSummaryRef.current, explicit, inferred, gapJob);
+        };
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, [explicit, inferred, gapJobIdx]);
+    return (React.createElement(React.Fragment, null,
+        React.createElement("div", { className: "module-tag", id: "module-1" },
+            React.createElement("b", null, "Module 1"),
+            " \u2014 Skills discovery"),
+        React.createElement("div", { className: "workbench" },
+            React.createElement("div", { className: "panel" },
+                React.createElement("div", { className: "persona-head-row" },
+                    React.createElement("div", { className: "panel-label", style: { marginBottom: 0, flex: 1 } }, "Candidate"),
+                    React.createElement("button", { className: "clear-link", type: "button", onClick: () => selectPersona('custom') }, "Clear")),
+                React.createElement("div", { className: "persona-row" }, Object.entries(PERSONAS).map(([key, p]) => (React.createElement("button", { key: key, className: 'persona-chip' + (key === candidate.personaKey ? ' active' : ''), onClick: () => selectPersona(key), type: "button" }, p.label)))),
+                React.createElement("textarea", { spellCheck: false, value: candidate.text, onChange: e => setCandidate({ ...candidate, personaKey: 'custom', text: e.target.value }) }),
+                React.createElement("div", { className: "field-row" },
+                    React.createElement("label", { className: "field" },
+                        "Years experience",
+                        React.createElement("input", { type: "number", min: 0, max: 40, value: candidate.years, onChange: e => setCandidate({ ...candidate, years: parseInt(e.target.value, 10) || 0 }) }))),
+                React.createElement("label", { className: "check-field" },
+                    React.createElement("input", { type: "checkbox", checked: candidate.hasDegree, onChange: e => setCandidate({ ...candidate, hasDegree: e.target.checked }) }),
+                    "Has a bachelor's degree on file"),
+                React.createElement("label", { className: "check-field" },
+                    React.createElement("input", { type: "checkbox", checked: candidate.hadGap, onChange: e => setCandidate({ ...candidate, hadGap: e.target.checked }) }),
+                    "Employment gap in last 3 years"),
+                React.createElement(motion.button, { className: "analyze-btn", onClick: onAnalyze, disabled: analyzing, style: { opacity: analyzing ? 0.6 : 1 }, whileTap: { scale: 0.98 } }, "Analyze candidate"),
+                React.createElement("p", { className: "note" }, "Skills are extracted from the text above using a keyword + adjacency model. Experience, degree, and gap are set explicitly here rather than parsed, so results stay consistent and reproducible.")),
+            React.createElement("div", { className: "panel" },
+                React.createElement("div", { className: "graph-head" },
+                    React.createElement("div", { className: "panel-label", style: { flex: 1 } }, "Inferred skills graph")),
+                React.createElement("div", { className: "legend" },
+                    React.createElement("span", null,
+                        React.createElement("i", { className: "dot-explicit" }),
+                        " Stated in the text"),
+                    React.createElement("span", null,
+                        React.createElement("i", { className: "dot-inferred" }),
+                        " Inferred capability"),
+                    React.createElement("span", null,
+                        React.createElement("i", { className: "dot-gap" }),
+                        " Missing for selected role")),
+                React.createElement("div", { className: "gap-select-row" },
+                    React.createElement("label", { htmlFor: "gap-job-select" }, "Show gaps against"),
+                    React.createElement("select", { id: "gap-job-select", value: gapJobIdx, onChange: e => setGapJobIdx(parseInt(e.target.value, 10)) },
+                        React.createElement("option", { value: -1 }, "No role selected"),
+                        JOBS.map((j, i) => React.createElement("option", { key: j.name, value: i }, j.name))),
+                    React.createElement("span", { id: "gap-summary", ref: gapSummaryRef })),
+                React.createElement("svg", { id: "graph-svg", ref: svgRef }),
+                React.createElement("div", { id: "rationale", ref: rationaleRef },
+                    React.createElement("span", { className: "empty" }, "Click a node to see why it's on the graph."))))));
+}
+
+
+/* ---- Results.js ---- */
+function scoreAll(candidate, explicit, inferred) {
+    return JOBS.map(job => {
+        const trad = traditionalResult(job, candidate.text, candidate.years, candidate.hasDegree, candidate.hadGap);
+        const bd = skillsBreakdown(job, explicit, inferred);
+        return { job, trad, skl: bd.score, rows: bd.rows };
+    }).sort((a, b) => b.skl - a.skl);
+}
+function AtsTranslator({ job, text, explicit, inferred }) {
+    const lines = atsTranslatorLines(job, text, explicit, inferred);
+    if (!lines.length)
+        return null;
+    return (React.createElement("div", { className: "ats-block" },
+        React.createElement("b", null, "ATS Translator"),
+        lines.map((l, i) => (React.createElement("div", { key: i, style: { marginBottom: 6 } },
+            l.lead,
+            React.createElement("br", null),
+            React.createElement("span", { className: "ats-line" },
+                "\"",
+                l.hint,
+                "\""))))));
+}
+function JobRow({ s, i, text, explicit, inferred }) {
+    const [open, setOpen] = useState(false);
+    return (React.createElement("div", { className: "job-row", style: { opacity: 1, transform: 'translateY(0)' } },
+        React.createElement("div", { className: "job-rank mono" }, String(i + 1).padStart(2, '0')),
+        React.createElement("div", null,
+            React.createElement("div", { className: "job-title" }, s.job.name),
+            React.createElement("div", { className: "job-meta" },
+                s.job.company,
+                " \u00B7 ",
+                s.job.minYears,
+                "+ yrs \u00B7 ",
+                s.job.degreeRequired ? "degree required" : "no degree required",
+                s.job.gapPolicy ? " · no employment gaps" : ""),
+            React.createElement("div", { className: "job-desc", dangerouslySetInnerHTML: { __html: highlightDesc(s.job) } })),
+        React.createElement("div", null,
+            React.createElement("div", { className: "verdict-block" },
+                React.createElement("div", { className: "verdict-label" }, "Traditional ATS"),
+                React.createElement("div", { className: 'verdict-badge ' + (s.trad.pass ? 'pass' : 'reject') },
+                    React.createElement("span", { className: "icon" }, s.trad.pass ? '✓' : '✕'),
+                    s.trad.pass ? 'Passed' : 'Rejected'),
+                s.trad.reasons.length > 0 && (React.createElement("div", { className: "verdict-reasons", dangerouslySetInnerHTML: { __html: s.trad.reasons.join('<br>') } })),
+                React.createElement(AtsTranslator, { job: s.job, text: text, explicit: explicit, inferred: inferred })),
+            React.createElement("div", null,
+                React.createElement("div", { className: "verdict-label" }, "Skills-based match"),
+                React.createElement("div", { className: "bar-pct", style: { color: s.skl >= 50 ? 'var(--teal)' : 'var(--ink-faint)' } },
+                    s.skl,
+                    "%"),
+                React.createElement("div", { className: "bar-track" },
+                    React.createElement("div", { className: 'bar-fill' + (s.skl < 50 ? ' low' : ''), style: { width: s.skl + '%' } }))),
+            React.createElement("button", { className: "breakdown-toggle", type: "button", onClick: () => setOpen(o => !o) }, open ? 'Hide scoring breakdown' : 'Show scoring breakdown'),
+            React.createElement("div", { className: 'breakdown-panel' + (open ? ' open' : '') }, s.rows.map((r, ri) => {
+                const tagText = r.type === 'explicit' ? 'stated' : r.type === 'inferred' ? `inferred ${Math.round(r.confidence * 100)}%` : 'missing';
+                return (React.createElement("div", { className: "breakdown-row", key: ri },
+                    React.createElement("span", { className: "sk-name" },
+                        r.name,
+                        React.createElement("span", { className: "req-tag" }, r.isRequired ? '(required)' : '(preferred)')),
+                    React.createElement("span", { className: "breakdown-right" },
+                        React.createElement("span", { className: 'sk-tag ' + r.type }, tagText),
+                        React.createElement("span", { className: "sk-pts mono" },
+                            r.contribution.toFixed(1),
+                            "/",
+                            r.weight))));
+            })))));
+}
+function Results({ candidate, explicit, inferred, indicatorLive }) {
+    const scored = useMemo(() => scoreAll(candidate, explicit, inferred), [candidate, explicit, inferred]);
+    const tradPass = scored.filter(s => s.trad.pass).length;
+    const sklPass = scored.filter(s => s.skl >= 50).length;
+    const rescued = scored.filter(s => !s.trad.pass && s.skl >= 50).length;
+    return (React.createElement(React.Fragment, null,
+        React.createElement("div", { className: "module-tag", id: "module-2" },
+            React.createElement("b", null, "Module 2"),
+            " \u2014 Inclusive matching"),
+        React.createElement("div", { className: "results-head" },
+            React.createElement("h2", null, "Match & audit"),
+            React.createElement("p", { className: "results-sub" }, "Every role below is scored two ways: a traditional ATS pass, which only looks for the literal required keyword in the text, and a skills-based score, which counts anything explicit or inferred on the graph. Ranked by skills-based score."),
+            indicatorLive !== null && (React.createElement("div", { style: { fontSize: 12, color: indicatorLive ? '#2C6656' : '#7C8895', marginTop: 6 } }, indicatorLive ? '● Live backend response' : '○ Offline engine (backend not reachable)'))),
+        React.createElement("div", { className: "stat-row" },
+            React.createElement("div", { className: "stat" },
+                React.createElement("div", { className: "num rust" },
+                    tradPass,
+                    React.createElement("span", { style: { fontSize: 22, color: 'var(--ink-faint)' } },
+                        " / ",
+                        JOBS.length)),
+                React.createElement("div", { className: "cap" }, "Roles passed by a literal keyword ATS")),
+            React.createElement("div", { className: "stat" },
+                React.createElement("div", { className: "num teal" },
+                    sklPass,
+                    React.createElement("span", { style: { fontSize: 22, color: 'var(--ink-faint)' } },
+                        " / ",
+                        JOBS.length)),
+                React.createElement("div", { className: "cap" }, "Roles matched by skills-based scoring")),
+            React.createElement("div", { className: "stat" },
+                React.createElement("div", { className: "num gold" }, rescued),
+                React.createElement("div", { className: "cap" }, "Roles this candidate would be screened out of, despite a qualifying skills score"))),
+        React.createElement("div", { id: "job-list" }, scored.map((s, i) => React.createElement(JobRow, { key: s.job.name, s: s, i: i, text: candidate.text, explicit: explicit, inferred: inferred })))));
+}
+
+
+/* ---- Audit.js ---- */
+function GhostCard({ id, label }) {
+    return (React.createElement(motion.div, { className: "ghost-card", initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4 } },
+        React.createElement("div", { className: "id-eyebrow" }, label),
+        React.createElement("div", { className: "id-row" },
+            React.createElement("b", null, id.name)),
+        React.createElement("div", { className: "id-row" },
+            "Age ",
+            id.age),
+        React.createElement("div", { className: "id-row" }, id.college),
+        React.createElement("div", { className: "id-row" }, id.pronouns)));
+}
+function GhostPanel({ personaKey, scored }) {
+    const identities = GHOST_IDENTITIES[personaKey];
+    if (!identities) {
+        return (React.createElement("div", { className: "ghost-panel" },
+            React.createElement("div", { className: "ghost-empty" }, "This check is wired up for the three sample personas. Pick Sadie, Emma, or Hrithik above to see it \u2014 the underlying point holds for any text you paste: the box above is the only thing the engine ever reads.")));
+    }
+    const avgScore = Math.round(scored.reduce((a, s) => a + s.skl, 0) / scored.length);
+    const matched = scored.filter(s => s.skl >= 50).length;
+    return (React.createElement("div", { className: "ghost-panel" },
+        React.createElement("div", { className: "ghost-grid" },
+            React.createElement(GhostCard, { id: identities.original, label: "As submitted" }),
+            React.createElement("div", { className: "ghost-divider" }),
+            React.createElement(motion.div, { className: "ghost-center", initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, delay: 0.12 } },
+                React.createElement("div", { className: "ghost-num" },
+                    avgScore,
+                    "%"),
+                React.createElement("div", { className: "ghost-cap" },
+                    "average skills-based match \u00B7 ",
+                    matched,
+                    "/",
+                    JOBS.length,
+                    " roles \u2014 identical for both identities")),
+            React.createElement("div", { className: "ghost-divider" }),
+            React.createElement(GhostCard, { id: identities.ghost, label: "Identity swapped" })),
+        React.createElement("div", { className: "ghost-note" },
+            React.createElement("b", null, "Why the number doesn't move \u2014"),
+            " both cards are wrappers around the exact same resume text. Name, age, college, and pronouns live in this display only; the scoring engine's input is the candidate text box, which is byte-for-byte identical either way. A system that scores on skills can't be swayed by a signal it was never given.")));
+}
+function FullAuditTable() {
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+    const [showTable, setShowTable] = useState(false);
+    useEffect(() => {
+        fetchFairnessSummary().then(d => {
+            if (d.error)
+                setError(d.error);
+            else
+                setData(d);
+        }).catch(() => setError('Could not reach backend for the full audit — the single-candidate check above still applies.'));
+    }, []);
+    return (React.createElement(React.Fragment, null,
+        React.createElement("div", { className: "module-tag" },
+            React.createElement("b", null, "Module 3"),
+            ", continued \u2014 the full audit, not just one example"),
+        React.createElement("div", { className: "results-head" },
+            React.createElement("h2", null, "Every synthetic candidate, every role, identity swapped"),
+            React.createElement("p", { className: "results-sub" }, error ? error : (data ? data.verdict : 'Loading audit results…'))),
+        data && (React.createElement(React.Fragment, null,
+            React.createElement("div", { className: "stat-row" },
+                React.createElement("div", { className: "stat" },
+                    React.createElement("div", { className: "num teal" },
+                        data.totalComparisons - data.mismatchesFound,
+                        React.createElement("span", { style: { fontSize: 22, color: 'var(--ink-faint)' } },
+                            " / ",
+                            data.totalComparisons)),
+                    React.createElement("div", { className: "cap" }, "Identity-swap comparisons with an identical score")),
+                React.createElement("div", { className: "stat" },
+                    React.createElement("div", { className: "num gold" }, data.candidatesTested),
+                    React.createElement("div", { className: "cap" },
+                        "Independently-written synthetic candidates, each tested against ",
+                        data.jobsPerCandidate,
+                        " roles")),
+                React.createElement("div", { className: "stat" },
+                    React.createElement("div", { className: 'num ' + (data.maxAbsoluteScoreDelta === 0 ? 'teal' : 'rust') }, data.maxAbsoluteScoreDelta),
+                    React.createElement("div", { className: "cap" }, "Maximum score difference found between identity-swapped pairs"))),
+            React.createElement("button", { className: "breakdown-toggle", type: "button", onClick: () => setShowTable(s => !s) }, showTable ? 'Hide comparisons' : `Show all ${data.totalComparisons} comparisons`),
+            showTable && (React.createElement("div", { style: { marginTop: 14, maxHeight: 420, overflowY: 'auto', border: '1px solid var(--line)', borderRadius: 'var(--radius)' } },
+                React.createElement("div", { style: { padding: '4px 14px' } }, data.comparisons.map((c, i) => (React.createElement("div", { className: "breakdown-row", key: i },
+                    React.createElement("span", { className: "sk-name" },
+                        c.job,
+                        " ",
+                        React.createElement("span", { className: "req-tag" },
+                            "candidate ",
+                            c.candidate)),
+                    React.createElement("span", { className: "breakdown-right mono", style: { fontSize: 11.5 } },
+                        c.identityA,
+                        ": ",
+                        c.scoreA,
+                        "% \u00A0\u2194\u00A0 ",
+                        c.identityB,
+                        ": ",
+                        c.scoreB,
+                        "%",
+                        React.createElement("span", { className: 'sk-tag ' + (c.delta === 0 ? 'explicit' : 'missing'), style: { marginLeft: 8 } }, c.delta === 0 ? 'match' : 'Δ' + c.delta))))))))))));
+}
+function Audit({ personaKey, scored }) {
+    return (React.createElement(React.Fragment, null,
+        React.createElement("div", { className: "module-tag", id: "module-3" },
+            React.createElement("b", null, "Module 3"),
+            " \u2014 Bias audit, continued: an identity-blind check"),
+        React.createElement("div", { className: "results-head" },
+            React.createElement("h2", null, "Fairness check"),
+            React.createElement("p", { className: "results-sub" }, "Same resume text, different identity. The fields below are display-only \u2014 the scoring engine only ever reads the text in the candidate box above, so it never sees a name, a college's reputation, or a pronoun.")),
+        React.createElement(GhostPanel, { personaKey: personaKey, scored: scored }),
+        React.createElement(FullAuditTable, null)));
+}
+
+
+/* ---- RoleArchitect.js ---- */
+function parseSkillList(raw) { return raw.split(',').map(s => s.trim()).filter(Boolean); }
+function resolveKnownNames(list) {
+    const known = [], unknown = [];
+    list.forEach(raw => {
+        const id = byName[raw.toLowerCase()];
+        if (id)
+            known.push(byId[id].name);
+        else
+            unknown.push(raw);
+    });
+    return { known, unknown };
+}
+function RoleArchitect({ candidate, explicit, inferred }) {
+    const [title, setTitle] = useState('');
+    const [minYears, setMinYears] = useState(0);
+    const [required, setRequired] = useState('');
+    const [preferred, setPreferred] = useState('');
+    const [degreeRequired, setDegreeRequired] = useState(false);
+    const [gapPolicy, setGapPolicy] = useState(false);
+    const [result, setResult] = useState(null);
+    const score = () => {
+        const reqR = resolveKnownNames(parseSkillList(required));
+        const prefR = resolveKnownNames(parseSkillList(preferred));
+        if (reqR.known.length === 0) {
+            setResult({ error: 'Add at least one required skill that matches a known skill name — see the legend and node labels on the skills graph above for the full list.' });
+            return;
+        }
+        const job = {
+            name: title.trim() || 'Custom role', company: 'Custom role · Role Architect',
+            required: reqR.known, preferred: prefR.known,
+            minYears, degreeRequired, gapPolicy,
+            desc: 'Defined live via Role Architect, scored against this candidate only — not part of the Module 3 fairness-audit matrix.',
+            flags: []
+        };
+        const trad = traditionalResult(job, candidate.text, candidate.years, candidate.hasDegree, candidate.hadGap);
+        const bd = skillsBreakdown(job, explicit, inferred);
+        const unknown = reqR.unknown.concat(prefR.unknown);
+        setResult({ job, trad, bd, unknown });
+    };
+    return (React.createElement(React.Fragment, null,
+        React.createElement("div", { className: "module-tag", id: "module-2b" },
+            React.createElement("b", null, "Module 2B"),
+            " \u2014 Role Architect (define your own role)"),
+        React.createElement("div", { className: "panel", id: "architect-panel" },
+            React.createElement("div", { className: "panel-label", style: { marginBottom: 0 } }, "Build a custom role"),
+            React.createElement("p", { className: "architect-note" }, "Define required and preferred skills for a role of your own, and score the current candidate against it using the exact same engine as every role above. This role is scored live for this candidate only \u2014 it is never added to the fairness-audit matrix in Module 3."),
+            React.createElement("div", { className: "field-row" },
+                React.createElement("label", { className: "field", style: { flex: 2, minWidth: 220 } },
+                    "Role title",
+                    React.createElement("input", { type: "text", placeholder: "e.g. Data Platform Analyst", value: title, onChange: e => setTitle(e.target.value) })),
+                React.createElement("label", { className: "field" },
+                    "Min years",
+                    React.createElement("input", { type: "number", min: 0, max: 40, value: minYears, onChange: e => setMinYears(parseInt(e.target.value, 10) || 0) }))),
+            React.createElement("div", { className: "field-row" },
+                React.createElement("label", { className: "field", style: { flex: 1, minWidth: 220 } },
+                    "Required skills (comma-separated)",
+                    React.createElement("input", { type: "text", placeholder: "e.g. SQL, Excel, Data Analysis", value: required, onChange: e => setRequired(e.target.value) })),
+                React.createElement("label", { className: "field", style: { flex: 1, minWidth: 220 } },
+                    "Preferred skills (comma-separated)",
+                    React.createElement("input", { type: "text", placeholder: "e.g. Python, Communication", value: preferred, onChange: e => setPreferred(e.target.value) }))),
+            React.createElement("label", { className: "check-field" },
+                React.createElement("input", { type: "checkbox", checked: degreeRequired, onChange: e => setDegreeRequired(e.target.checked) }),
+                " Requires a bachelor's degree"),
+            React.createElement("label", { className: "check-field" },
+                React.createElement("input", { type: "checkbox", checked: gapPolicy, onChange: e => setGapPolicy(e.target.checked) }),
+                " Employment-gap policy disqualifies"),
+            React.createElement("button", { className: "btn-primary", type: "button", style: { marginTop: 18 }, onClick: score }, "Score current candidate against this role"),
+            React.createElement("div", { id: "arch-result", style: { marginTop: 14 } },
+                result && result.error && React.createElement("p", { className: "note" }, result.error),
+                result && !result.error && (React.createElement(React.Fragment, null,
+                    result.unknown.length > 0 && React.createElement("p", { className: "note" },
+                        "Skipped (not a recognized skill name): ",
+                        result.unknown.join(', ')),
+                    React.createElement("div", { className: "job-row" },
+                        React.createElement("div", { className: "job-rank mono" }, "\u2605"),
+                        React.createElement("div", null,
+                            React.createElement("div", { className: "job-title" }, result.job.name),
+                            React.createElement("div", { className: "job-meta" },
+                                result.job.company,
+                                " \u00B7 ",
+                                result.job.minYears,
+                                "+ yrs \u00B7 ",
+                                result.job.degreeRequired ? 'degree required' : 'no degree required',
+                                result.job.gapPolicy ? ' · no employment gaps' : ''),
+                            React.createElement("div", { className: "job-desc" }, result.job.desc)),
+                        React.createElement("div", null,
+                            React.createElement("div", { className: "verdict-block" },
+                                React.createElement("div", { className: "verdict-label" }, "Traditional ATS"),
+                                React.createElement("div", { className: 'verdict-badge ' + (result.trad.pass ? 'pass' : 'reject') },
+                                    React.createElement("span", { className: "icon" }, result.trad.pass ? '✓' : '✕'),
+                                    result.trad.pass ? 'Passed' : 'Rejected'),
+                                result.trad.reasons.length > 0 && React.createElement("div", { className: "verdict-reasons", dangerouslySetInnerHTML: { __html: result.trad.reasons.join('<br>') } }),
+                                atsTranslatorLines(result.job, candidate.text, explicit, inferred).map((l, i) => (React.createElement("div", { className: "ats-block", key: i },
+                                    React.createElement("b", null, "ATS Translator"),
+                                    React.createElement("div", { style: { marginBottom: 6 } },
+                                        l.lead,
+                                        React.createElement("br", null),
+                                        React.createElement("span", { className: "ats-line" },
+                                            "\"",
+                                            l.hint,
+                                            "\"")))))),
+                            React.createElement("div", null,
+                                React.createElement("div", { className: "verdict-label" }, "Skills-based match"),
+                                React.createElement("div", { className: "bar-pct", style: { color: result.bd.score >= 50 ? 'var(--teal)' : 'var(--ink-faint)' } },
+                                    result.bd.score,
+                                    "%"),
+                                React.createElement("div", { className: "bar-track" },
+                                    React.createElement("div", { className: 'bar-fill' + (result.bd.score < 50 ? ' low' : ''), style: { width: result.bd.score + '%' } })))))))))));
+}
+
+
+/* ---- Pathway.js ---- */
+function Pathway({ candidate, onBridgeStart }) {
+    const [jobIdx, setJobIdx] = useState(-1);
+    const [result, setResult] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [note, setNote] = useState(null);
+    const getPathway = async () => {
+        setNote(null);
+        setResult(null);
+        if (jobIdx < 0) {
+            setNote('Pick a role first.');
+            return;
+        }
+        const job = JOBS[jobIdx];
+        setLoading(true);
+        try {
+            const data = await fetchLearningPathway(job.name, candidate.text, candidate.years, candidate.hasDegree, candidate.hadGap);
+            setLoading(false);
+            if (data.error) {
+                setNote(data.error);
+                return;
+            }
+            if (!data.pathway.length) {
+                setNote(`No gaps found for ${job.name} — this candidate already covers every required and preferred skill.`);
+                return;
+            }
+            const gapNames = data.pathway.map((p) => p.skill);
+            onBridgeStart(job.name, gapNames, async () => { setResult(data.pathway); });
+        }
+        catch (e) {
+            setLoading(false);
+            setNote('Could not reach backend for pathway suggestions.');
+        }
+    };
+    return (React.createElement(React.Fragment, null,
+        React.createElement("div", { className: "module-tag", id: "module-4" },
+            React.createElement("b", null, "Module 4"),
+            " \u2014 Learning pathway (bonus)"),
+        React.createElement("div", { className: "results-head" },
+            React.createElement("h2", null, "Close the gap"),
+            React.createElement("p", { className: "results-sub" }, "Pick a role to see a suggested learning path for the skills this candidate is missing. Not a live course-market integration yet \u2014 a curated static list \u2014 but real code that runs against the same gap data shown above.")),
+        React.createElement("div", { className: "gap-select-row" },
+            React.createElement("label", { htmlFor: "pathway-job-select" }, "Show pathway for"),
+            React.createElement("select", { id: "pathway-job-select", value: jobIdx, onChange: e => setJobIdx(parseInt(e.target.value, 10)) },
+                React.createElement("option", { value: -1 }, "Select a role"),
+                JOBS.map((j, i) => React.createElement("option", { key: j.name, value: i }, j.name))),
+            React.createElement("button", { className: "btn-primary", type: "button", onClick: getPathway, disabled: loading }, loading ? 'Loading…' : 'Get learning pathway')),
+        React.createElement("div", { id: "pathway-results", style: { marginTop: 14 } },
+            note && React.createElement("p", { className: "note" }, note),
+            result && result.map((p, i) => (React.createElement("div", { className: "breakdown-panel open", style: { marginBottom: 10 }, key: i },
+                React.createElement("div", { style: { fontWeight: 600, marginBottom: 6 } }, p.skill),
+                React.createElement("ul", { style: { margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--ink-soft)' } }, p.suggestions.map((s, si) => React.createElement("li", { key: si }, s)))))))));
+}
+
+
+/* ---- transitions.js ---- */
+/* ============ The four bespoke transitions ============
+   Adapted from the provided spec, wired to real trigger conditions and
+   real app data/state rather than the illustrative placeholder data in
+   the spec. Each is a full-screen overlay shown via AnimatePresence that
+   runs once, then calls onComplete to hand control back to the app. */
+const EXPO = [0.25, 1, 0.5, 1];
+/* ---------- Transition 1: Hero -> Discovery (the scan) ---------- */
+function ScanTransition({ active, headline, onComplete }) {
+    const chars = useMemo(() => Array.from(headline), [headline]);
+    const offsets = useMemo(() => chars.map(() => ({
+        x: (Math.random() - 0.5) * 220, y: (Math.random() - 0.5) * 120, r: (Math.random() - 0.5) * 30
+    })), [chars]);
+    useEffect(() => {
+        if (!active)
+            return;
+        const t = setTimeout(onComplete, 820);
+        return () => clearTimeout(t);
+    }, [active]);
+    return (React.createElement(AnimatePresence, null, active && (React.createElement(motion.div, { style: { position: 'fixed', inset: 0, zIndex: 9998, pointerEvents: 'none' }, initial: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.15 } },
+        React.createElement(motion.div, { style: { position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8vw', textAlign: 'center', flexWrap: 'wrap', fontFamily: 'Fraunces, Georgia, serif', fontWeight: 500, fontSize: 'clamp(28px,4.4vw,50px)', color: 'var(--ink)' } }, chars.map((c, i) => (React.createElement(motion.span, { key: i, style: { display: 'inline-block', whiteSpace: 'pre' }, initial: { opacity: 1, x: 0, y: 0, rotate: 0, filter: 'blur(0px)' }, animate: { opacity: 0, x: offsets[i].x, y: offsets[i].y, rotate: offsets[i].r, filter: 'blur(4px)' }, transition: { duration: 0.28, delay: i * 0.006, ease: EXPO } }, c)))),
+        React.createElement(motion.div, { initial: { left: '-2px' }, animate: { left: '100vw' }, transition: { duration: 0.42, delay: 0.2, ease: 'linear' }, style: { position: 'fixed', top: 0, width: '2px', height: '100vh', background: 'var(--gold, #C4571F)', boxShadow: '0 0 24px var(--gold, #C4571F)' } })))));
+}
+/* ---------- Transition 2: Discovery -> Matching (extraction) ---------- */
+function ExtractionTransition({ active, text, explicitNames, onComplete }) {
+    const words = useMemo(() => text.split(/\s+/).filter(Boolean).slice(0, 140), [text]);
+    const isKeyword = (w) => explicitNames.some(k => w.toLowerCase().replace(/[^a-z0-9]/g, '').includes(k.toLowerCase().split(' ')[0]));
+    useEffect(() => {
+        if (!active)
+            return;
+        const t = setTimeout(onComplete, 1150);
+        return () => clearTimeout(t);
+    }, [active]);
+    return (React.createElement(AnimatePresence, null, active && (React.createElement(motion.div, { initial: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.2 }, style: { position: 'fixed', inset: 0, zIndex: 9998, background: 'var(--paper)', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '6vh 8vw' } },
+        React.createElement(motion.div, { style: { display: 'flex', flexWrap: 'wrap', gap: '6px 10px', maxWidth: 900, justifyContent: 'center', maxHeight: '34vh', overflow: 'hidden' } }, words.map((w, i) => {
+            const kw = isKeyword(w);
+            return (React.createElement(motion.span, { key: i, initial: { opacity: 1, y: 0 }, animate: { opacity: kw ? 1 : 0.15, y: -20 - Math.random() * 70, x: (Math.random() - 0.5) * 40 }, transition: { duration: 0.4, delay: Math.min(i * 0.006, 0.5), ease: EXPO }, style: { fontSize: 13, fontFamily: 'Space Grotesk, sans-serif', color: kw ? 'var(--gold,#C4571F)' : 'var(--ink-faint,#8B8C84)', fontWeight: kw ? 600 : 400 } }, w));
+        })),
+        React.createElement("div", { style: { display: 'flex', gap: 40, marginTop: 36, width: '100%', maxWidth: 640, justifyContent: 'center' } },
+            React.createElement(motion.div, { initial: { x: -60, opacity: 0 }, animate: { x: 0, opacity: 1 }, transition: { delay: 0.55, duration: 0.4 }, style: { flex: 1, maxWidth: 220, padding: '14px 16px', borderLeft: '3px solid var(--rust,#A6432F)', background: 'var(--rust-soft,#EFD6CE)' } },
+                React.createElement("div", { style: { fontSize: 11, textTransform: 'uppercase', letterSpacing: '.06em', color: 'var(--rust,#A6432F)', fontWeight: 600 } }, "Traditional ATS"),
+                React.createElement("div", { style: { fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 6 } }, "Literal keyword match only")),
+            React.createElement(motion.div, { initial: { x: 60, opacity: 0 }, animate: { x: 0, opacity: 1 }, transition: { delay: 0.55, duration: 0.4 }, style: { flex: 1, maxWidth: 220, padding: '14px 16px', borderLeft: '3px solid var(--gold,#C4571F)', background: 'var(--gold-soft,#F0DDCD)' } },
+                React.createElement("div", { style: { fontSize: 11, textTransform: 'uppercase', letterSpacing: '.06em', color: 'var(--gold,#C4571F)', fontWeight: 600 } }, "Skills Graph"),
+                React.createElement("div", { style: { fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 6 } }, "Explicit + inferred capability")))))));
+}
+/* ---------- Transition 3: Matching -> Audit (the ghost swap) ---------- */
+function GhostSwapTransition({ active, avgScore, onComplete }) {
+    useEffect(() => {
+        if (!active)
+            return;
+        const t = setTimeout(onComplete, 1050);
+        return () => clearTimeout(t);
+    }, [active]);
+    return (React.createElement(AnimatePresence, null, active && (React.createElement(motion.div, { initial: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.2 }, style: { position: 'fixed', inset: 0, zIndex: 9998, background: 'var(--paper)', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+        React.createElement(motion.div, { initial: { opacity: 0 }, animate: { opacity: [0, 0.35, 0] }, transition: { duration: 0.22 }, style: { position: 'absolute', inset: 0, background: '#fff', pointerEvents: 'none' } }),
+        React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 0, position: 'relative' } },
+            React.createElement(motion.div, { initial: { x: 0, opacity: 1 }, animate: { x: -70, opacity: 0.4 }, transition: { duration: 0.4, ease: EXPO }, style: { width: 200, padding: 22, border: '1px solid var(--line)', background: 'var(--paper-raised)', textAlign: 'center' } },
+                React.createElement("div", { style: { fontSize: 11, color: 'var(--ink-faint)', marginBottom: 8 } }, "As submitted"),
+                React.createElement(motion.div, { animate: { opacity: 0, rotateY: 90, filter: 'blur(6px)' }, transition: { delay: 0.15, duration: 0.3 }, style: { fontFamily: 'Fraunces,serif', fontSize: 15 } }, "Name \u00B7 Age \u00B7 College")),
+            React.createElement(motion.div, { initial: { scale: 0, opacity: 0 }, animate: { scale: 1.6, opacity: [0, 0.8, 0] }, transition: { delay: 0.25, duration: 0.5 }, style: { width: 50, height: 50, borderRadius: '50%', background: 'radial-gradient(circle, var(--gold,#C4571F) 0%, transparent 70%)', margin: '0 -25px', zIndex: 2 } }),
+            React.createElement(motion.div, { initial: { x: 0, opacity: 0 }, animate: { x: 70, opacity: 1 }, transition: { duration: 0.4, ease: EXPO }, style: { width: 200, padding: 22, border: '1px dashed var(--gold,#C4571F)', background: 'var(--paper-raised)', textAlign: 'center' } },
+                React.createElement("div", { style: { fontSize: 11, color: 'var(--gold,#C4571F)', fontStyle: 'italic', marginBottom: 8 } }, "Identity swapped"),
+                React.createElement(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.5 }, style: { fontFamily: 'Fraunces,serif', fontSize: 20, fontWeight: 600, color: 'var(--teal,#2C6656)' } },
+                    avgScore,
+                    "%"))),
+        React.createElement(motion.div, { initial: { scale: 0, opacity: 0 }, animate: { scale: 1, opacity: 1 }, transition: { delay: 0.6, type: 'spring', stiffness: 220 }, style: { position: 'absolute', bottom: '20%', textAlign: 'center' } },
+            React.createElement("svg", { width: "46", height: "46", viewBox: "0 0 60 60" },
+                React.createElement(motion.circle, { cx: "30", cy: "30", r: "26", fill: "none", stroke: "var(--teal,#2C6656)", strokeWidth: "3", initial: { pathLength: 0 }, animate: { pathLength: 1 }, transition: { delay: 0.65, duration: 0.3 } }),
+                React.createElement(motion.path, { d: "M 18 30 L 26 38 L 42 22", fill: "none", stroke: "var(--teal,#2C6656)", strokeWidth: "4", strokeLinecap: "round", initial: { pathLength: 0 }, animate: { pathLength: 1 }, transition: { delay: 0.85, duration: 0.2 } })),
+            React.createElement(motion.p, { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.95 }, style: { fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 6 } }, "Score unchanged"))))));
+}
+/* ---------- Transition 4: Audit -> Pathway (the bridge build) ---------- */
+function BridgeTransition({ active, roleName, gapNames, onComplete }) {
+    useEffect(() => {
+        if (!active)
+            return;
+        const t = setTimeout(onComplete, 1250);
+        return () => clearTimeout(t);
+    }, [active]);
+    const gaps = gapNames.slice(0, 6);
+    const w = 700, h = 320;
+    const pathD = `M 60 280 ${gaps.map((_, i) => {
+        const x = 60 + ((i + 1) * (580 / (gaps.length + 1)));
+        const y = 280 - ((i + 1) * (210 / (gaps.length + 1)));
+        return `L ${x} ${y}`;
+    }).join(' ')} L 640 40`;
+    return (React.createElement(AnimatePresence, null, active && (React.createElement(motion.div, { initial: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.2 }, style: { position: 'fixed', inset: 0, zIndex: 9998, background: 'var(--paper)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4vh 5vw' } },
+        React.createElement(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.05 }, style: { textAlign: 'center', marginBottom: 8 } },
+            React.createElement("div", { style: { fontFamily: 'Fraunces,serif', fontSize: 22, fontWeight: 500 } }, roleName),
+            React.createElement("div", { style: { fontSize: 12.5, color: 'var(--ink-faint)', marginTop: 4 } },
+                gaps.length,
+                " skill",
+                gaps.length === 1 ? '' : 's',
+                " to bridge")),
+        React.createElement("svg", { width: "100%", viewBox: `0 0 ${w} ${h}`, style: { maxWidth: 700 } },
+            React.createElement(motion.path, { d: pathD, fill: "none", stroke: "var(--gold,#C4571F)", strokeWidth: "2", initial: { pathLength: 0 }, animate: { pathLength: 1 }, transition: { duration: 0.7, delay: 0.25, ease: EXPO } }),
+            gaps.map((g, i) => {
+                const x = 60 + ((i + 1) * (580 / (gaps.length + 1)));
+                const y = 280 - ((i + 1) * (210 / (gaps.length + 1)));
+                return (React.createElement("g", { key: g },
+                    React.createElement(motion.circle, { cx: x, cy: y, r: "0", fill: "var(--rust,#A6432F)", animate: { r: 9 }, transition: { delay: 0.35 + i * 0.12 } }),
+                    React.createElement(motion.text, { x: x, y: y - 16, textAnchor: "middle", fontSize: "11", fill: "var(--ink)", initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.45 + i * 0.12 } }, g)));
+            }),
+            React.createElement(motion.text, { x: "60", y: "305", fill: "var(--ink-faint)", fontSize: "12", initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.3 } }, "Current"),
+            React.createElement(motion.text, { x: "600", y: "30", fill: "var(--teal,#2C6656)", fontSize: "12", initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.9 } }, "Role ready"))))));
+}
+
+
+/* ---- App.js ---- */
+function App() {
+    const [screen, setScreen] = useState('hero');
+    const [scanActive, setScanActive] = useState(false);
+    const [candidate, setCandidate] = useState({
+        personaKey: 'priya', text: PERSONAS.priya.text, years: PERSONAS.priya.years,
+        hasDegree: PERSONAS.priya.hasDegree, hadGap: PERSONAS.priya.hadGap
+    });
+    const [analyzing, setAnalyzing] = useState(false);
+    const [explicit, setExplicit] = useState(new Set());
+    const [inferred, setInferred] = useState(new Map());
+    const [indicatorLive, setIndicatorLive] = useState(null);
+    const [extractionActive, setExtractionActive] = useState(false);
+    const [resultsShown, setResultsShown] = useState(false);
+    const [ghostSwapActive, setGhostSwapActive] = useState(false);
+    const [auditRevealed, setAuditRevealed] = useState(false);
+    const [bridgeActive, setBridgeActive] = useState(false);
+    const [bridgeRole, setBridgeRole] = useState('');
+    const [bridgeGaps, setBridgeGaps] = useState([]);
+    const bridgeRunRef = useRef(null);
+    const resultsRef = useRef(null);
+    const auditRef = useRef(null);
+    const handleTryLive = () => setScanActive(true);
+    const handleScanComplete = () => { setScanActive(false); setScreen('app'); };
+    const handleAnalyze = async () => {
+        setAnalyzing(true);
+        const result = await analyzeCandidate(candidate.text, candidate.years, candidate.hasDegree, candidate.hadGap);
+        setExplicit(result.explicit);
+        setInferred(result.inferred);
+        setIndicatorLive(result.live);
+        setAnalyzing(false);
+        setExtractionActive(true);
+    };
+    const handleExtractionComplete = () => {
+        setExtractionActive(false);
+        setResultsShown(true);
+        setAuditRevealed(false);
+        setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    };
+    const handleRunAudit = () => setGhostSwapActive(true);
+    const handleGhostSwapComplete = () => {
+        setGhostSwapActive(false);
+        setAuditRevealed(true);
+        setTimeout(() => auditRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    };
+    const handleBridgeStart = (roleName, gapNames, run) => {
+        setBridgeRole(roleName);
+        setBridgeGaps(gapNames);
+        bridgeRunRef.current = run;
+        setBridgeActive(true);
+    };
+    const handleBridgeComplete = async () => {
+        if (bridgeRunRef.current)
+            await bridgeRunRef.current();
+        setBridgeActive(false);
+    };
+    const scored = resultsShown ? scoreAll(candidate, explicit, inferred) : [];
+    return (React.createElement(React.Fragment, null,
+        React.createElement("div", { className: "grid-bg" }),
+        React.createElement(ScanTransition, { active: scanActive, headline: "Hiring that can't see who you are \u2014 only what you can do.", onComplete: handleScanComplete }),
+        screen === 'hero' && React.createElement(Hero, { onTryLive: handleTryLive }),
+        screen === 'app' && (React.createElement("div", { className: "wrap" },
+            React.createElement("header", null,
+                React.createElement("div", { className: "brand-row" },
+                    React.createElement("h1", null,
+                        "Bridge",
+                        React.createElement("span", { className: "dot" }, "."))),
+                React.createElement("p", { className: "tagline" }, "Skills-first candidate matching. Paste a resume, watch it get read two ways \u2014 once by a literal keyword scanner, once by a skills graph that infers adjacent capability \u2014 and see where the two disagree."),
+                React.createElement("div", { className: "header-meta" },
+                    React.createElement("span", null,
+                        React.createElement("b", null, "Module 1"),
+                        " \u2014 Skills discovery"),
+                    React.createElement("span", null,
+                        React.createElement("b", null, "Module 2"),
+                        " \u2014 Inclusive matching"),
+                    React.createElement("span", null,
+                        React.createElement("b", null, "Module 3"),
+                        " \u2014 Bias audit"),
+                    React.createElement("span", null,
+                        React.createElement("b", null, "Module 4"),
+                        " \u2014 Learning pathway"))),
+            React.createElement(Discovery, { candidate: candidate, setCandidate: setCandidate, explicit: explicit, inferred: inferred, analyzing: analyzing, onAnalyze: handleAnalyze }),
+            resultsShown && (React.createElement("div", { ref: resultsRef },
+                React.createElement(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.4 } },
+                    React.createElement(Results, { candidate: candidate, explicit: explicit, inferred: inferred, indicatorLive: indicatorLive }),
+                    !auditRevealed && (React.createElement("div", { style: { margin: '20px 0 34px', textAlign: 'center' } },
+                        React.createElement("button", { className: "btn-primary", type: "button", onClick: handleRunAudit, style: { padding: '12px 26px' } }, "Run fairness audit \u2192"))),
+                    React.createElement(RoleArchitect, { candidate: candidate, explicit: explicit, inferred: inferred })),
+                auditRevealed && (React.createElement(motion.div, { ref: auditRef, initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.4 } },
+                    React.createElement(Audit, { personaKey: candidate.personaKey, scored: scored }))),
+                React.createElement(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.4, delay: 0.1 } },
+                    React.createElement(Pathway, { candidate: candidate, onBridgeStart: handleBridgeStart })))),
+            React.createElement("footer", null,
+                React.createElement("b", null, "How this works \u2014"),
+                " skill extraction and job scoring run on a deterministic rule engine (a ~30-node skills dictionary with weighted adjacency), not a live model call, so every result is exactly reproducible. Built with React + Framer Motion for SAP HackFest 2026."))),
+        React.createElement(ExtractionTransition, { active: extractionActive, text: candidate.text, explicitNames: [...explicit].map(id => id), onComplete: handleExtractionComplete }),
+        React.createElement(GhostSwapTransition, { active: ghostSwapActive, avgScore: scored.length ? Math.round(scored.reduce((a, s) => a + s.skl, 0) / scored.length) : 0, onComplete: handleGhostSwapComplete }),
+        React.createElement(BridgeTransition, { active: bridgeActive, roleName: bridgeRole, gapNames: bridgeGaps, onComplete: handleBridgeComplete })));
+}
+
+
+/* ---- main.js ---- */
+const rootEl = document.getElementById('root');
+if (rootEl) {
+    createRoot(rootEl).render(React.createElement(App));
+}
+
+</script>
+</body>
+</html>

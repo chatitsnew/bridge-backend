@@ -111,7 +111,11 @@ const server = http.createServer(async (req, res) => {
   // 404ing, so a typo'd link never dead-ends.
   if(req.method === 'GET' && !url.pathname.startsWith('/api/')){
     const isApp = url.pathname === '/app' || url.pathname === '/app.html' || url.pathname === '/try';
-    const filePath = path.join(__dirname, isApp ? 'app.html' : 'index.html');
+    // Experimental React + Framer Motion build, served separately from the
+    // stable vanilla-JS site above so its external CDN dependency (React,
+    // Framer Motion) can never take down the main working demo.
+    const isExperience = url.pathname === '/experience' || url.pathname === '/experience.html';
+    const filePath = path.join(__dirname, isExperience ? 'experience.html' : (isApp ? 'app.html' : 'index.html'));
     if(fs.existsSync(filePath)){
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       return res.end(fs.readFileSync(filePath, 'utf8'));
