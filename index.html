@@ -223,6 +223,29 @@
     font-family:inherit;
     font-size:14px;
   }
+  .field input[type="text"]{
+    width:100%;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:7px 9px;
+    color:var(--ink);
+    font-family:inherit;
+    font-size:14px;
+    box-sizing:border-box;
+  }
+  .architect-note{font-size:12px; color:var(--ink-faint); margin:10px 0 16px; line-height:1.5;}
+  .verify-block{
+    margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);
+    font-size:12.5px; color:var(--ink-soft); line-height:1.5;
+  }
+  .verify-block b{color:var(--ink);}
+  .ats-block{
+    margin-top:8px; padding:10px 12px; background:var(--paper-raised);
+    border:1px solid var(--line); border-radius:var(--radius);
+    font-size:12.5px; color:var(--ink-soft); line-height:1.5;
+  }
+  .ats-block .ats-line{font-family:Georgia,serif; color:var(--ink); font-style:italic;}
   .check-field{
     display:flex; align-items:center; gap:7px;
     font-size:13px; color:var(--ink-soft);
@@ -551,6 +574,32 @@
 
   <div id="job-list"></div>
 
+  <div class="module-tag" id="module-2b"><b>Module 2B</b> — Role Architect (define your own role)</div>
+  <div class="panel" id="architect-panel">
+    <div class="panel-label" style="margin-bottom:0;">Build a custom role</div>
+    <p class="architect-note">Define required and preferred skills for a role of your own, and score the current candidate against it using the exact same engine as every role above. This role is scored live for this candidate only — it is never added to the fairness-audit matrix in Module 3.</p>
+    <div class="field-row">
+      <label class="field" style="flex:2; min-width:220px;">Role title
+        <input type="text" id="arch-title" placeholder="e.g. Data Platform Analyst">
+      </label>
+      <label class="field">Min years
+        <input type="number" id="arch-years" min="0" max="40" value="0">
+      </label>
+    </div>
+    <div class="field-row">
+      <label class="field" style="flex:1; min-width:220px;">Required skills (comma-separated)
+        <input type="text" id="arch-required" placeholder="e.g. SQL, Excel, Data Analysis">
+      </label>
+      <label class="field" style="flex:1; min-width:220px;">Preferred skills (comma-separated)
+        <input type="text" id="arch-preferred" placeholder="e.g. Python, Communication">
+      </label>
+    </div>
+    <label class="check-field"><input type="checkbox" id="arch-degree"> Requires a bachelor's degree</label>
+    <label class="check-field"><input type="checkbox" id="arch-gap"> Employment-gap policy disqualifies</label>
+    <button class="btn-primary" id="arch-score-btn" type="button" style="margin-top:18px;">Score current candidate against this role</button>
+    <div id="arch-result" style="margin-top:14px;"></div>
+  </div>
+
   <div class="module-tag" id="module-3"><b>Module 3</b> — Bias audit, continued: an identity-blind check</div>
   <div class="results-head">
     <h2>Fairness check</h2>
@@ -610,6 +659,75 @@ const ADJ = [
   ['resource_prior','project_mgmt',0.55],
   ['automation','data_analysis',0.4],
 ].map(([from,to,w])=>({from,to,w}));
+
+// Verification Toolkit + Proof-of-Skill: one tailored pair per adjacency edge,
+// so every inferred skill comes with a way to actually check it, not a
+// generic mad-lib. Keyed 'from|to' to match an {from,id} inferred-skill pair.
+const VERIFY_MAP = {
+  'python|data_analysis': { q:"Ask them to walk through a specific Python script or notebook where they cleaned or analyzed a real dataset — what did the data look like, and what did they conclude from it?", p:"Ask for a link to the script/notebook, or a before/after look at the dataset they cleaned." },
+  'python|automation': { q:"Ask what repetitive task they automated with Python, how long it used to take by hand, and how much time it saved.", p:"Ask for the script itself, or a short before/after description of the manual process it replaced." },
+  'python|ml': { q:"Ask whether any of their Python work touched a predictive or classification model — even a simple one — and what problem it solved.", p:"Ask for the notebook, or a one-paragraph write-up of the model's inputs and accuracy." },
+  'react|javascript': { q:"Ask them to describe a JavaScript concept (closures, async/await, state updates) they had to reason about carefully while building their React app.", p:"Ask for a link to the deployed app or repo, plus one tricky bug they remember fixing." },
+  'react|html': { q:"Ask how they structure and semantically mark up a page before adding React components on top of it.", p:"Ask for a screenshot of a component's rendered markup, or an accessibility/Lighthouse score." },
+  'react|css': { q:"Ask how they approach responsive styling in a React app — CSS modules, a utility framework, or plain CSS — and why.", p:"Ask for a live link to a page they styled, viewed on both desktop and mobile." },
+  'react|component_arch': { q:"Ask them to describe how they split one of their React apps into components, and why they drew the boundaries where they did.", p:"Ask for a component-tree sketch or a quick look at the repo's folder structure." },
+  'react|uiux': { q:"Ask what user feedback or usability issue shaped a design decision in one of their React interfaces.", p:"Ask for a before/after screenshot, or the wireframe they built from." },
+  'nodejs|javascript': { q:"Ask them to describe one way Node.js's runtime behaves differently from browser JavaScript, in the context of something they built.", p:"Ask for a link to a repo showing their Node.js code." },
+  'nodejs|rest_api': { q:"Ask them to describe an endpoint they built in Node.js — its inputs, outputs, and one edge case they had to handle.", p:"Ask for API docs, a Postman collection, or a live demo of the endpoint responding to a request." },
+  'data_analysis|statistics': { q:"Ask what statistical method (an average, a correlation, a significance test) they used to support a conclusion from their analysis.", p:"Ask for the chart or summary table that used that method." },
+  'data_analysis|sql': { q:"Ask whether any of their analysis pulled from a database, and what a query they wrote looked like.", p:"Ask them to sketch or describe one SQL query from memory." },
+  'data_analysis|data_viz': { q:"Ask what chart type they chose to represent a finding, and why that type over another.", p:"Ask for a screenshot of a chart or dashboard they built." },
+  'data_analysis|excel': { q:"Ask whether their analysis happened in a spreadsheet, and what formulas or pivot tables it relied on.", p:"Ask for a (redacted) screenshot of the formula bar or a pivot table behind it." },
+  'excel|data_analysis': { q:"Ask what conclusion they drew from a workbook, and how they'd double-check it wasn't a spreadsheet error.", p:"Ask for a screenshot of the summary tab or pivot table behind that conclusion." },
+  'crisis_mgmt|project_mgmt': { q:"Ask how they kept a project on track while also handling the high-pressure situation they described.", p:"Ask for a timeline, task list, or plan they kept during that period." },
+  'crisis_mgmt|stakeholder_comm': { q:"Ask who they had to keep informed during that high-pressure period, and how often.", p:"Ask for an example update or message from that time, names redacted." },
+  'crisis_mgmt|resource_prior': { q:"Ask them to walk through a moment where they had to choose between two competing needs under pressure, and how they decided.", p:"Ask for that specific example, with the reasoning behind the trade-off." },
+  'scheduling|stakeholder_comm': { q:"Ask how they coordinated schedules across multiple people, and what they did when two commitments conflicted.", p:"Ask for a redacted screenshot of a calendar or scheduling tool they used." },
+  'scheduling|project_mgmt': { q:"Ask what tool or system they used to track scheduling across a project, and one deadline they had to move.", p:"Ask for a redacted screenshot of the tracker or calendar." },
+  'budget_mgmt|resource_prior': { q:"Ask about a time the budget was tighter than planned, and what they cut or delayed as a result.", p:"Ask for a (redacted) budget sheet, or a short written account of the trade-off." },
+  'budget_mgmt|project_mgmt': { q:"Ask how they tracked spend against a plan, and what they did when a cost ran over.", p:"Ask for a redacted budget tracker, or a summary of the overage and the fix." },
+  'resource_prior|project_mgmt': { q:"Ask for an example of reprioritizing a project's task list when resources suddenly got tight.", p:"Ask for the before/after task list or plan." },
+  'automation|data_analysis': { q:"Ask what data the automation they built touched, and what it let them analyze that manual work didn't.", p:"Ask for the script, plus a one-line description of what it outputs." },
+};
+function verifyFor(fromId, toId){
+  return VERIFY_MAP[fromId+'|'+toId] || {
+    q:`Ask for a specific example that shows both ${byId[fromId] ? byId[fromId].name : fromId} and this capability together — inference is a hint, not proof.`,
+    p:`Ask for a concrete artifact (a file, link, or screenshot) that demonstrates it directly.`
+  };
+}
+
+// ATS Translator: one example resume-line per skill, phrased with the
+// literal keyword an ATS keyword-scanner is looking for.
+const ATS_HINTS = {
+  python:"Automated recurring tasks and analyzed datasets using Python.",
+  javascript:"Built interactive product features using JavaScript.",
+  react:"Developed component-based user interfaces using React.",
+  nodejs:"Built backend services and REST APIs using Node.js.",
+  html:"Built responsive page markup using HTML.",
+  css:"Styled responsive interfaces using CSS.",
+  git:"Managed version control and collaborative workflows using Git.",
+  sql:"Queried and filtered structured data using SQL.",
+  excel:"Built reporting workflows and tracked data using Excel.",
+  data_analysis:"Analyzed datasets to surface trends through Data Analysis.",
+  statistics:"Applied Statistics to validate trends in operational data.",
+  data_viz:"Built dashboards and charts for Data Visualization of key metrics.",
+  ml:"Applied Machine Learning to a classification or prediction problem.",
+  agile:"Worked within Agile/Scrum sprints to plan and deliver features.",
+  project_mgmt:"Managed a cross-functional project end-to-end, i.e. Project Management.",
+  stakeholder_comm:"Coordinated regularly with stakeholders to align priorities (Stakeholder Communication).",
+  scheduling:"Managed complex, multi-party Scheduling across teams or specialists.",
+  budget_mgmt:"Tracked spend against a plan, i.e. Budget Management.",
+  crisis_mgmt:"Made fast decisions under pressure during a high-stakes situation (Crisis Management).",
+  resource_prior:"Prioritized limited resources across competing needs (Resource Prioritization).",
+  communication:"Communicated updates clearly across technical and non-technical audiences.",
+  leadership:"Led and mentored a team, i.e. Leadership.",
+  uiux:"Designed user flows and interfaces with UI/UX best practices in mind.",
+  component_arch:"Built reusable, componentized architecture (Component Architecture).",
+  rest_api:"Designed and integrated REST APIs.",
+  aws:"Deployed and managed services on AWS.",
+  docker:"Containerized services using Docker.",
+  automation:"Built scripts to automate a repetitive workflow (Automation).",
+};
 
 const byId = Object.fromEntries(SKILLS.map(s=>[s.id,s]));
 const byName = Object.fromEntries(SKILLS.map(s=>[s.name.toLowerCase(), s.id]));
@@ -952,7 +1070,10 @@ function renderGraph(explicitSet, inferredMap, gapJob){
           } else if(n.kind==='explicit'){
             rationaleEl.innerHTML = `<b>${byId[n.id].name}</b> — stated directly in the candidate's text.`;
           } else {
-            rationaleEl.innerHTML = `<b>${byId[n.id].name}</b> — inferred from <b>${byId[n.from].name}</b> at ${Math.round(n.confidence*100)}% confidence. Candidates who show ${byId[n.from].name.toLowerCase()} typically also carry this capability, even if they never wrote the word down.`;
+            const v = verifyFor(n.from, n.id);
+            rationaleEl.innerHTML = `<b>${byId[n.id].name}</b> — inferred from <b>${byId[n.from].name}</b> at ${Math.round(n.confidence*100)}% confidence. Candidates who show ${byId[n.from].name.toLowerCase()} typically also carry this capability, even if they never wrote the word down.
+              <div class="verify-block"><b>Verify it — interview question:</b> ${v.q}</div>
+              <div class="verify-block"><b>Ask for proof of skill:</b> ${v.p}</div>`;
           }
         }
       };
@@ -1042,6 +1163,26 @@ gapSelect.addEventListener('change', ()=>{
   renderGraph(lastExplicit, lastInferred, getSelectedGapJob());
 });
 
+/* ============ ATS Translator ============ */
+// For each required skill the literal keyword scanner misses, suggest a
+// resume line phrased with the literal keyword — prioritizing skills the
+// candidate already shows (explicit or inferred) but never spelled out,
+// since those are real experience just waiting on better wording.
+function atsTranslatorHtml(job, text, explicitSet, inferredMap){
+  const missingNames = job.required.filter(name=>!literalFound(text, name));
+  if(!missingNames.length) return '';
+  const items = missingNames.slice(0,2).map(name=>{
+    const id = byName[name.toLowerCase()];
+    const hint = (id && ATS_HINTS[id]) || `Add a line naming ${name} directly, if it applies.`;
+    const rescuable = id && (explicitSet.has(id) || inferredMap.has(id));
+    const lead = rescuable
+      ? `Your skills graph already shows ${name} — the ATS scanner just never saw the literal word. Try adding:`
+      : `No sign of ${name} in the text at all. If you have it, try adding a line like:`;
+    return `<div style="margin-bottom:6px;">${lead}<br><span class="ats-line">"${hint}"</span></div>`;
+  }).join('');
+  return `<div class="ats-block"><b>ATS Translator</b>${items}</div>`;
+}
+
 /* ============ Results rendering ============ */
 let lastScored = [];
 function renderResults(explicitSet, inferredMap, text, years, hasDegree, hadGap){
@@ -1091,6 +1232,7 @@ function renderResults(explicitSet, inferredMap, text, years, hasDegree, hadGap)
           <div class="verdict-label">Traditional ATS</div>
           <div class="verdict-badge ${s.trad.pass?'pass':'reject'}"><span class="icon">${s.trad.pass?'✓':'✕'}</span>${s.trad.pass?'Passed':'Rejected'}</div>
           ${s.trad.reasons.length? `<div class="verdict-reasons">${s.trad.reasons.join('<br>')}</div>` : ''}
+          ${atsTranslatorHtml(s.job, text, explicitSet, inferredMap)}
         </div>
         <div>
           <div class="verdict-label">Skills-based match</div>
@@ -1408,6 +1550,89 @@ document.addEventListener('keydown', function(e){
   else if(e.key === '2'){ selectPersona('arjun'); }
   else if(e.key === '3'){ selectPersona('rahul'); }
 });
+</script>
+
+<script>
+/* ============ Module 2B: Role Architect (pre-finals addition) ============ */
+// Scores the currently-analyzed candidate against a recruiter-defined custom
+// role, through the exact same traditionalResult/skillsBreakdown functions
+// used for every built-in role. Deliberately kept out of JOBS and out of the
+// backend fairness-summary audit (which is a separate, server-driven fetch)
+// so it can never touch the rehearsed 72/72 identity-blind guarantee.
+(function(){
+  const btn = document.getElementById('arch-score-btn');
+  if(!btn) return;
+
+  function parseSkillList(raw){
+    return raw.split(',').map(s=>s.trim()).filter(Boolean);
+  }
+  function resolveKnownNames(list){
+    const known = [], unknown = [];
+    list.forEach(raw=>{
+      const id = byName[raw.toLowerCase()];
+      if(id) known.push(byId[id].name); else unknown.push(raw);
+    });
+    return {known, unknown};
+  }
+
+  btn.addEventListener('click', ()=>{
+    const resultEl = document.getElementById('arch-result');
+    const reqR = resolveKnownNames(parseSkillList(document.getElementById('arch-required').value));
+    const prefR = resolveKnownNames(parseSkillList(document.getElementById('arch-preferred').value));
+
+    if(reqR.known.length === 0){
+      resultEl.innerHTML = '<p class="note">Add at least one required skill that matches a known skill name — see the legend and node labels on the skills graph above for the full list.</p>';
+      return;
+    }
+
+    const title = document.getElementById('arch-title').value.trim() || 'Custom role';
+    const minYears = parseInt(document.getElementById('arch-years').value,10) || 0;
+    const degreeRequired = document.getElementById('arch-degree').checked;
+    const gapPolicy = document.getElementById('arch-gap').checked;
+    const job = {
+      name: title, company: 'Custom role · Role Architect',
+      required: reqR.known, preferred: prefR.known,
+      minYears, degreeRequired, gapPolicy,
+      desc: 'Defined live via Role Architect, scored against this candidate only — not part of the Module 3 fairness-audit matrix.',
+      flags: []
+    };
+
+    const text = document.getElementById('resume-text').value;
+    const years = parseInt(document.getElementById('years-input').value,10) || 0;
+    const hasDegree = document.getElementById('degree-input').checked;
+    const hadGap = document.getElementById('gap-input').checked;
+
+    const trad = traditionalResult(job, text, years, hasDegree, hadGap);
+    const bd = skillsBreakdown(job, lastExplicit, lastInferred);
+
+    const unknown = reqR.unknown.concat(prefR.unknown);
+    const unknownNote = unknown.length
+      ? `<p class="note">Skipped (not a recognized skill name): ${unknown.join(', ')}</p>` : '';
+
+    resultEl.innerHTML = `${unknownNote}
+      <div class="job-row">
+        <div class="job-rank mono">★</div>
+        <div>
+          <div class="job-title">${job.name}</div>
+          <div class="job-meta">${job.company} · ${minYears}+ yrs · ${degreeRequired?'degree required':'no degree required'}${gapPolicy?' · no employment gaps':''}</div>
+          <div class="job-desc">${job.desc}</div>
+        </div>
+        <div>
+          <div class="verdict-block">
+            <div class="verdict-label">Traditional ATS</div>
+            <div class="verdict-badge ${trad.pass?'pass':'reject'}"><span class="icon">${trad.pass?'✓':'✕'}</span>${trad.pass?'Passed':'Rejected'}</div>
+            ${trad.reasons.length? `<div class="verdict-reasons">${trad.reasons.join('<br>')}</div>` : ''}
+            ${atsTranslatorHtml(job, text, lastExplicit, lastInferred)}
+          </div>
+          <div>
+            <div class="verdict-label">Skills-based match</div>
+            <div class="bar-pct" style="color:${bd.score>=50?'var(--teal)':'var(--ink-faint)'}">${bd.score}%</div>
+            <div class="bar-track"><div class="bar-fill ${bd.score<50?'low':''}" style="width:${bd.score}%;"></div></div>
+          </div>
+        </div>
+      </div>`;
+  });
+})();
 </script>
 </body>
 </html>
