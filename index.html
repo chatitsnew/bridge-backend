@@ -1160,5 +1160,68 @@ window.addEventListener('resize', ()=>{
 
 analyze();
 </script>
+<script>
+  /* ============ Module 4: Learning Pathway (post-regionals addition) ============ */
+  (function(){
+      const footer = document.querySelector('footer');
+      const section = document.createElement('div');
+      section.innerHTML = `
+          <div class="module-tag"><b>Module 4</b> — Learning pathway (bonus)</div>
+              <div class="results-head">
+                    <h2>Close the gap</h2>
+                          <p class="results-sub">Pick a role to see a suggested learning path for the skills this candidate is missing. Not a live course-market integration yet — a curated static list — but real code that runs against the same gap data shown above.</p>
+                              </div>
+                                  <div class="gap-select-row">
+                                        <label for="pathway-job-select">Show pathway for</label>
+                                              <select id="pathway-job-select"><option value="-1">Select a role</option></select>
+                                                    <button id="pathway-btn" class="clear-link" type="button" style="text-decoration:none; border:1px solid var(--line); padding:6px 14px; border-radius:var(--radius); color:var(--ink);">Get learning pathway</button>
+                                                        </div>
+                                                            <div id="pathway-results" style="margin-top:14px;"></div>
+                                                              `;
+      footer.parentNode.insertBefore(section, footer);
+
+      const pathwaySelect = document.getElementById('pathway-job-select');
+      JOBS.forEach((job,i)=>{
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = job.name;
+            pathwaySelect.appendChild(opt);
+      });
+
+      document.getElementById('pathway-btn').addEventListener('click', async ()=>{
+            const resultsEl = document.getElementById('pathway-results');
+            const v = parseInt(pathwaySelect.value,10);
+            if(v<0){ resultsEl.innerHTML = '<p class="note">Pick a role first.</p>'; return; }
+            const job = JOBS[v];
+            const text = document.getElementById('resume-text').value;
+            const years = parseInt(document.getElementById('years-input').value,10) || 0;
+            const hasDegree = document.getElementById('degree-input').checked;
+            const hadGap = document.getElementById('gap-input').checked;
+            resultsEl.innerHTML = '<p class="note">Loading pathway…</p>';
+            try {
+                    const res = await fetch(BACKEND_URL + '/api/learning-pathway', {
+                              method:'POST', headers:{'Content-Type':'application/json'},
+                              body: JSON.stringify({ text, years, hasDegree, hadGap, jobName: job.name })
+                    });
+                    const data = await res.json();
+                    if(data.error){ resultsEl.innerHTML = '<p class="note">'+data.error+'</p>'; return; }
+                    if(!data.pathway.length){
+                              resultsEl.innerHTML = '<p class="note">No gaps found for '+job.name+' — this candidate already covers every required and preferred skill.</p>';
+                              return;
+                    }
+                    resultsEl.innerHTML = data.pathway.map(function(p){
+                              return '<div class="breakdown-panel" style="display:block; margin-bottom:10px;">'
+                                + '<div style="font-weight:600; margin-bottom:6px;">'+p.skill+'</div>'
+                                + '<ul style="margin:0; padding-left:18px; font-size:13px; color:var(--ink-soft);">'
+                                + p.suggestions.map(function(s){ return '<li>'+s+'</li>'; }).join('')
+                                + '</ul></div>';
+                    }).join('');
+            } catch(e){
+                    resultsEl.innerHTML = '<p class="note">Could not reach backend for pathway suggestions.</p>';
+            }
+      });
+  })();
+</script>
+  
 </body>
 </html>
