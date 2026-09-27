@@ -1581,8 +1581,15 @@ function BridgeTransition({ active, roleName, gapNames, onComplete }) {
    it — standing in for the literal "scan" effect used in the vanilla build.
    Three.js loads from esm.sh via the import map (same pattern as React/
    Framer Motion): untestable in this sandbox short of a live browser, so
-   construction is wrapped defensively and falls through to onDone on any
-   failure rather than stranding the user on a blank screen. */
+   construction is wrapped defensively and falls through to onComplete on
+   any failure rather than stranding the user on a blank screen.
+
+   The WebGL setup/teardown lives in a useEffect keyed directly on `active`
+   at the top level of IntroBridgeTransition — the same shape the other
+   three transitions use for their completion timers — rather than in a
+   separately-mounted child component. That keeps teardown tied to the
+   `active` prop flipping, not to AnimatePresence's own exit-then-unmount
+   timing, so cleanup always runs exactly when the transition ends. */
 const DURATION = 1500;
 function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 function easeOutExpo(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
@@ -1600,12 +1607,13 @@ function makeGlowTexture() {
     grad.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, size, size);
-    const tex = new THREE.CanvasTexture(c);
-    return tex;
+    return new THREE.CanvasTexture(c);
 }
-function BridgeScene3D({ onDone }) {
+function IntroBridgeTransition({ active, onComplete }) {
     const canvasRef = useRef(null);
     useEffect(() => {
+        if (!active)
+            return;
         const canvas = canvasRef.current;
         if (!canvas)
             return;
@@ -1615,9 +1623,8 @@ function BridgeScene3D({ onDone }) {
         const disposables = [];
         const finish = () => { if (!disposed) {
             disposed = true;
-            onDone();
+            onComplete();
         } };
-        const safetyTimer = setTimeout(finish, DURATION + 250);
         try {
             const GOLD = 0xE07B3F;
             const PLATFORM = 0x4A3A2C;
@@ -1625,8 +1632,7 @@ function BridgeScene3D({ onDone }) {
             const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
             renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
             renderer.setClearColor(0x000000, 0);
-            const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-            renderer.setPixelRatio(pixelRatio);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
             const resize = () => {
                 const w = canvas.clientWidth || window.innerWidth;
                 const h = canvas.clientHeight || window.innerHeight;
@@ -1705,15 +1711,12 @@ function BridgeScene3D({ onDone }) {
                 if (disposed)
                     return;
                 const t = Math.min((now - start) / DURATION, 1);
-                // Platforms pop in.
                 const platT = easeOutCubic(Math.min(t / 0.22, 1));
                 platformL.scale.setScalar(Math.max(platT, 0.001));
                 platformR.scale.setScalar(Math.max(platT, 0.001));
-                // Cable draws in.
                 const lineT = Math.min(Math.max((t - 0.12) / 0.55, 0), 1);
                 const lineCount = lineT <= 0 ? 0 : Math.max(2, Math.floor(easeOutCubic(lineT) * N) + 1);
                 lineGeo.setDrawRange(0, lineCount);
-                // Nodes light up in sequence.
                 for (const n of nodes) {
                     const nt = Math.min(Math.max((t - n.start) / 0.22, 0), 1);
                     const eased = easeOutExpo(nt);
@@ -1721,19 +1724,16 @@ function BridgeScene3D({ onDone }) {
                     n.sprite.scale.setScalar(Math.max(eased * 0.9, 0.001));
                     n.sprite.material.opacity = eased * 0.85;
                 }
-                // Camera drifts around the scene — the "3D" motion.
                 const orbit = THREE.MathUtils.lerp(-0.32, 0.18, easeOutCubic(t));
                 const radius = 7.6;
                 camera.position.set(Math.sin(orbit) * radius, 1.7 + Math.sin(t * Math.PI) * 0.35, Math.cos(orbit) * radius);
                 camera.lookAt(0, 0.25, 0);
                 renderer.render(scene, camera);
-                if (t < 1) {
+                if (!disposed && t < 1) {
                     rafId = requestAnimationFrame(tick);
                 }
             }
             rafId = requestAnimationFrame(tick);
-            const doneTimer = setTimeout(finish, DURATION);
-            disposables.push(() => clearTimeout(doneTimer));
             disposables.push(() => scene.traverse((obj) => {
                 if (obj.geometry)
                     obj.geometry.dispose?.();
@@ -1747,10 +1747,14 @@ function BridgeScene3D({ onDone }) {
             // user on a broken transition.
             console.error('IntroBridgeTransition: 3D scene failed, skipping.', err);
             finish();
+            return;
         }
+        const doneTimer = setTimeout(finish, DURATION);
+        // Cleanup fires the moment `active` flips false (or on unmount) —
+        // independent of whatever AnimatePresence is doing visually.
         return () => {
             disposed = true;
-            clearTimeout(safetyTimer);
+            clearTimeout(doneTimer);
             cancelAnimationFrame(rafId);
             disposables.forEach(fn => { try {
                 fn();
@@ -1761,12 +1765,9 @@ function BridgeScene3D({ onDone }) {
             }
             catch { }
         };
-    }, []);
-    return React.createElement("canvas", { ref: canvasRef, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' } });
-}
-function IntroBridgeTransition({ active, onComplete }) {
+    }, [active]);
     return (React.createElement(AnimatePresence, null, active && (React.createElement(motion.div, { style: { position: 'fixed', inset: 0, zIndex: 9998, background: 'var(--paper)', overflow: 'hidden' }, initial: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.25 } },
-        React.createElement(BridgeScene3D, { onDone: onComplete })))));
+        React.createElement("canvas", { ref: canvasRef, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' } })))));
 }
 
 
