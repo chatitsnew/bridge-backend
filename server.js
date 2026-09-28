@@ -8,7 +8,8 @@
      GET  /api/fairness-summary     -> latest batch audit result
    ============================================================ */
 const http = require('http');
-const { JOBS, analyzeCandidate } = require('./engine.js');
+const { JOBS, analyzeCandidate, extractExplicit, assembleAnalysis } = require('./engine.js');
+const { extractViaAiCore, isConfigured: aiCoreConfigured } = require('./ai-core.js');
 const { suggestCourses } = require('./learning-pathway.js');
 const fs = require('fs');
 const path = require('path');
@@ -58,13 +59,31 @@ const server = http.createServer(async (req, res) => {
       if(!body.text || typeof body.text !== 'string' || !body.text.trim()){
         return sendJSON(res, 400, { error: 'Missing required field: text' });
       }
-      const result = analyzeCandidate({
+      const input = {
         text: body.text,
         years: Number(body.years) || 0,
         hasDegree: !!body.hasDegree,
         hadGap: !!body.hadGap,
-      });
-      return sendJSON(res, 200, result);
+      };
+      // Skill extraction can optionally be augmented by a call to SAP AI
+      // Core (GPT-4o/4o-mini) — only the extraction step, never the job
+      // scoring/audit math below, which stays the same deterministic code
+      // either way. Only resume text is ever sent to the model: no name,
+      // age, college, or pronouns, so the fairness audit's identity-blind
+      // guarantee is unaffected by which path ran. If AI Core isn't
+      // configured, or the call fails or times out for any reason, this
+      // falls straight back to the regex engine with no visible impact.
+      let explicitSet, extractionSource;
+      const aiResult = aiCoreConfigured() ? await extractViaAiCore(input.text) : null;
+      if(aiResult){
+        explicitSet = aiResult.explicitSet;
+        extractionSource = 'ai-core';
+      } else {
+        explicitSet = extractExplicit(input.text);
+        extractionSource = 'rule-engine';
+      }
+      const result = assembleAnalysis(input, explicitSet);
+      return sendJSON(res, 200, { ...result, extractionSource });
     } catch(e){
       return sendJSON(res, 400, { error: 'Invalid request body', detail: String(e.message||e) });
     }
@@ -100,7 +119,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   if(req.method === 'GET' && url.pathname === '/api/health'){
-    return sendJSON(res, 200, { status: 'ok', jobs: JOBS.length });
+    return sendJSON(res, 200, { status: 'ok', jobs: JOBS.length, aiCoreConfigured: aiCoreConfigured() });
   }
 
   // Serve the site itself, so the frontend and backend live on the same

@@ -200,13 +200,15 @@ function traditionalResult(job, text, years, hasDegree, hadGap){
 }
 
 /**
- * Full analysis for one candidate across every job.
- * NOTE: this function's signature has no name/college/pronoun/identity
- * parameter at all — that's not a policy, it's a type-level fact. There
- * is nothing to pass in even if a caller wanted to.
+ * Assembles the full per-job analysis given an already-computed explicit
+ * skill set — the job-matching, scoring, and traditional-pass math is
+ * always this same deterministic code, regardless of whether explicitSet
+ * came from the regex engine or an optional AI-assisted extraction pass
+ * (see ai-core.js). This is what keeps the fairness audit meaningful
+ * either way: identity fields never flow into this function or into
+ * whatever produced explicitSet.
  */
-function analyzeCandidate({text, years=0, hasDegree=false, hadGap=false}){
-  const explicitSet = extractExplicit(text);
+function assembleAnalysis({text, years=0, hasDegree=false, hadGap=false}, explicitSet){
   const inferredMap = inferSkills(explicitSet);
   const results = JOBS.map(job => {
     const trad = traditionalResult(job, text, years, hasDegree, hadGap);
@@ -230,8 +232,20 @@ function analyzeCandidate({text, years=0, hasDegree=false, hadGap=false}){
   };
 }
 
+/**
+ * Full analysis for one candidate across every job, using the regex
+ * engine's own extraction. NOTE: this function's signature has no
+ * name/college/pronoun/identity parameter at all — that's not a policy,
+ * it's a type-level fact. There is nothing to pass in even if a caller
+ * wanted to.
+ */
+function analyzeCandidate(input){
+  const explicitSet = extractExplicit(input.text);
+  return assembleAnalysis(input, explicitSet);
+}
+
 module.exports = {
   SKILLS, ADJ, JOBS, byId, byName,
   extractExplicit, inferSkills, skillsBreakdown, traditionalResult,
-  analyzeCandidate,
+  analyzeCandidate, assembleAnalysis,
 };
